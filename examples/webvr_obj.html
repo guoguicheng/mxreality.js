@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>vr obj scene</title>
+    <script src="../build/three.js"></script>
+    <script src="./js/controls/OrbitControls.js"></script>
+    <script src="../build/mxreality.js"></script>
+    <script src="js/loaders/collada/AnimationHandler.js"></script>
+    
+    <meta charset="utf-8">
+    <style>
+        body {
+            /* set margin to 0 and overflow to hidden, to go fullscreen */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 用来保存输出结果 -->
+<div id="WebGL-output">
+</div>
+
+<script type="text/javascript">
+
+
+    // 当页面加载完成时运行初始化函数, 完成绘制
+    function init() {
+        var scene = new THREE.Scene();
+        var renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setClearColor(0x000000)
+        var container =document.getElementById("WebGL-output");
+        var mesh1,distance=40;
+        var vr=new VR(scene,renderer,container);
+
+        vr.init();
+
+        // 创建一个平面层
+        var planeGeometry = new THREE.PlaneGeometry(60, 60);
+        var texture=new THREE.TextureLoader().load("textures/lavatile.jpg");//加载纹理图片
+        var planeMaterial = new THREE.MeshLambertMaterial({map:texture});
+        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+
+        // 旋转并设置平面层位置
+        plane.rotation.x = -0.5 * Math.PI;
+
+        plane.receiveShadow = true;
+        // 将平面层加入到场景
+        scene.add(plane);
+
+        //添加环境光
+        var envLight=new THREE.AmbientLight(0xffffff,0.7);
+        scene.add(envLight);
+
+        // 添加聚光灯
+        var spotLight = new THREE.SpotLight(0xffffff, 1,300,2);
+        //var spotLight=new THREE.DirectionalLight(0xffffff,1)
+        spotLight.position.set(0, 20, 20);
+        spotLight.castShadow = true;
+        spotLight.shadow.camera.zoom=1;
+
+
+        mixer = new THREE.AnimationMixer( scene );
+        var loader = new THREE.JSONLoader();
+        loader.load( 'models/animated/monster/monster.js', function ( geometry, materials ) {
+            // adjust color a bit
+            var material = materials[ 0 ];
+            material.morphTargets = true;
+            material.color.setHex( 0xffaaaa );
+            var faceMaterial = new THREE.MultiMaterial( materials );
+            // random placement in a grid
+            mesh1 = new THREE.Mesh( geometry, faceMaterial );
+            mesh1.scale.set( 0.01, 0.01, 0.01 );
+            mesh1.position.set( distance, -4, 0 );
+            //mesh.rotation.y = THREE.Math.randFloat( -0.25, 0.25 );
+            mesh1.rotation.y =Math.PI;
+            mesh1.matrixAutoUpdate = true;
+            mesh1.updateMatrix();
+            mesh1.castShadow=true;
+
+            scene.add( mesh1 );
+            mixer.clipAction( geometry.animations[0], mesh1 )
+                .setDuration( 1 )			// one second
+                .startAt(0)	// random phase (already running)
+                .play();					// let's go
+
+        } );
+
+
+        // 创建一个渲染器
+
+        //renderer.setClearColorHex();
+        renderer.setClearColor(new THREE.Color(0xEEEEEE));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled=true;
+        // 添加图形到div层
+        document.getElementById("WebGL-output").appendChild(renderer.domElement);
+
+
+        var clock=new THREE.Clock();
+        //var mixer = new THREE.AnimationMixer( scene );
+        function render() {
+            requestAnimationFrame(render);
+
+            var delta = clock.getDelta();
+            // animate Collada model
+            THREE.AnimationHandler.update( delta );
+            mixer.update( delta );
+
+            mesh1.position.x=distance;
+            distance -=0.01;
+            if(distance<=20) distance=40;
+        }
+
+        render();
+    }
+    window.onload = init;
+
+</script>
+</body>
+</html>

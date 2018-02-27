@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>three.js canvas - materials</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            font-family: Monospace;
+            background-color: #202020;
+            margin: 0px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<script src="../build/three.r88.js"></script>
+
+<script src="js/controls/OrbitControls.js"></script>
+
+<script src="js/libs/stats.min.js"></script>
+<script src="../build/mxreality.js"></script>
+
+<script>
+
+    var container, stats;
+
+    var camera, scene, renderer, objects,controller;
+    var pointLight;
+    var imglist=['bricks.jpg','checker.png','clouds.jpg','crate.jpg','water.jpg','wood-floor.jpg'];
+
+    init();
+    animate();
+
+    function init() {
+
+        container = document.createElement('div');
+        document.body.appendChild(container);
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+        camera.position.set(0, 200, 800);
+
+        scene = new THREE.Scene();
+
+        // Grid
+
+        var gridHelper = new THREE.GridHelper(1000, 10);
+        gridHelper.position.y = -120;
+        scene.add(gridHelper);
+
+        // Spheres
+        var cubeGeometry = new THREE.CubeGeometry(150, 150, 150, 2, 2, 2);
+
+        var textureLoader = new THREE.TextureLoader();
+        var materials=[];
+        for(var i=0;i<imglist.length;i++){
+            materials.push(new THREE.MeshBasicMaterial({map:textureLoader.load("textures/"+imglist[i])}));
+        }
+        console.log(materials)
+        console.log(cubeGeometry.faces.length)
+        var faceId=0;
+        var aaa=[new THREE.Vector2(0,0),new THREE.Vector2(1,0),new THREE.Vector2(1,1),new THREE.Vector2(0,1)];
+        for (var i = 0, l = cubeGeometry.faces.length; i < l; i++) {
+            if(i<8) {
+                if (i != 0 && i % 2 == 0) {
+                    faceId++;
+                    console.log("face:" + faceId);
+
+                    cubeGeometry.faceVertexUvs[0][i]=[aaa[3],aaa[0],aaa[2]];
+                    cubeGeometry.faceVertexUvs[0][i+1]=[aaa[0],aaa[1],aaa[2]];
+                }
+                cubeGeometry.faces[i].materialIndex = faceId;
+
+            }else{
+                cubeGeometry.faces[i].materialIndex = 5;
+            }
+
+        }
+
+
+        var cube=new THREE.Mesh(cubeGeometry,materials);
+        scene.add(cube);
+
+
+        var PI2 = Math.PI * 2;
+        var program = function (context) {
+
+            context.beginPath();
+            //context.arc( 0, 0, 0.5, 0, PI2, true );
+            context.fill();
+
+        };
+
+        // Lights
+
+        scene.add(new THREE.AmbientLight(Math.random() * 0x202020));
+
+        var directionalLight = new THREE.DirectionalLight(Math.random() * 0xffffff);
+        directionalLight.position.x = Math.random() - 0.5;
+        directionalLight.position.y = Math.random() - 0.5;
+        directionalLight.position.z = Math.random() - 0.5;
+        directionalLight.position.normalize();
+        scene.add(directionalLight);
+
+        pointLight = new THREE.PointLight(0xffffff, 1);
+        scene.add(pointLight);
+
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+        controller=new THREE.OrbitControls(camera,renderer.domElement)
+        stats = new Stats();
+        container.appendChild(stats.dom);
+
+        //
+
+        window.addEventListener('resize', onWindowResize, false);
+
+    }
+
+    function onWindowResize() {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+    }
+
+    function animate() {
+
+        requestAnimationFrame( animate );
+
+        render();
+        stats.update();
+
+    }
+
+    function render() {
+
+        camera.lookAt( scene.position );
+        controller.update();
+        renderer.render( scene, camera );
+
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>vr sphere example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <script src="../build/three.js"></script>
+    <script src="../build/mxreality.js"></script>
+    <style type="text/css">
+
+        /*#example {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left:0px;
+            top:0px;
+            overflow: hidden;
+        }*/
+    </style>
+</head>
+<body>
+<div id="example"></div>
+<script>
+    window.onload=function () {
+        init();
+    }
+    function init() {
+        var  scene, renderer;
+        var container;
+        renderer = new THREE.WebGLRenderer();
+        container = document.getElementById('example');
+        container.appendChild(renderer.domElement);
+
+        scene = new THREE.Scene();
+
+        var vr=new VR(scene,renderer,container,{'fov':60});
+        vr.vrbox.radius=10;
+        vr.asteroidConfig.enable=true;
+        //vr.asteroidConfig.asteroidTop=-1;
+        //vr.effect.separation=5;
+
+        vr.init();
+        //vr.controls.object.position.set(0,-7,0);
+        //vr.camera.lookAt(0,0,0)
+        if(!AVR.isCrossScreen()) {
+            vr.useGyroscope = false;
+        }
+        vr.loadProgressManager.onLoad=function () {
+            vr.VRObject.getObjectByName("__panoContainer").visible = true;
+
+            vr.asteroidForward(function () {
+                //vr.controls.autoRotate=true;
+            });
+        }
+        window.addEventListener("click",function () {
+            //vr.controls.object.position.z=0.0001;
+        });
+        /*setInterval(function () {
+            //console.log(vr.controls.object.position.z);
+            vr.controls.object.position.z=0.0001;
+        },36)*/
+
+        vr.playPanorama('textures/puydesancy.jpg');
+    }
+
+
+</script>
+</body>
+</html>

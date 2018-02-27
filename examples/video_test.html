@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MAGI 精彩时刻</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="author" content="monicaqin">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <style>
+        html,body{
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 0px;
+            margin: 0px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <video id="player" style="margin: 0px;padding: 0px;"
+            src="textures/1517801660.mp4"
+           poster="textures/texture-atlas.jpg"
+            muted="muted"
+            webkit-playsinline=true
+            playsinline=true
+            preload='auto',
+            x-webkit-airplay='allow',
+            x5-video-player-type= 'h5',
+            x5-video-player-fullscreen= true,
+            x5-video-orientation='portrait'
+            allowsInlineMediaPlayback=true
+    ></video>
+<script>
+    var video=document.getElementById("player");
+    window.onload=function () {
+        init();
+    }
+
+    document.body.addEventListener("click",function () {
+        video.play();
+        //fullscreen(video);
+    },false)
+    //var vr=new VR(scene,renderer,container);
+    function init() {
+        video.addEventListener("x5videoenterfullscreen", function() {
+            video.style.height = (window.innerHeight += window.innerHeight *= .1) + "px";
+            //video.style.width = (window.innerWidth += window.innerWidth *= .1) + "px";
+            //video.videoHeight = (window.innerHeight);video.videoWidth = window.innerWidth;
+        })
+        video.addEventListener("x5videoexitfullscreen", function(){
+
+        })
+
+    }
+    video.onended=function () {
+
+    }
+    function fullscreen(el){
+        var isFullscreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen || false;
+
+        if (!isFullscreen) {//进入全屏,多重短路表达式
+            (el.requestFullscreen && el.requestFullscreen()) ||
+            (el.mozRequestFullScreen && el.mozRequestFullScreen()) ||
+            (el.webkitRequestFullscreen && el.webkitRequestFullscreen()) || (el.msRequestFullscreen && el.msRequestFullscreen());
+
+        } else {	//退出全屏,三目运算符
+            document.exitFullscreen ? document.exitFullscreen() :
+                document.mozCancelFullScreen ? document.mozCancelFullScreen() :
+                    document.webkitExitFullscreen ? document.webkitExitFullscreen() : '';
+        }
+    }
+
+
+</script>
+</body>
+</html>

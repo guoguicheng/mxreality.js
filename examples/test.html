@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>我是个网页，但不显示滚动条</title>
+    <script src="../build/three.js"></script>
+    <script src="../build/AVR.js"></script>
+    <style>
+        body{
+            padding: 0px;
+            margin: 0px;
+
+        }
+    </style>
+</head>
+<body style="background: #ededed;">
+<button onmouseover="InitMouseDow(event)" onmousedown="alert('mousedown event occurred')" onmouseup="alert('mouseup event occurred')">鼠标移动到这里</button>
+<script type="text/javascript">
+    function InitMouseDow(e){
+        if(e.initMouseEvent){
+            console.log('1')
+            var mousedownEvent=document.createEvent("MouseEvent");
+            mousedownEvent.initMouseEvent ("mouseup", true, true, window, 0,
+                event.screenX, event.screenY, event.clientX, event.clientY,
+                event.ctrlKey, event.altKey, event.shiftKey, event.metaKey,
+                0, null);
+            e.target.dispatchEvent(mousedownEvent);
+        }else{
+            console.log('2')
+            if(document.createEventObject()){
+                var mousedownEvent=document.createEventObject(window.event);
+                mousedownEvent.button=1;
+                e.srcElement.fireEvent('onmousedown',mousedownEvent)
+            }
+        }
+    }
+    window.onload=function () {
+
+    }
+    var test=1;
+    var ss={
+        a:function () {
+            return test;
+        }(),
+        b:function () {
+            console.log(this.a);
+        }
+    }
+    ss.b();
+</script>
+</body>
+</html>

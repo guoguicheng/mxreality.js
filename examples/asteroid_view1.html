@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>测试视频</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <style>
+
+        #example {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+    </style>
+
+</head>
+<body>
+<div id="example"></div>
+<script src="../build/three.js"></script>
+<script src="./js/renderers/CanvasRenderer.js"></script>
+<script src="./js/renderers/Projector.js"></script>
+<script src="../build/mxreality.js"></script>
+<script>
+
+
+    window.onload=function () {
+        init();
+    }
+    //var vr=new VR(scene,renderer,container);
+    function init() {
+        var  scene, renderer;
+        var container;
+        //renderer = new THREE.WebGLRenderer();
+        AVR.debug=true;
+        if( !AVR.Broswer.isIE() && AVR.Broswer.webglAvailable() ) {
+            renderer = new THREE.WebGLRenderer();
+        }else {
+            renderer = new THREE.CanvasRenderer();
+        }
+        renderer.setPixelRatio( window.devicePixelRatio );
+        container = document.getElementById('example');
+        container.appendChild(renderer.domElement);
+
+
+
+        scene = new THREE.Scene();
+
+        var vr=new VR(scene,renderer,container,{"fov":50});
+
+        //vr.playText="<img src='img/play90.png' width='40' height='40'/>";
+        vr.vrbox.radius=2;
+        vr.asteroidConfig.enable=true;
+        if(AVR.isCrossScreen()) {
+            vr.effect.separation=1.2;
+        }
+        var times=0;
+        vr.loadProgressManager.onLoad=function () {
+            console.log("loaded")
+            if(times<1) {
+                vr.VRObject.getObjectByName("__panoContainer").visible = true;
+                vr.asteroidForward();
+                times++;
+            }
+
+        }
+
+        //AVR.useGyroscope=false;
+        vr.init();
+
+        vr.playPanorama('textures/960p.mp4',vr.recType.video);
+        vr.video.setAttribute("loop","loop");
+        vr.video.crossOrigin="Anonymous";
+        vr.video.autoplay=true;
+
+
+        vr.video.onended=function () {
+        }
+
+
+    }
+
+
+</script>
+</body>
+</html>

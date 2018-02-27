@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>vr sphere example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <script src="../build/three.js"></script>
+    <script src="../build/mxreality.js"></script>
+    <style type="text/css">
+
+        /*#example {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left:0px;
+            top:0px;
+            overflow: hidden;
+        }*/
+    </style>
+</head>
+<body>
+<div id="example"></div>
+<script>
+    window.onload=function () {
+        init();
+    }
+    function init() {
+        var  scene, renderer;
+        var container;
+        renderer = new THREE.WebGLRenderer();
+        container = document.getElementById('example');
+        container.appendChild(renderer.domElement);
+
+        scene = new THREE.Scene();
+
+        var vr=new VR(scene,renderer,container,{'fov':60});
+        vr.vrbox.radius=50;
+        vr.init();
+        if(!AVR.isCrossScreen()) {
+            vr.useGyroscope = false;
+        }
+        vr.loadProgressManager.onLoad=function () {
+            vr.VRObject.getObjectByName("__panoContainer").visible = true;
+            //vr.controls.enable=false;
+        }
+        vr.playPanorama('textures/puydesancy.jpg');
+        //console.log(vr.controls);
+        /*setInterval(function () {
+            console.log(vr.controls.target);
+            console.log(vr.controls.object.position);
+        },36)*/
+    }
+
+
+</script>
+</body>
+</html>

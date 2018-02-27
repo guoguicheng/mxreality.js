@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>vr box example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            margin: 0px;
+            overflow: scroll;
+        }
+        #example {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="example"></div>
+<script src="../build/three.js"></script>
+<script src="./js/controls/OrbitControls.js"></script>
+<script src="../build/mxreality.js"></script>
+
+<script>
+    var  scene, renderer;
+    var container;
+    var vr=null;
+    function init() {
+        renderer = new THREE.WebGLRenderer();
+        container = document.getElementById('example');
+        container.appendChild(renderer.domElement);
+
+
+        scene = new THREE.Scene();
+        AVR.debug=true;
+        vr=new VR(scene,renderer,container,{'fov':80});
+        vr.vrbox.width=50;
+        vr.vrbox.height=50;
+        vr.vrbox.depth=50;
+        vr.init();
+        vr.sliceSegment=4;
+        vr.loadProgressManager.onLoad=function () {
+            vr.VRObject.getObjectByName("__panoContainer").visible = true;
+        }
+        vr.sphere2BoxPano("http://ov4hj29xx.bkt.clouddn.com/puydesancy.jpg",1024,1024,function (sliceArray) {
+            vr.playPanorama(sliceArray, vr.recType.slice);
+        });
+    }
+    init();
+
+</script>
+</body>
+</html>
