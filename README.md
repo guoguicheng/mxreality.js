@@ -45,3 +45,6 @@
 
 #### 全景图切片技术实现
 ![全景图切片技术实现](https://github.com/guoguicheng/mxreality.js/raw/master/docs/22.jpg)
+
+
+### 展示中的视频资源来自网络
