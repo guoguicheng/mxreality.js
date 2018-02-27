@@ -37,8 +37,8 @@
 ![全景场景VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/17.jpg)
 
 #### 全景图补天功能对比
-![没有补天](https://github.com/guoguicheng/mxreality.js/raw/master/docs/19.jpg)
-![全景场景VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/17.jpg)
+![没有补天](https://github.com/guoguicheng/mxreality.js/raw/master/docs/19.png)
+![已补天](https://github.com/guoguicheng/mxreality.js/raw/master/docs/20.png)
 
 #### 热点功能实现
 ![热点功能实现](https://github.com/guoguicheng/mxreality.js/raw/master/docs/21.png)
