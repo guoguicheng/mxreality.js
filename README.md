@@ -41,10 +41,10 @@
 ![全景场景VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/17.jpg)
 
 #### 热点功能实现
-![热点功能实现](https://github.com/guoguicheng/mxreality.js/raw/master/docs/21.jpg)
+![热点功能实现](https://github.com/guoguicheng/mxreality.js/raw/master/docs/21.png)
 
 #### 全景图切片技术实现
-![全景图切片技术实现](https://github.com/guoguicheng/mxreality.js/raw/master/docs/22.jpg)
+![全景图切片技术实现](https://github.com/guoguicheng/mxreality.js/raw/master/docs/22.png)
 
 
 ### 展示中的视频资源来自网络
