@@ -978,9 +978,15 @@ AR.prototype.init=function () {
     });
 
     function render(dt) {
+        var width = self.container.offsetWidth;
+        var height = self.container.offsetHeight;
+        self.camera.aspect = width / height;
         if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+            self.effect.setSize(width, height);
             self.effect.render(self.scene, self.camera);
         }else{
+            self.renderer.setSize(width, height);
+            self.renderer.setClearColor(new THREE.Color(0xffffff));
             self.renderer.render(self.scene, self.camera);
         }
         self.camera.updateProjectionMatrix();
