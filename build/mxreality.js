@@ -1880,8 +1880,8 @@ var AVR= {
         }
     },
     bindOrientationEnevt: function (that,target) {
-        alert(void 0 === that.controls);
-        if (void 0 === that.controls) {
+        alert("controls="+that.controls);
+        if (that.controls) {
             if (AVR.isMobileDevice()) {
                 target.y = -1;
             }
