@@ -895,7 +895,6 @@ AR.prototype.init=function () {
     AVR.bindOrientationEnevt(self,self._controlTarget);
     this.video=document.createElement('video');
     this.video.setAttribute("autoplay","autoplay");
-    this.video.style="object-fit:fill";
     //this.video.style.height=this._windowHeight+"px";
     //this.video.style.width=this._windowWidth+"px";
     //this.video.style.background="#ffffff";
