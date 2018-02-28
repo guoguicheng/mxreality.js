@@ -897,7 +897,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 AR.prototype.init=function () {
     var self=this;
 
-    AVR.bindOrientationEnevt(self,self._controlTarget);
+    //AVR.bindOrientationEnevt(self,self._controlTarget);
 
     this.video=document.createElement('video');
     this.video.setAttribute("autoplay","autoplay");
@@ -1016,6 +1016,8 @@ AR.prototype.play=function () {
         }else{
             that.renderer.render(that.scene, that.camera);
         }
+        that.camera.updateProjectionMatrix();
+        that.controls.update(dt);
     }
 
     function animate(t) {
@@ -1032,10 +1034,7 @@ AR.prototype.play=function () {
             image.minFilter = THREE.NearestFilter;
             that.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
-
         }
-        that.camera.updateProjectionMatrix();
-        that.controls.update(that.clock.getDelta());
     }
     animate();
 }
