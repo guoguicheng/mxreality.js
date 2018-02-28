@@ -1042,7 +1042,7 @@ AR.prototype.play=function () {
         }
         //that.camera.updateProjectionMatrix();
         if (that.controls) {
-            that.controls.update(dt);
+            //that.controls.update(dt);
         }
     }
 
