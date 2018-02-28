@@ -1027,6 +1027,7 @@ AR.prototype.play=function () {
     function animate() {
         requestAnimationFrame(animate);
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
+            AVR.msgBox(that.video.videoWidth+","+that.video.videoHeight,36,that.container);
             var image = new THREE.VideoTexture(that.video);
             image.generateMipmaps = false;
             image.format = THREE.RGBAFormat;
@@ -1876,7 +1877,6 @@ var AVR= {
     },
     bindOrientationEnevt: function (that,target) {
         if (void 0 === that.controls) {
-            alert("init controls")
             if (AVR.isMobileDevice()) {
                 target.y = -1;
             }
