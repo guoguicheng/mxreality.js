@@ -40,7 +40,7 @@
 </head>
 <body>
 
-<div id="container" style="display: none"></div>
+<div id="container"></div>
 <button id="showpic" style="color: #ffffff;position:absolute;top:0px;width: 100%;display: none">showpic</button>
 <script src="../build/three.js"></script>
 <script src="./js/controls/OrbitControls.js"></script>
@@ -61,13 +61,13 @@
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
         container.appendChild( renderer.domElement );
-        AVR.debug=true;
         var ar=new AR(scene,renderer,container);
         ar.openAudio=false;
         ar.cameraIndex=1;
+        ar.frameRate=35;
         ar.init();//初始化AR
-        ar.showVedio();
-        //ar.play();
+        //ar.showVedio();
+        ar.play();
 
         document.getElementById("showpic").addEventListener("click",function () {
             alert(ar.video);

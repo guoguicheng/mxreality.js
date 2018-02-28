@@ -944,17 +944,17 @@ AR.prototype.init=function () {
                 //console.log(cameras);
             });
     }
-    enumerateDevices().then(function(){
-        self.constraints= self.constraints.length>0?self.constraints: {
+    enumerateDevices().then(function() {
+        self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
                 width: {min: self._windowWidth, ideal: self._windowWidth, max: self._windowWidth},
                 height: {min: self._windowHeight, ideal: self._windowHeight, max: self._windowHeight},
                 //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
                 //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
-                frameRate:self.frameRate,//{ideal:10,max:15},
+                frameRate: self.frameRate,//{ideal:10,max:15},
                 //deviceId: {exact: self.frontCamera?'user':'environment'}
-                deviceId: { exact: self._cameras[self.cameraIndex] }
+                deviceId: {exact: self._cameras[self.cameraIndex]}
             }
         };
         navigator.mediaDevices.getUserMedia(self.constraints).then(
@@ -966,11 +966,11 @@ AR.prototype.init=function () {
                     // Avoid using this in new browsers, as it is going away.
                     self.video.src = window.URL.createObjectURL(stream);
                 }
-                self.video.onloadedmetadata=function (e) {
+                self.video.onloadedmetadata = function (e) {
                     self.video.play();
-                    document.body.addEventListener("click",function (e) {
+                    document.body.addEventListener("click", function (e) {
                         self.video.play();
-                    },false);
+                    }, false);
                 }
 
             }
