@@ -978,7 +978,7 @@ AR.prototype.init=function () {
     function render(dt) {
         var width = self.container.offsetWidth;
         var height = self.container.offsetHeight;
-        self.camera.aspect = width / height;
+        //self.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             self.effect.setSize(width, height);
             self.effect.render(self.scene, self.camera);
@@ -1029,7 +1029,6 @@ AR.prototype.showVedio=function() {
 AR.prototype.play=function () {
     var that=this;
     that.video.oncanplaythrough=function () {
-        alert('sssss');
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             var image = new THREE.VideoTexture(that.video);
             image.generateMipmaps = false;
