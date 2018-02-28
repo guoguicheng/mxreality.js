@@ -877,6 +877,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.video = null;
     this.openAudio = true;
     this.frameRate = 60;
+    this.useCamera={'environment':0,'user':1};//前置摄像头，否则为后置
     this.cameraIndex = 1;//0为前置摄像头，否则为后置
     this._cameras=[];
     this._controlTarget={x:0.0001,y:0,z:0};
