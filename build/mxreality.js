@@ -1037,9 +1037,6 @@ AR.prototype.play=function () {
         }
     }
     animate();
-    setInterval(function () {
-        alert(that.controls);
-    },3000)
 
 }
 
