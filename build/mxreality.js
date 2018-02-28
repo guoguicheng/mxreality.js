@@ -1028,7 +1028,7 @@ AR.prototype.play=function () {
             image.needsUpdate = true;
         }
     }
-    function render(dt) {
+    function render() {
         var width = that.container.offsetWidth;
         var height = that.container.offsetHeight;
         //that.camera.aspect = width / height;
@@ -1042,14 +1042,14 @@ AR.prototype.play=function () {
         }
         //that.camera.updateProjectionMatrix();
         if (that.controls) {
-            //that.controls.update(dt);
+            that.controls.update(self.clock.getDelta());
         }
     }
 
     function animate() {
         AVR.msgBox(self.video.videoWidth+","+self.video.videoHeight,36,self.container);
         requestAnimationFrame(animate);
-        render(self.clock.getDelta());
+        render();
     }
     animate();
 
