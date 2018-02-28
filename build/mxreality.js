@@ -1025,8 +1025,8 @@ AR.prototype.play=function () {
         }
     }
     function render() {
-        var width = that._windowWidth;
-        var height = that._windowHeight;
+        var width = that.video.videoWidth||that._windowWidth;
+        var height = that.video.videoHeight||that._windowHeight;
         that.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             that.effect.setSize(width, height);
@@ -1043,7 +1043,7 @@ AR.prototype.play=function () {
     }
 
     function animate() {
-        AVR.msgBox(that.video.videoWidth+"+"+that.video.videoHeight,36,that.container);
+        AVR.msgBox(that.video.videoWidth+"&"+that.video.videoHeight,36,that.container);
         requestAnimationFrame(animate);
         render();
     }
