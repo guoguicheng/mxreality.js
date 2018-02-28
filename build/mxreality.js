@@ -885,8 +885,6 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 
     this.clock = new THREE.Clock();
 
-    this.controls = null;
-
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
     this.scene.add(this.camera);
@@ -1880,8 +1878,8 @@ var AVR= {
         }
     },
     bindOrientationEnevt: function (that,target) {
-        alert("controls="+that.controls);
-        if (that.controls) {
+        if (void 0 === that.controls) {
+            alert("init controls")
             if (AVR.isMobileDevice()) {
                 target.y = -1;
             }
