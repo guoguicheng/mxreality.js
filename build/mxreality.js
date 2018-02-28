@@ -979,6 +979,23 @@ AR.prototype.init=function () {
         );
     });
 
+    function render(dt) {
+        if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+            self.effect.render(self.scene, self.camera);
+        }else{
+            self.renderer.render(self.scene, self.camera);
+        }
+        self.camera.updateProjectionMatrix();
+        if(self.controls) {
+            self.controls.update(dt);
+        }
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render(self.clock.getDelta());
+    }
+    animate();
 }
 AR.prototype._createCanvas=function(id){
     var canvasobj=document.getElementById(id);
@@ -1009,23 +1026,8 @@ AR.prototype.showVedio=function() {
 }
 AR.prototype.play=function () {
     var that=this;
-
-    function render(dt) {
-        if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
-            that.effect.render(that.scene, that.camera);
-        }else{
-            that.renderer.render(that.scene, that.camera);
-        }
-        that.camera.updateProjectionMatrix();
-        that.controls.update(dt);
-    }
-
-    function animate(t) {
+    function animate() {
         requestAnimationFrame(animate);
-        render(that.clock.getDelta());
-        update();
-    }
-    function update() {
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             var image = new THREE.VideoTexture(that.video);
             image.generateMipmaps = false;
