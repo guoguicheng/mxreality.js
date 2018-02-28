@@ -876,9 +876,9 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.constraints = {};
     this.video = null;
     this.openAudio = true;
-    this.frameRate = 60;
-    this.useCamera={'environment':0,'user':1};//前置摄像头，否则为后置
+
     this.cameraIndex = 1;//0为前置摄像头，否则为后置
+
     this._cameras=[];
     this._controlTarget={x:0.0001,y:0,z:0};
     this._windowWidth = window.innerWidth;
@@ -887,7 +887,13 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
     this.scene.add(this.camera);
     this.clock = new THREE.Clock();
-
+    this.cameraVideo={
+        width: {min: this._windowWidth, ideal: this._windowWidth, max: this._windowWidth},
+        height: {min: this._windowHeight, ideal: this._windowHeight, max: this._windowHeight},
+        //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
+        //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
+        frameRate: 15,//{ideal:10,max:15},
+    }
     this.effect = AVR.stereoEffect(this.renderer);
 
 }
@@ -946,11 +952,11 @@ AR.prototype.init=function () {
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
-                width: {min: self._windowWidth, ideal: self._windowWidth, max: self._windowWidth},
-                height: {min: self._windowHeight, ideal: self._windowHeight, max: self._windowHeight},
+                width: self.cameraVideo.width,
+                height: self.cameraVideo.height,
                 //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
                 //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
-                frameRate: self.frameRate,//{ideal:10,max:15},
+                frameRate: self.cameraVideo.frameRate,//{ideal:10,max:15},
                 //deviceId: {exact: self.frontCamera?'user':'environment'}
                 deviceId: {exact: self._cameras[self.cameraIndex]}
             }
@@ -983,7 +989,7 @@ AR.prototype.init=function () {
     function render(dt) {
         var width = self.container.offsetWidth;
         var height = self.container.offsetHeight;
-        //self.camera.aspect = width / height;
+        self.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             self.effect.setSize(width, height);
             self.effect.render(self.scene, self.camera);
