@@ -895,7 +895,9 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
         //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
         frameRate: 15,//{ideal:10,max:15},
         //deviceId: {exact: self.frontCamera?'user':'environment'}
-        deviceId: {exact: this._cameras[self.cameraIndex]}
+        deviceId: {exact: function(){
+            return self._cameras[self.cameraIndex]
+        }}
     };
 
     this.effect = AVR.stereoEffect(this.renderer);
@@ -953,7 +955,7 @@ AR.prototype.init=function () {
             });
     }
     enumerateDevices().then(function() {
-        self.cameraVideoParam.deviceId.exact=self._cameras[self.cameraIndex];
+        //self.cameraVideoParam.deviceId.exact=self._cameras[self.cameraIndex];
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: self.cameraVideoParam
