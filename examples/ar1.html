@@ -79,6 +79,12 @@
         mesh.position.set(0,0,-200);
         scene.add( mesh );
 
+        function animate() {
+            requestAnimationFrame(animate);
+            mesh.rotation.y +=0.01;
+
+        }
+        animate();
 
     }
 
