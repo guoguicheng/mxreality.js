@@ -896,7 +896,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
         frameRate: 15,//{ideal:10,max:15},
         //deviceId: {exact: self.frontCamera?'user':'environment'}
         deviceId: {exact: function(){
-            return self._cameras[self.cameraIndex]
+            return that._cameras[that.cameraIndex]
         }}
     };
 
