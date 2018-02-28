@@ -905,11 +905,7 @@ AR.prototype.init=function () {
     //this.video.style.height=this._windowHeight+"px";
     //this.video.style.width=this._windowWidth+"px";
     //this.video.style.background="#ffffff";
-    if (AVR.isCrossScreen()) {
-        this.video.width = Math.max(this._windowWidth, this._windowHeight);
-    } else {
-        this.video.height = Math.max(this._windowWidth, this._windowHeight);
-    }
+
     this.video.style.display = "none";
     document.body.appendChild(this.video);
 
@@ -2094,11 +2090,11 @@ head.appendChild(AVR.createTag('meta',{'name':'viewport','content':"width=device
 head.appendChild(AVR.createTag('meta',{'name':'google','content':"notranslate"}));
 if(AVR.debug) {
     window.onerror = function (msg, url, l) {
-        txt = "There was an error on this page.\n\n"
-        txt += "Error: " + msg + "\n"
-        txt += "URL: " + url + "\n"
-        txt += "Line: " + l + "\n\n"
-        AVR.msgBox(txt, 36, document.body)
-        return true
+        var txt = "There was an error on this page.\n\n";
+        txt += "Error: " + msg + "\n";
+        txt += "URL: " + url + "\n";
+        txt += "Line: " + l + "\n\n";
+        AVR.msgBox(txt, 36, document.body);
+        return true;
     }
 }
