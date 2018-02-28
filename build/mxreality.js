@@ -1029,8 +1029,8 @@ AR.prototype.play=function () {
         }
     }
     function render() {
-        var width = that.container.offsetWidth;
-        var height = that.container.offsetHeight;
+        var width = that._windowWidth;
+        var height = that._windowHeight;
         that.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             that.effect.setSize(width, height);
