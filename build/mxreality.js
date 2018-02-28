@@ -1047,7 +1047,7 @@ AR.prototype.play=function () {
     }
 
     function animate() {
-        AVR.msgBox(self.video.videoWidth+","+self.video.videoHeight,36,self.container);
+        AVR.msgBox(that.video.videoWidth+","+that.video.videoHeight,36,that.container);
         requestAnimationFrame(animate);
         render();
     }
