@@ -43,7 +43,7 @@
 <body>
 
 <div id="container"></div>
-<button id="showpic" style="color: #ffffff;position:absolute;top:0px;width: 100%;display: block">showpic</button>
+<button id="showpic" style="color: #ffffff;position:absolute;top:0px;width: 100%;display: none">showpic</button>
 <script src="../build/three.js"></script>
 <script src="./js/controls/OrbitControls.js"></script>
 <script src="../build/mxreality.js"></script>
@@ -65,7 +65,7 @@
         container.appendChild( renderer.domElement );
         var ar=new AR(scene,renderer,container);
         ar.openAudio=false;
-        ar.cameraIndex=1;
+        ar.cameraIndex=0;
         ar.frameRate=35;
         ar.init();//初始化AR
         //ar.showVedio();
@@ -93,9 +93,8 @@
         scene.add( mesh );
 
         function animate() {
-            document.body.style.overflow="scroll";
             requestAnimationFrame(animate);
-            mesh.rotation.y +=0.01;
+            //mesh.rotation.y +=0.01;
 
         }
         animate();

@@ -936,6 +936,7 @@ AR.prototype.init=function () {
         return navigator.mediaDevices.enumerateDevices()
             .then(function(devices) {
                 devices.forEach(function(device) {
+                    alert(device.kind)
                     //console.log(device);
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
