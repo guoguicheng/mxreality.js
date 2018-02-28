@@ -937,11 +937,12 @@ AR.prototype.init=function () {
             });
     }
     enumerateDevices().then(function() {
+        var max=Math.max(self._windowWidth,self._windowHeight);
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
-                width: {min: self._windowWidth, ideal: self._windowWidth, max: self._windowWidth},
-                height: {min: self._windowHeight, ideal: self._windowHeight, max: self._windowHeight},
+                width: {min: self._windowWidth, ideal: self._windowWidth, max: Infinity},
+                height: {min: self._windowHeight, ideal: self._windowHeight, max: Infinity},
                 //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
                 //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
                 frameRate: self.frameRate,//{ideal:10,max:15},
@@ -977,7 +978,7 @@ AR.prototype.init=function () {
     function render(dt) {
         var width = self.container.offsetWidth;
         var height = self.container.offsetHeight;
-        //self.camera.aspect = width / height;
+        self.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             self.effect.setSize(width, height);
             self.effect.render(self.scene, self.camera);
@@ -986,7 +987,7 @@ AR.prototype.init=function () {
             self.renderer.setClearColor(new THREE.Color(0xffffff));
             self.renderer.render(self.scene, self.camera);
         }
-        //self.camera.updateProjectionMatrix();
+        self.camera.updateProjectionMatrix();
         if (self.controls) {
             self.controls.update(dt);
         }
