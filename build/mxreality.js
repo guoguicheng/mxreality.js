@@ -934,8 +934,8 @@ AR.prototype.init=function () {
     }
     function enumerateDevices() {
         return navigator.mediaDevices.enumerateDevices()
-            .then(function(devices) {
-                devices.forEach(function(device) {
+            .then(function (devices) {
+                devices.forEach(function (device) {
                     //console.log(device);
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
@@ -945,7 +945,7 @@ AR.prototype.init=function () {
             });
     }
     enumerateDevices().then(function() {
-        alert("000")
+        alert('bbbb')
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
@@ -978,7 +978,6 @@ AR.prototype.init=function () {
         ).catch(
             function (err) {
                 alert(err.name + ": " + err.message)
-                console.log(err.name + ": " + err.message);
             }
         );
     });
