@@ -897,7 +897,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 AR.prototype.init=function () {
     var self=this;
 
-    //AVR.bindOrientationEnevt(self,self._controlTarget);
+    AVR.bindOrientationEnevt(self,self._controlTarget);
 
     this.video=document.createElement('video');
     this.video.setAttribute("autoplay","autoplay");
