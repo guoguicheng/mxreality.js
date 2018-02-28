@@ -876,10 +876,10 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.constraints = {};
     this.video = null;
     this.openAudio = true;
-    this._cameras=[];
+    this.frameRate = 60;
+    this.useCamera={'environment':0,'user':1};//前置摄像头，否则为后置
     this.cameraIndex = 1;//0为前置摄像头，否则为后置
-
-
+    this._cameras=[];
     this._controlTarget={x:0.0001,y:0,z:0};
     this._windowWidth = window.innerWidth;
     this._windowHeight = window.innerHeight;
@@ -887,18 +887,6 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
     this.scene.add(this.camera);
     this.clock = new THREE.Clock();
-
-    this.cameraVideoParam={
-        width: {min: this._windowWidth, ideal: this._windowWidth, max: this._windowWidth},
-        height: {min: this._windowHeight, ideal: this._windowHeight, max: this._windowHeight},
-        //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
-        //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
-        frameRate: 15,//{ideal:10,max:15},
-        //deviceId: {exact: self.frontCamera?'user':'environment'}
-        deviceId: {exact: function(){
-            return that._cameras[that.cameraIndex]
-        }}
-    };
 
     this.effect = AVR.stereoEffect(this.renderer);
 
@@ -955,10 +943,17 @@ AR.prototype.init=function () {
             });
     }
     enumerateDevices().then(function() {
-        //self.cameraVideoParam.deviceId.exact=self._cameras[self.cameraIndex];
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
-            video: self.cameraVideoParam
+            video: {
+                width: {min: self._windowWidth, ideal: self._windowWidth, max: self._windowWidth},
+                height: {min: self._windowHeight, ideal: self._windowHeight, max: self._windowHeight},
+                //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
+                //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
+                frameRate: self.frameRate,//{ideal:10,max:15},
+                //deviceId: {exact: self.frontCamera?'user':'environment'}
+                deviceId: {exact: self._cameras[self.cameraIndex]}
+            }
         };
         navigator.mediaDevices.getUserMedia(self.constraints).then(
             function (stream) {
