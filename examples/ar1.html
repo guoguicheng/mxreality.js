@@ -40,7 +40,7 @@
 </head>
 <body>
 
-<div id="container"></div>
+<div id="container" style="display: none"></div>
 <button id="showpic" style="color: #ffffff;position:absolute;top:0px;width: 100%;display: none">showpic</button>
 <script src="../build/three.js"></script>
 <script src="./js/controls/OrbitControls.js"></script>
@@ -92,9 +92,6 @@
         function animate() {
             requestAnimationFrame(animate);
             mesh.rotation.y +=0.01;
-
-            mesh.rotation.x += 0.005;
-            mesh.rotation.y += 0.01;
 
         }
         animate();

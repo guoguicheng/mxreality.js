@@ -904,7 +904,7 @@ AR.prototype.init=function () {
     //this.video.style.height=this._windowHeight+"px";
     //this.video.style.width=this._windowWidth+"px";
     //this.video.style.background="#ffffff";
-    this.video.style.display="none";
+    //this.video.style.display="none";
     document.body.appendChild(this.video);
 
 
@@ -936,7 +936,7 @@ AR.prototype.init=function () {
         return navigator.mediaDevices.enumerateDevices()
             .then(function(devices) {
                 devices.forEach(function(device) {
-                    console.log(device);
+                    //console.log(device);
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
                     }
@@ -2091,13 +2091,13 @@ var AVR= {
 var head=document.getElementsByTagName('head')[0];
 head.appendChild(AVR.createTag('meta',{'name':'viewport','content':"width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0,minimal-ui,user-scalable=no"}));
 head.appendChild(AVR.createTag('meta',{'name':'google','content':"notranslate"}));
-if(AVR.debug){
-    window.onerror = function(msg,url,l) {
-        txt="There was an error on this page.\n\n"
-        txt+="Error: " + msg + "\n"
-        txt+="URL: " + url + "\n"
-        txt+="Line: " + l + "\n\n"
-        AVR.msgBox(txt,36,document.body)
+if(AVR.debug) {
+    window.onerror = function (msg, url, l) {
+        txt = "There was an error on this page.\n\n"
+        txt += "Error: " + msg + "\n"
+        txt += "URL: " + url + "\n"
+        txt += "Line: " + l + "\n\n"
+        AVR.msgBox(txt, 36, document.body)
         return true
     }
 }
