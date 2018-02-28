@@ -987,7 +987,6 @@ AR.prototype.init=function () {
         }
         self.camera.updateProjectionMatrix();
         if(self.controls) {
-            AVR.msgBox("update",36,self.container);
             self.controls.update(dt);
         }
     }
@@ -1040,6 +1039,10 @@ AR.prototype.play=function () {
         }
     }
     animate();
+    setInterval(function () {
+        alert(that.controls);
+    },3000)
+
 }
 
 var AVR= {
