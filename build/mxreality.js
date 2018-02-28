@@ -945,6 +945,7 @@ AR.prototype.init=function () {
             });
     }
     enumerateDevices().then(function() {
+        alert("000")
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
@@ -961,10 +962,8 @@ AR.prototype.init=function () {
             function (stream) {
                 // Older browsers may not have srcObject
                 if ("srcObject" in self.video) {
-                    alert('1')
                     self.video.srcObject = stream;
                 } else {
-                    alert('2')
                     // Avoid using this in new browsers, as it is going away.
                     self.video.src = window.URL.createObjectURL(stream);
                 }
