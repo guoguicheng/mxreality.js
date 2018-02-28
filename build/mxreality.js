@@ -941,11 +941,10 @@ AR.prototype.init=function () {
                         self._cameras.push(device.deviceId);
                     }
                 });
-                //console.log(cameras);
+                alert(self._cameras)
             });
     }
     enumerateDevices().then(function() {
-        alert('bbbb')
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
