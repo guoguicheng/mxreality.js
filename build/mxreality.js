@@ -899,6 +899,11 @@ AR.prototype.init=function () {
     //this.video.style.height=this._windowHeight+"px";
     //this.video.style.width=this._windowWidth+"px";
     //this.video.style.background="#ffffff";
+    if(AVR.isCrossScreen()) {
+        this.video.width = Math.max(this._windowWidth, this._windowHeight);
+    }else {
+        this.video.height = Math.max(this._windowWidth, this._windowHeight);
+    }
     this.video.style.display="none";
     document.body.appendChild(this.video);
 
