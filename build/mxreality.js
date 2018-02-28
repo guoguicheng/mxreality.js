@@ -885,8 +885,8 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this._windowHeight = window.innerHeight;
     var videoMax=Math.max(this._windowWidth,this._windowHeight);
     this.cameraVideoParam= {
-        width: {min: this._windowWidth, ideal: this._windowWidth, max: videoMax},
-        height: {min: this._windowHeight, ideal: this._windowHeight, max: videoMax},
+        width: {min: this._windowWidth, ideal: this._windowWidth, max: this._windowWidth},
+        height: {min: this._windowHeight, ideal: this._windowHeight, max: this._windowHeight},
     };
 
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
@@ -902,7 +902,6 @@ AR.prototype.init=function () {
     AVR.bindOrientationEnevt(self,self._controlTarget);
     this.video=document.createElement('video');
     this.video.setAttribute("autoplay","autoplay");
-    this.video.style="object-fit:fill";
     //this.video.style.height=this._windowHeight+"px";
     //this.video.style.width=this._windowWidth+"px";
     //this.video.style.background="#ffffff";
