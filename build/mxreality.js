@@ -1029,6 +1029,7 @@ AR.prototype.showVedio=function() {
 AR.prototype.play=function () {
     var that=this;
     that.video.oncanplaythrough=function () {
+        alert('sssss');
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             var image = new THREE.VideoTexture(that.video);
             image.generateMipmaps = false;
