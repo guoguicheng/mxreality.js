@@ -897,7 +897,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 AR.prototype.init=function () {
     var self=this;
 
-    AVR.bindOrientationEnevt(self,self._controlTarget);
+    AVR.bindOrientationEnevt(self,self._controlTarget,'ar');
 
     this.video=document.createElement('video');
     this.video.setAttribute("autoplay","autoplay");
@@ -1875,10 +1875,12 @@ var AVR= {
             return false;
         }
     },
-    bindOrientationEnevt: function (that,target) {
+    bindOrientationEnevt: function (that,target,mode) {
         if (void 0 === that.controls) {
-            if(AVR.isMobileDevice()){
-                target.y=-1;
+            if (void 0 !== mode || mode == 'ar') {
+                if (AVR.isMobileDevice()) {
+                    target.y = -1;
+                }
             }
             that.controls = AVR.orbitControls(that.camera, that.renderer.domElement);
             var target = new THREE.Vector3(target.x, target.y, target.z);
