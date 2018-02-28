@@ -882,21 +882,17 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this._controlTarget={x:0.0001,y:0,z:0};
     this._windowWidth = window.innerWidth;
     this._windowHeight = window.innerHeight;
-
-    this.clock = new THREE.Clock();
-
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
     this.scene.add(this.camera);
+    this.clock = new THREE.Clock();
 
     this.effect = AVR.stereoEffect(this.renderer);
 
 }
 AR.prototype.init=function () {
     var self=this;
-
     AVR.bindOrientationEnevt(self,self._controlTarget);
-
     this.video=document.createElement('video');
     this.video.setAttribute("autoplay","autoplay");
     //this.video.style.height=this._windowHeight+"px";
@@ -967,6 +963,7 @@ AR.prototype.init=function () {
                     document.body.addEventListener("click", function (e) {
                         self.video.play();
                     }, false);
+
                 }
 
             }
@@ -978,9 +975,11 @@ AR.prototype.init=function () {
     });
 
     function render(dt) {
-        var width = self.container.offsetWidth;
-        var height = self.container.offsetHeight;
-        self.camera.aspect = width / height;
+        /*var width = self.container.offsetWidth;
+        var height = self.container.offsetHeight;*/
+        var width = self.video.videoWidth;
+        var height = self.video.videoHeight;
+        self.camera.aspect = width/height;
         if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             self.effect.setSize(width, height);
             self.effect.render(self.scene, self.camera);
@@ -997,7 +996,9 @@ AR.prototype.init=function () {
 
     function animate() {
         requestAnimationFrame(animate);
-        render(self.clock.getDelta());
+        if(self.video) {
+            render(self.clock.getDelta());
+        }
     }
     animate();
 }
@@ -1033,10 +1034,7 @@ AR.prototype.play=function () {
     function animate() {
         requestAnimationFrame(animate);
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
-            AVR.msgBox(that.video.videoWidth+","+that.video.videoHeight,36,that.container);
             var image = new THREE.VideoTexture(that.video);
-            that.camera.aspect=that.video.videoWidth/that.video.videoHeight;
-            that.camera.updateProjectionMatrix();
             image.generateMipmaps = false;
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
