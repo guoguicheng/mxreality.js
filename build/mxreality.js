@@ -978,6 +978,7 @@ AR.prototype.init=function () {
             }
         ).catch(
             function (err) {
+                alert(err.name + ": " + err.message)
                 console.log(err.name + ": " + err.message);
             }
         );
