@@ -883,10 +883,10 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this._controlTarget={x:0.0001,y:0,z:0};
     this._windowWidth = window.innerWidth;
     this._windowHeight = window.innerHeight;
-
+    var videoMax=Math.max(this._windowWidth,this._windowHeight);
     this.cameraVideoParam= {
-        width: {min: this._windowWidth, ideal: this._windowWidth, max: Infinity},
-        height: {min: this._windowHeight, ideal: this._windowHeight, max: Infinity},
+        width: {min: this._windowWidth, ideal: this._windowWidth, max: videoMax},
+        height: {min: this._windowHeight, ideal: this._windowHeight, max: videoMax},
     };
 
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
