@@ -8,7 +8,7 @@
         body {
             background-color: #000000;
             margin: 0px;
-            overflow: hidden;
+            overflow: scroll;
         }
 
         #info {
@@ -34,7 +34,9 @@
             left: 0px;
             width: 100%;
             height: 200px;
+
         }
+
     </style>
 
 </head>
@@ -91,6 +93,7 @@
         scene.add( mesh );
 
         function animate() {
+            document.body.style.overflow="scroll";
             requestAnimationFrame(animate);
             mesh.rotation.y +=0.01;
 
