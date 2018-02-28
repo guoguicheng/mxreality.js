@@ -904,7 +904,7 @@ AR.prototype.init=function () {
     //this.video.style.height=this._windowHeight+"px";
     //this.video.style.width=this._windowWidth+"px";
     //this.video.style.background="#ffffff";
-    //this.video.style.display="none";
+    this.video.style.display="none";
     document.body.appendChild(this.video);
 
 
