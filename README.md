@@ -1,12 +1,14 @@
 ### mix reality 混合现实网页版
 
-#### 小行星视角
+* 展示中的全景图片和视频资源来自网络 
+
+#### 全景图小行星视角
 ![小行星视角](https://github.com/guoguicheng/mxreality.js/raw/master/docs/1.png)
 ![小行星视角](https://github.com/guoguicheng/mxreality.js/raw/master/docs/2.png)
 ![小行星视角](https://github.com/guoguicheng/mxreality.js/raw/master/docs/3.png)
 ![小行星视角](https://github.com/guoguicheng/mxreality.js/raw/master/docs/4.png)
 ![小行星视角](https://github.com/guoguicheng/mxreality.js/raw/master/docs/5.jpg)
-![小行星视角](https://github.com/guoguicheng/mxreality.js/raw/master/docs/14.jpg)
+![小行星视角](https://github.com/guoguicheng/mxreality.js/raw/master/docs/14.png)
 
 #### 移动设备全景图
 ![移动设备全景图](https://github.com/guoguicheng/mxreality.js/raw/master/docs/6.jpg)
@@ -22,15 +24,20 @@
 ![全景视频播放器](https://github.com/guoguicheng/mxreality.js/raw/master/docs/10.png)
 ![全景视频播放器](https://github.com/guoguicheng/mxreality.js/raw/master/docs/11.png)
 
+
 #### 移动设备全景视频
 ![移动设备全景视频](https://github.com/guoguicheng/mxreality.js/raw/master/docs/12.jpg)
+![全景视频播放器](https://github.com/guoguicheng/mxreality.js/raw/master/docs/23.jpg)
+![全景视频播放器](https://github.com/guoguicheng/mxreality.js/raw/master/docs/24.jpg)
 
 #### 移动设备全景视频VR
 ![移动设备全景视频VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/13.jpg)
+![移动设备全景视频VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/25jpg)
+![移动设备全景视频VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/26.jpg)
 
 #### 全景场景
 ![全景场景](https://github.com/guoguicheng/mxreality.js/raw/master/docs/15.jpg)
-![全景场景](https://github.com/guoguicheng/mxreality.js/raw/master/docs/18.jpg)
+![全景场景](https://github.com/guoguicheng/mxreality.js/raw/master/docs/18.png)
 
 #### 全景场景VR
 ![全景场景VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/16.jpg)
@@ -46,5 +53,3 @@
 #### 全景图切片技术实现
 ![全景图切片技术实现](https://github.com/guoguicheng/mxreality.js/raw/master/docs/22.png)
 
-
-### 展示中的视频资源来自网络

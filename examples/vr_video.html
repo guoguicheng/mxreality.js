@@ -58,10 +58,11 @@
         //AVR.useGyroscope=false;
         vr.init();
 
-        vr.playPanorama('textures/960p.mp4',vr.recType.video);
+        vr.playPanorama('http://ov4hj29xx.bkt.clouddn.com/360.mp4',vr.recType.video);
         vr.video.setAttribute("loop","loop");
         vr.video.crossOrigin="Anonymous";
         vr.loadProgressManager.onLoad=function () {
+            vr.video.muted=true;
             vr.VRObject.getObjectByName("__panoContainer").visible = true;
         }
 
