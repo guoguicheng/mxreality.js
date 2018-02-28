@@ -898,19 +898,19 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 
 }
 AR.prototype.init=function () {
-    var self=this;
-    AVR.bindOrientationEnevt(self,self._controlTarget);
-    this.video=document.createElement('video');
-    this.video.setAttribute("autoplay","autoplay");
+    var self = this;
+    AVR.bindOrientationEnevt(self, self._controlTarget);
+    this.video = document.createElement('video');
+    this.video.setAttribute("autoplay", "autoplay");
     //this.video.style.height=this._windowHeight+"px";
     //this.video.style.width=this._windowWidth+"px";
     //this.video.style.background="#ffffff";
-    if(AVR.isCrossScreen()) {
+    if (AVR.isCrossScreen()) {
         this.video.width = Math.max(this._windowWidth, this._windowHeight);
-    }else {
+    } else {
         this.video.height = Math.max(this._windowWidth, this._windowHeight);
     }
-    this.video.style.display="none";
+    this.video.style.display = "none";
     document.body.appendChild(this.video);
 
 
@@ -921,7 +921,7 @@ AR.prototype.init=function () {
     // with getUserMedia as it would overwrite existing properties.
     // Here, we will just add the getUserMedia property if it's missing.
     if (void 0 === navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia = function(constraints) {
+        navigator.mediaDevices.getUserMedia = function (constraints) {
 
             // First get ahold of the legacy getUserMedia, if present
             var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;//navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -933,11 +933,12 @@ AR.prototype.init=function () {
             }
 
             // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 getUserMedia.call(navigator, constraints, resolve, reject);
             });
         }
     }
+
     function enumerateDevices() {
         return navigator.mediaDevices.enumerateDevices()
             .then(function (devices) {
@@ -948,7 +949,8 @@ AR.prototype.init=function () {
                 });
             });
     }
-    enumerateDevices().then(function() {
+
+    enumerateDevices().then(function () {
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
@@ -985,31 +987,6 @@ AR.prototype.init=function () {
             }
         );
     });
-
-    function render(dt) {
-        var width = self.container.offsetWidth;
-        var height = self.container.offsetHeight;
-        self.camera.aspect = width / height;
-        if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
-            self.effect.setSize(width, height);
-            self.effect.render(self.scene, self.camera);
-        } else {
-            self.renderer.setSize(width, height);
-            self.renderer.setClearColor(new THREE.Color(0xffffff));
-            self.renderer.render(self.scene, self.camera);
-        }
-        self.camera.updateProjectionMatrix();
-        if (self.controls) {
-            //self.controls.update();
-        }
-    }
-
-    function animate() {
-        AVR.msgBox(self.video.videoWidth+","+self.video.videoHeight,36,self.container);
-        requestAnimationFrame(animate);
-        render(self.clock.getDelta());
-    }
-    animate();
 }
 AR.prototype._createCanvas=function(id){
     var canvasobj=document.getElementById(id);
@@ -1051,6 +1028,30 @@ AR.prototype.play=function () {
             image.needsUpdate = true;
         }
     }
+    function render(dt) {
+        var width = that.container.offsetWidth;
+        var height = that.container.offsetHeight;
+        that.camera.aspect = width / height;
+        if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+            that.effect.setSize(width, height);
+            that.effect.render(that.scene, that.camera);
+        } else {
+            that.renderer.setSize(width, height);
+            that.renderer.setClearColor(new THREE.Color(0xffffff));
+            that.renderer.render(that.scene, that.camera);
+        }
+        that.camera.updateProjectionMatrix();
+        if (that.controls) {
+            that.controls.update(dt);
+        }
+    }
+
+    function animate() {
+        AVR.msgBox(self.video.videoWidth+","+self.video.videoHeight,36,self.container);
+        requestAnimationFrame(animate);
+        render(self.clock.getDelta());
+    }
+    animate();
 
 }
 
