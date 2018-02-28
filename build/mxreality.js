@@ -977,7 +977,7 @@ AR.prototype.init=function () {
     function render(dt) {
         var width = self.container.offsetWidth;
         var height = self.container.offsetHeight;
-        self.camera.aspect = self.cameraPara.aspect;
+        self.camera.aspect = width/height;
         if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             self.effect.setSize(width, height);
             self.effect.render(self.scene, self.camera);
