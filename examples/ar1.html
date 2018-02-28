@@ -34,7 +34,7 @@
             left: 0px;
             width: 100%;
             height: 200px;
-
+            display: none;
         }
 
     </style>
@@ -65,8 +65,8 @@
         container.appendChild( renderer.domElement );
         var ar=new AR(scene,renderer,container);
         ar.openAudio=false;
-        ar.cameraIndex=0;
-        ar.frameRate=35;
+        ar.cameraIndex=1;
+        //ar.frameRate=35;
         ar.init();//初始化AR
         //ar.showVedio();
         ar.play();
