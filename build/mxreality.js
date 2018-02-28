@@ -950,7 +950,7 @@ AR.prototype.init=function () {
                         self._cameras.push(device.deviceId);
                     }
                 });
-                self.cameraVideoParam.deviceId.exact=self._cameras[self.deviceId];
+                self.cameraVideoParam.deviceId.exact=self._cameras[self.cameraIndex];
             });
     }
     enumerateDevices().then(function() {
