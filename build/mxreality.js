@@ -878,10 +878,17 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.openAudio = true;
     this.frameRate = 60;
     this.cameraIndex = 1;//0为前置摄像头，否则为后置
+
     this._cameras=[];
     this._controlTarget={x:0.0001,y:0,z:0};
     this._windowWidth = window.innerWidth;
     this._windowHeight = window.innerHeight;
+
+    this.cameraVideoParam= {
+        width: {min: this._windowWidth, ideal: this._windowWidth, max: Infinity},
+        height: {min: this._windowHeight, ideal: this._windowHeight, max: Infinity},
+    };
+
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
     this.scene.add(this.camera);
@@ -895,6 +902,7 @@ AR.prototype.init=function () {
     AVR.bindOrientationEnevt(self,self._controlTarget);
     this.video=document.createElement('video');
     this.video.setAttribute("autoplay","autoplay");
+    this.video.style="object-fit:fill";
     //this.video.style.height=this._windowHeight+"px";
     //this.video.style.width=this._windowWidth+"px";
     //this.video.style.background="#ffffff";
@@ -940,8 +948,8 @@ AR.prototype.init=function () {
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
-                width: {min: self._windowWidth, ideal: self._windowWidth, max: self._windowWidth},
-                height: {min: self._windowHeight, ideal: self._windowHeight, max: self._windowHeight},
+                width: self.cameraVideoParam.width,
+                height: self.cameraVideoParam.height,
                 //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
                 //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
                 frameRate: self.frameRate,//{ideal:10,max:15},
@@ -975,11 +983,9 @@ AR.prototype.init=function () {
     });
 
     function render(dt) {
-        /*var width = self.container.offsetWidth;
-        var height = self.container.offsetHeight;*/
-        var width = self.video.videoWidth;
-        var height = self.video.videoHeight;
-        self.camera.aspect = width/height;
+        var width = self.container.offsetWidth;
+        var height = self.container.offsetHeight;
+        self.camera.aspect = self.cameraPara.aspect;
         if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             self.effect.setSize(width, height);
             self.effect.render(self.scene, self.camera);
