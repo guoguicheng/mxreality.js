@@ -1035,6 +1035,7 @@ AR.prototype.play=function () {
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             AVR.msgBox(that.video.videoWidth+","+that.video.videoHeight,36,that.container);
             var image = new THREE.VideoTexture(that.video);
+            that.camera.aspect=that.video.videoWidth/that.video.videoHeight;
             image.generateMipmaps = false;
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
