@@ -961,13 +961,14 @@ AR.prototype.init=function () {
             function (stream) {
                 // Older browsers may not have srcObject
                 if ("srcObject" in self.video) {
+                    alert('1')
                     self.video.srcObject = stream;
                 } else {
+                    alert('2')
                     // Avoid using this in new browsers, as it is going away.
                     self.video.src = window.URL.createObjectURL(stream);
                 }
                 self.video.onloadedmetadata = function (e) {
-                    alert("onloadedmetadata")
                     self.video.play();
                     document.body.addEventListener("click", function (e) {
                         self.video.play();
