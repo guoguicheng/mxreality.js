@@ -950,10 +950,10 @@ AR.prototype.init=function () {
                         self._cameras.push(device.deviceId);
                     }
                 });
-                self.cameraVideoParam.deviceId.exact=self._cameras[self.cameraIndex];
             });
     }
     enumerateDevices().then(function() {
+        self.cameraVideoParam.deviceId.exact=self._cameras[self.cameraIndex];
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: self.cameraVideoParam
