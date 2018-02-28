@@ -1012,17 +1012,29 @@ AR.prototype.showVedio=function() {
 AR.prototype.play=function () {
     var that=this;
     function render(dt) {
-        if((AVR.isMobileDevice() && AVR.isCrossScreen()) || AVR.debug) {
+        var width = that.container.offsetWidth;
+        var height = that.container.offsetHeight;
+        that.camera.aspect = width / height;
+        if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+            that.effect.setSize(width, height);
             that.effect.render(that.scene, that.camera);
         }else{
+            that.renderer.setSize(width, height);
+            that.renderer.setClearColor(new THREE.Color(0xffffff));
             that.renderer.render(that.scene, that.camera);
+        }
+        that.camera.updateProjectionMatrix();
+        if(that.controls){
+            that.controls.update(that.clock.getDelta());
         }
     }
 
     function animate(t) {
-        requestAnimationFrame(animate);
         render(that.clock.getDelta());
         update();
+        requestAnimationFrame(animate);
+
+
     }
     function update() {
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
