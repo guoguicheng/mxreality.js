@@ -941,8 +941,8 @@ AR.prototype.init=function () {
         self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
-                width: {min: self._windowWidth, ideal: self._windowWidth, max: Infinity},
-                height: {min: self._windowHeight, ideal: self._windowHeight, max: Infinity},
+                width: {min: self._windowWidth, ideal: self._windowWidth, max: self._windowWidth},
+                height: {min: self._windowHeight, ideal: self._windowHeight, max: self._windowHeight},
                 //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
                 //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
                 frameRate: self.frameRate,//{ideal:10,max:15},
