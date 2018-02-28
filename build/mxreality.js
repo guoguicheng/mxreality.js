@@ -1010,34 +1010,32 @@ AR.prototype.showVedio=function() {
 AR.prototype.play=function () {
     var that=this;
 
+    function render(dt) {
+        if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+            that.effect.render(that.scene, that.camera);
+        }else{
+            that.renderer.render(that.scene, that.camera);
+        }
+    }
+
     function animate(t) {
+        requestAnimationFrame(animate);
+        render(that.clock.getDelta());
+        update();
+    }
+    function update() {
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             var image = new THREE.VideoTexture(that.video);
             image.generateMipmaps = false;
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
+            image.minFilter = THREE.NearestFilter;
             that.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
-        }
 
-
-        var width = that.container.offsetWidth;
-        var height = that.container.offsetHeight;
-        that.camera.aspect = width / height;
-        if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
-            that.effect.setSize(width, height);
-            that.effect.render(that.scene, that.camera);
-        }else{
-            that.renderer.setSize(width, height);
-            that.renderer.setClearColor(new THREE.Color(0xffffff));
-            that.renderer.render(that.scene, that.camera);
         }
         that.camera.updateProjectionMatrix();
-        if(that.controls){
-            that.controls.update(that.clock.getDelta());
-        }
-
-        requestAnimationFrame(animate);
+        that.controls.update(that.clock.getDelta());
     }
     animate();
 }
