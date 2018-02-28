@@ -909,14 +909,12 @@ AR.prototype.init=function () {
 
 
     // Older browsers might not implement mediaDevices at all, so we set an empty object first
-    if (navigator.mediaDevices === undefined) {
-        navigator.mediaDevices = {};
-    }
+    void 0 === navigator.mediaDevices && (navigator.mediaDevices = {});
 
     // Some browsers partially implement mediaDevices. We can't just assign an object
     // with getUserMedia as it would overwrite existing properties.
     // Here, we will just add the getUserMedia property if it's missing.
-    if (navigator.mediaDevices.getUserMedia === undefined) {
+    if (void 0 === navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia = function(constraints) {
 
             // First get ahold of the legacy getUserMedia, if present
@@ -938,7 +936,7 @@ AR.prototype.init=function () {
         return navigator.mediaDevices.enumerateDevices()
             .then(function(devices) {
                 devices.forEach(function(device) {
-                    console.log(device);
+                    //console.log(device);
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
                     }
@@ -946,17 +944,17 @@ AR.prototype.init=function () {
                 //console.log(cameras);
             });
     }
-    enumerateDevices().then(function(){
-        self.constraints= self.constraints.length>0?self.constraints: {
+    enumerateDevices().then(function() {
+        self.constraints = self.constraints.length > 0 ? self.constraints : {
             audio: self.openAudio,
             video: {
                 width: {min: self._windowWidth, ideal: self._windowWidth, max: self._windowWidth},
                 height: {min: self._windowHeight, ideal: self._windowHeight, max: self._windowHeight},
                 //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
                 //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
-                frameRate:self.frameRate,//{ideal:10,max:15},
+                frameRate: self.frameRate,//{ideal:10,max:15},
                 //deviceId: {exact: self.frontCamera?'user':'environment'}
-                deviceId: { exact: self._cameras[self.cameraIndex] }
+                deviceId: {exact: self._cameras[self.cameraIndex]}
             }
         };
         navigator.mediaDevices.getUserMedia(self.constraints).then(
@@ -968,9 +966,13 @@ AR.prototype.init=function () {
                     // Avoid using this in new browsers, as it is going away.
                     self.video.src = window.URL.createObjectURL(stream);
                 }
-                self.video.onloadedmetadata=function (e) {
+                self.video.onloadedmetadata = function (e) {
                     self.video.play();
+                    document.body.addEventListener("click", function (e) {
+                        self.video.play();
+                    }, false);
                 }
+
             }
         ).catch(
             function (err) {
@@ -979,7 +981,7 @@ AR.prototype.init=function () {
         );
     });
 
-};
+}
 AR.prototype._createCanvas=function(id){
     var canvasobj=document.getElementById(id);
     if(canvasobj ===null) {
@@ -991,14 +993,13 @@ AR.prototype._createCanvas=function(id){
         document.body.appendChild(canvasobj);
     }
     return canvasobj;
-};
+}
 //拍照
 AR.prototype.showPhoto=function() {
     var canvas1=this._createCanvas('_content');
     var photoCanvas = canvas1.getContext('2d');
     photoCanvas.drawImage(this.video, 0, 0,this._windowWidth,this._windowHeight); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
-};
-
+}
 //视频
 AR.prototype.showVedio=function() {
     var canvas2 =this._createCanvas('_content');
@@ -1007,38 +1008,48 @@ AR.prototype.showVedio=function() {
     setInterval(function () {
         videoCanvas.drawImage(this.video, 0, 0,this._windowWidth,this._windowHeight);
     }, 60);
-};
+}
 AR.prototype.play=function () {
     var that=this;
     function render(dt) {
+        var width = that.container.offsetWidth;
+        var height = that.container.offsetHeight;
+        that.camera.aspect = width / height;
         if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+            that.effect.setSize(width, height);
             that.effect.render(that.scene, that.camera);
         }else{
+            that.renderer.setSize(width, height);
+            that.renderer.setClearColor(new THREE.Color(0xffffff));
             that.renderer.render(that.scene, that.camera);
+        }
+        that.camera.updateProjectionMatrix();
+        if(that.controls){
+            that.controls.update(that.clock.getDelta());
         }
     }
 
     function animate(t) {
-        requestAnimationFrame(animate);
         render(that.clock.getDelta());
-        update();
-    }
-    function update() {
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             var image = new THREE.VideoTexture(that.video);
             image.generateMipmaps = false;
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
-            image.minFilter = THREE.NearestFilter;
             that.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
 
         }
         that.camera.updateProjectionMatrix();
-        that.controls.update(that.clock.getDelta());
+        if(that.controls) {
+            that.controls.update(that.clock.getDelta());
+        }
+        requestAnimationFrame(animate);
+
+
     }
     animate();
-};
+}
 
 var AVR= {
     debug: false,
