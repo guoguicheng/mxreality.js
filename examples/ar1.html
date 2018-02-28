@@ -33,7 +33,6 @@
 
 <div id="container"></div>
 <script src="../build/three.js"></script>
-<script src="./js/controls/OrbitControls.js"></script>
 <script src="../build/mxreality.js"></script>
 <script>
 
@@ -80,12 +79,6 @@
         mesh.position.set(0,0,-200);
         scene.add( mesh );
 
-        function animate() {
-            requestAnimationFrame(animate);
-            //mesh.rotation.y +=0.01;
-
-        }
-        animate();
 
     }
 

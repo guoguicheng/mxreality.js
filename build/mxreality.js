@@ -940,7 +940,6 @@ AR.prototype.init=function () {
                         self._cameras.push(device.deviceId);
                     }
                 });
-                alert(self._cameras)
             });
     }
     enumerateDevices().then(function() {
@@ -1010,7 +1009,18 @@ AR.prototype.showVedio=function() {
 }
 AR.prototype.play=function () {
     var that=this;
-    function render(dt) {
+
+    function animate(t) {
+        if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
+            var image = new THREE.VideoTexture(that.video);
+            image.generateMipmaps = false;
+            image.format = THREE.RGBAFormat;
+            image.maxFilter = THREE.NearestFilter;
+            that.scene.background = image;                   // 背景视频纹理
+            image.needsUpdate = true;
+        }
+
+
         var width = that.container.offsetWidth;
         var height = that.container.offsetHeight;
         that.camera.aspect = width / height;
@@ -1026,26 +1036,8 @@ AR.prototype.play=function () {
         if(that.controls){
             that.controls.update(that.clock.getDelta());
         }
-    }
 
-    function animate(t) {
-        render(that.clock.getDelta());
-        if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
-            var image = new THREE.VideoTexture(that.video);
-            image.generateMipmaps = false;
-            image.format = THREE.RGBAFormat;
-            image.maxFilter = THREE.NearestFilter;
-            that.scene.background = image;                   // 背景视频纹理
-            image.needsUpdate = true;
-
-        }
-        that.camera.updateProjectionMatrix();
-        if(that.controls) {
-            that.controls.update(that.clock.getDelta());
-        }
         requestAnimationFrame(animate);
-
-
     }
     animate();
 }
