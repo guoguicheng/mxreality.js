@@ -986,7 +986,7 @@ AR.prototype.init=function () {
             self.renderer.setClearColor(new THREE.Color(0xffffff));
             self.renderer.render(self.scene, self.camera);
         }
-        self.camera.updateProjectionMatrix();
+        //self.camera.updateProjectionMatrix();
         if (self.controls) {
             self.controls.update(dt);
         }
