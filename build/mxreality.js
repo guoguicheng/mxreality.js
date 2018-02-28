@@ -1000,11 +1000,12 @@ AR.prototype.init=function () {
         }
         self.camera.updateProjectionMatrix();
         if (self.controls) {
-            self.controls.update(dt);
+            //self.controls.update();
         }
     }
 
     function animate() {
+        AVR.msgBox(self.video.videoWidth+","+self.video.videoHeight,36,self.container);
         requestAnimationFrame(animate);
         render(self.clock.getDelta());
     }
