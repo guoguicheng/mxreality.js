@@ -1028,8 +1028,7 @@ AR.prototype.showVedio=function() {
 }
 AR.prototype.play=function () {
     var that=this;
-    function animate() {
-        requestAnimationFrame(animate);
+    that.video.oncanplaythrough=function () {
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             var image = new THREE.VideoTexture(that.video);
             image.generateMipmaps = false;
@@ -1040,7 +1039,6 @@ AR.prototype.play=function () {
             image.needsUpdate = true;
         }
     }
-    animate();
 
 }
 
