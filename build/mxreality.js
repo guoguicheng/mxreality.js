@@ -1031,7 +1031,7 @@ AR.prototype.play=function () {
         var height = window.innerHeight;
         that.camera.aspect = width / height;
         if(that.cameraReady){
-            AVR.msgBox(that.video.videoWidth+"|"+that.video.videoHeight)
+            AVR.msgBox(that.video.videoWidth+"|"+that.video.videoHeight,36,that.container)
         }
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             if(that.cameraReady) {
