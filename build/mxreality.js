@@ -1021,10 +1021,11 @@ AR.prototype.play=function () {
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
             image.minFilter = THREE.NearestFilter;
-            image.offset.x=0;
-            image.offset.y=0;
+            AVR.msgBox(vW/that.video.videoWidth,36,that.container);
             image.repeat.x=vW/that.video.videoWidth;
             image.repeat.y=1;
+            image.offset.x=0;
+            image.offset.y=0;
             that.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
         }
@@ -1049,7 +1050,6 @@ AR.prototype.play=function () {
     }
 
     function animate() {
-        AVR.msgBox(that.video.videoWidth+"&"+that.video.videoHeight,36,that.container);
         requestAnimationFrame(animate);
         render();
     }
