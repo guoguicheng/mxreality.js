@@ -1029,11 +1029,10 @@ AR.prototype.play=function () {
 
         var width = window.innerWidth;
         var height = window.innerHeight;
-        AVR.msgBox(width+"&"+height+"|"+that.container.innerWidth+"&"+that.container.innerHeight,36,that.container);
         that.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             if(that.cameraReady) {
-                var vH = (that._windowHeight * that.video.videoWidth) / that._windowWidth;
+                var vH = (height * that.video.videoWidth) / width;
                 that.cameraTexture.repeat.x = 1;
                 that.cameraTexture.repeat.y = vH / that.video.videoHeight;
                 that.cameraTexture.offset.x = 0;
@@ -1043,7 +1042,7 @@ AR.prototype.play=function () {
             that.effect.render(that.scene, that.camera);
         } else {
             if(that.cameraReady) {
-                var vW = (that._windowWidth * that.video.videoHeight) / that._windowHeight;
+                var vW = (width * that.video.videoHeight) / height;
                 that.cameraTexture.repeat.x = vW / that.video.videoWidth;
                 that.cameraTexture.repeat.y = 1;
                 that.cameraTexture.offset.x = 0;
