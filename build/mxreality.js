@@ -1020,7 +1020,7 @@ AR.prototype.play=function () {
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
             image.minFilter = THREE.NearestFilter;
-            image.offset.width=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
+            image.offset.x=that.video.videoWidth-(that._windowWidth*that.video.videoHeight)/that._windowHeight;
             that.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
         }
