@@ -1014,13 +1014,15 @@ AR.prototype.showVedio=function() {
 AR.prototype.play=function () {
     var that=this;
     that.video.oncanplaythrough=function () {
+        var vH=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             var image = new THREE.VideoTexture(that.video);
             image.generateMipmaps = false;
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
             image.minFilter = THREE.NearestFilter;
-            image.offset.x=that.video.videoWidth-(that._windowWidth*that.video.videoHeight)/that._windowHeight;
+            image.repeat.x=vH/that.video.videoWidth;
+            image.offset.x=image.repeat.x;
             that.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
         }
