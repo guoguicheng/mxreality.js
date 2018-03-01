@@ -1013,26 +1013,22 @@ AR.prototype.showVedio=function() {
 }
 AR.prototype.play=function () {
     var that=this;
+
     that.video.oncanplaythrough=function () {
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             var image = new THREE.VideoTexture(that.video);
+            image.offset.width=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
             image.generateMipmaps = false;
-            image.format = THREE.RGBAFormat;
-            image.maxFilter = THREE.NearestFilter;
-            image.minFilter = THREE.NearestFilter;
+            image.minFilter = THREE.LinearFilter;
+            image.magFilter = THREE.LinearFilter;
+            image.format = THREE.RGBFormat;
             that.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
         }
     }
     function render() {
-
-        if(that.video) {
-            width = that.video.videoWidth;
-            height = that.video.videoHeight;
-        }else{
-            width = that._windowWidth;
-            height = that._windowHeight;
-        }
+        var width = that._windowWidth;
+        var height = that._windowHeight;
         that.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             that.effect.setSize(width, height);
