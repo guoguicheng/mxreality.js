@@ -899,7 +899,6 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 }
 AR.prototype.init=function () {
     var self = this;
-    var that = this;
     AVR.bindOrientationEnevt(self, self._controlTarget);
     this.video = document.createElement('video');
     this.video.setAttribute("autoplay", "autoplay");
@@ -910,19 +909,19 @@ AR.prototype.init=function () {
     this.video.style.display = "none";
     document.body.appendChild(this.video);
 
-    that.video.oncanplaythrough=function () {
-        var vW=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
-        if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
-            var image = new THREE.VideoTexture(that.video);
+    this.video.oncanplaythrough=function () {
+        var vW=(self._windowWidth*self.video.videoHeight)/self._windowHeight;
+        if (self.video.readyState === self.video.HAVE_ENOUGH_DATA) {
+            var image = new THREE.VideoTexture(self.video);
             image.generateMipmaps = false;
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
             image.minFilter = THREE.NearestFilter;
-            image.repeat.x=vW/that.video.videoWidth;
+            image.repeat.x=vW/self.video.videoWidth;
             image.repeat.y=1;
             image.offset.x=0;
             image.offset.y=0;
-            that.scene.background = image;                   // 背景视频纹理
+            self.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
         }
     }
@@ -1032,8 +1031,9 @@ AR.prototype.play=function () {
 
     function render() {
 
-        var width = that.container.offsetWidth;
-        var height = that.container.offsetHeight;
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        AVR.msgBox(width+"&"+height,36,that.container);
         that.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             that.effect.setSize(width, height);
@@ -1045,7 +1045,7 @@ AR.prototype.play=function () {
         }
         that.camera.updateProjectionMatrix();
         if (that.controls) {
-            //that.controls.update(that.clock.getDelta());
+            that.controls.update(that.clock.getDelta());
         }
     }
 
