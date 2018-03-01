@@ -1013,20 +1013,20 @@ AR.prototype.showVedio=function() {
 }
 AR.prototype.play=function () {
     var that=this;
-
     that.video.oncanplaythrough=function () {
         if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
             var image = new THREE.VideoTexture(that.video);
-            image.offset.width=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
             image.generateMipmaps = false;
-            image.minFilter = THREE.LinearFilter;
-            image.magFilter = THREE.LinearFilter;
-            image.format = THREE.RGBFormat;
+            image.format = THREE.RGBAFormat;
+            image.maxFilter = THREE.NearestFilter;
+            image.minFilter = THREE.NearestFilter;
+            image.offset.width=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
             that.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
         }
     }
     function render() {
+
         var width = that.container.offsetWidth;
         var height = that.container.offsetHeight;
         that.camera.aspect = width / height;
