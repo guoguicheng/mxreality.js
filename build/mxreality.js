@@ -1033,7 +1033,7 @@ AR.prototype.play=function () {
 
         var width = that.container.offsetWidth;
         var height = that.container.offsetHeight;
-        //that.camera.aspect = width / height;
+        that.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             that.effect.setSize(width, height);
             that.effect.render(that.scene, that.camera);
@@ -1042,7 +1042,7 @@ AR.prototype.play=function () {
             that.renderer.setClearColor(new THREE.Color(0xffffff));
             that.renderer.render(that.scene, that.camera);
         }
-        //that.camera.updateProjectionMatrix();
+        that.camera.updateProjectionMatrix();
         if (that.controls) {
             that.controls.update(that.clock.getDelta());
         }
