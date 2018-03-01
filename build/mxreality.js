@@ -910,19 +910,15 @@ AR.prototype.init=function () {
     document.body.appendChild(this.video);
 
     this.video.oncanplaythrough=function () {
-        var vW=(self._windowWidth*self.video.videoHeight)/self._windowHeight;
+
         if (self.video.readyState === self.video.HAVE_ENOUGH_DATA) {
-            var image = new THREE.VideoTexture(self.video);
-            image.generateMipmaps = false;
-            image.format = THREE.RGBAFormat;
-            image.maxFilter = THREE.NearestFilter;
-            image.minFilter = THREE.NearestFilter;
-            image.repeat.x=vW/self.video.videoWidth;
-            image.repeat.y=1;
-            image.offset.x=0;
-            image.offset.y=0;
-            self.scene.background = image;                   // 背景视频纹理
-            image.needsUpdate = true;
+            self.cameraTexture = new THREE.VideoTexture(self.video);
+            cameraTexture.generateMipmaps = false;
+            cameraTexture.format = THREE.RGBAFormat;
+            cameraTexture.maxFilter = THREE.NearestFilter;
+            cameraTexture.minFilter = THREE.NearestFilter;
+            self.scene.background = cameraTexture;                   // 背景视频纹理
+            cameraTexture.needsUpdate = true;
         }
     }
     // Older browsers might not implement mediaDevices at all, so we set an empty object first
@@ -1033,12 +1029,22 @@ AR.prototype.play=function () {
 
         var width = window.innerWidth;
         var height = window.innerHeight;
-        AVR.msgBox(width+"&"+height,36,that.container);
+        AVR.msgBox(width+"&"+height+"|"+that.container.innerWidth+"&"+that.container.innerHeight,36,that.container);
         that.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+            var vH=(that._windowHeight*that.video.videoWidth)/that._windowWidth;
+            that.cameraTexture.repeat.x=1;
+            that.cameraTexture.repeat.y=vH/that.video.videoHeight;
+            that.cameraTexture.offset.x=0;
+            that.cameraTexture.offset.y=0;
             that.effect.setSize(width, height);
             that.effect.render(that.scene, that.camera);
         } else {
+            var vW=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
+            that.cameraTexture.repeat.x=vW/that.video.videoWidth;
+            that.cameraTexture.repeat.y=1;
+            that.cameraTexture.offset.x=0;
+            that.cameraTexture.offset.y=0;
             that.renderer.setSize(width, height);
             that.renderer.setClearColor(new THREE.Color(0xffffff));
             that.renderer.render(that.scene, that.camera);
