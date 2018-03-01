@@ -899,6 +899,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 }
 AR.prototype.init=function () {
     var self = this;
+    var that = this;
     AVR.bindOrientationEnevt(self, self._controlTarget);
     this.video = document.createElement('video');
     this.video.setAttribute("autoplay", "autoplay");
@@ -909,7 +910,22 @@ AR.prototype.init=function () {
     this.video.style.display = "none";
     document.body.appendChild(this.video);
 
-
+    that.video.oncanplaythrough=function () {
+        var vW=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
+        if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
+            var image = new THREE.VideoTexture(that.video);
+            image.generateMipmaps = false;
+            image.format = THREE.RGBAFormat;
+            image.maxFilter = THREE.NearestFilter;
+            image.minFilter = THREE.NearestFilter;
+            image.repeat.x=vW/that.video.videoWidth;
+            image.repeat.y=1;
+            image.offset.x=0;
+            image.offset.y=0;
+            that.scene.background = image;                   // 背景视频纹理
+            image.needsUpdate = true;
+        }
+    }
     // Older browsers might not implement mediaDevices at all, so we set an empty object first
     void 0 === navigator.mediaDevices && (navigator.mediaDevices = {});
 
@@ -1013,22 +1029,7 @@ AR.prototype.showVedio=function() {
 }
 AR.prototype.play=function () {
     var that=this;
-    that.video.oncanplaythrough=function () {
-        var vW=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
-        if (that.video.readyState === that.video.HAVE_ENOUGH_DATA) {
-            var image = new THREE.VideoTexture(that.video);
-            image.generateMipmaps = false;
-            image.format = THREE.RGBAFormat;
-            image.maxFilter = THREE.NearestFilter;
-            image.minFilter = THREE.NearestFilter;
-            image.repeat.x=vW/that.video.videoWidth;
-            image.repeat.y=1;
-            image.offset.x=0;
-            image.offset.y=0;
-            that.scene.background = image;                   // 背景视频纹理
-            image.needsUpdate = true;
-        }
-    }
+
     function render() {
 
         var width = that.container.offsetWidth;
