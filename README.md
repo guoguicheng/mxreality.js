@@ -53,3 +53,6 @@
 #### 全景图切片技术实现
 ![全景图切片技术实现](https://github.com/guoguicheng/mxreality.js/raw/master/docs/22.png)
 
+### AR 测试例子
+![AR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/30.jpg)
+![AR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/31.png)
