@@ -1045,7 +1045,7 @@ AR.prototype.play=function () {
         }
         that.camera.updateProjectionMatrix();
         if (that.controls) {
-            that.controls.update(that.clock.getDelta());
+            //that.controls.update(that.clock.getDelta());
         }
     }
 
