@@ -1021,8 +1021,8 @@ AR.prototype.play=function () {
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
             image.minFilter = THREE.NearestFilter;
-            image.repeat.x=vH/that.video.videoWidth;
-            image.offset.x=image.repeat.x;
+            image.offset.x=vH/that.video.videoWidth;
+            image.offset.y=1;
             that.scene.background = image;                   // 背景视频纹理
             image.needsUpdate = true;
         }
