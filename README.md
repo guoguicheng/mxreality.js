@@ -32,7 +32,7 @@
 
 #### 移动设备全景视频VR
 ![移动设备全景视频VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/13.jpg)
-![移动设备全景视频VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/25jpg)
+![移动设备全景视频VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/25.jpg)
 ![移动设备全景视频VR](https://github.com/guoguicheng/mxreality.js/raw/master/docs/26.jpg)
 
 #### 全景场景
