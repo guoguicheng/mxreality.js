@@ -885,6 +885,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this._windowHeight = window.innerHeight;
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
+    this.cameraReady=false;
     this.scene.add(this.camera);
     this.clock = new THREE.Clock();
     this.cameraVideo={
@@ -908,9 +909,8 @@ AR.prototype.init=function () {
 
     this.video.style.display = "none";
     document.body.appendChild(this.video);
-
     this.video.oncanplaythrough=function () {
-
+        self.cameraReady=true;
         if (self.video.readyState === self.video.HAVE_ENOUGH_DATA) {
             self.cameraTexture = new THREE.VideoTexture(self.video);
             cameraTexture.generateMipmaps = false;
@@ -1032,19 +1032,23 @@ AR.prototype.play=function () {
         AVR.msgBox(width+"&"+height+"|"+that.container.innerWidth+"&"+that.container.innerHeight,36,that.container);
         that.camera.aspect = width / height;
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
-            var vH=(that._windowHeight*that.video.videoWidth)/that._windowWidth;
-            that.cameraTexture.repeat.x=1;
-            that.cameraTexture.repeat.y=vH/that.video.videoHeight;
-            that.cameraTexture.offset.x=0;
-            that.cameraTexture.offset.y=0;
+            if(that.cameraReady) {
+                var vH = (that._windowHeight * that.video.videoWidth) / that._windowWidth;
+                that.cameraTexture.repeat.x = 1;
+                that.cameraTexture.repeat.y = vH / that.video.videoHeight;
+                that.cameraTexture.offset.x = 0;
+                that.cameraTexture.offset.y = 0;
+            }
             that.effect.setSize(width, height);
             that.effect.render(that.scene, that.camera);
         } else {
-            var vW=(that._windowWidth*that.video.videoHeight)/that._windowHeight;
-            that.cameraTexture.repeat.x=vW/that.video.videoWidth;
-            that.cameraTexture.repeat.y=1;
-            that.cameraTexture.offset.x=0;
-            that.cameraTexture.offset.y=0;
+            if(that.cameraReady) {
+                var vW = (that._windowWidth * that.video.videoHeight) / that._windowHeight;
+                that.cameraTexture.repeat.x = vW / that.video.videoWidth;
+                that.cameraTexture.repeat.y = 1;
+                that.cameraTexture.offset.x = 0;
+                that.cameraTexture.offset.y = 0;
+            }
             that.renderer.setSize(width, height);
             that.renderer.setClearColor(new THREE.Color(0xffffff));
             that.renderer.render(that.scene, that.camera);
