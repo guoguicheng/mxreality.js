@@ -913,12 +913,12 @@ AR.prototype.init=function () {
         self.cameraReady=true;
         if (self.video.readyState === self.video.HAVE_ENOUGH_DATA) {
             self.cameraTexture = new THREE.VideoTexture(self.video);
-            cameraTexture.generateMipmaps = false;
-            cameraTexture.format = THREE.RGBAFormat;
-            cameraTexture.maxFilter = THREE.NearestFilter;
-            cameraTexture.minFilter = THREE.NearestFilter;
-            self.scene.background = cameraTexture;                   // 背景视频纹理
-            cameraTexture.needsUpdate = true;
+            self.cameraTexture.generateMipmaps = false;
+            self.cameraTexture.format = THREE.RGBAFormat;
+            self.cameraTexture.maxFilter = THREE.NearestFilter;
+            self.cameraTexture.minFilter = THREE.NearestFilter;
+            self.scene.background = self.cameraTexture;                   // 背景视频纹理
+            self.cameraTexture.needsUpdate = true;
         }
     }
     // Older browsers might not implement mediaDevices at all, so we set an empty object first
