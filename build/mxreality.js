@@ -1021,7 +1021,6 @@ AR.prototype.play=function () {
             image.format = THREE.RGBAFormat;
             image.maxFilter = THREE.NearestFilter;
             image.minFilter = THREE.NearestFilter;
-            AVR.msgBox(vW/that.video.videoWidth,36,that.container);
             image.repeat.x=vW/that.video.videoWidth;
             image.repeat.y=1;
             image.offset.x=0;
