@@ -39,7 +39,7 @@
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
         container.appendChild( renderer.domElement );
-        var ar=new AR(scene,renderer,container);
+        var ar=new AR(scene,renderer,container,{fov:125});
         ar.openAudio=false;
         ar.cameraIndex=1;
 
