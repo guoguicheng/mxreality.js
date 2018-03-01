@@ -1030,13 +1030,12 @@ AR.prototype.play=function () {
         var width = window.innerWidth;
         var height = window.innerHeight;
         that.camera.aspect = width / height;
-        if(that.cameraReady){
-            AVR.msgBox(that.video.videoWidth+"|"+that.video.videoHeight,36,that.container)
-        }
+
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             if(that.cameraReady) {
-                var vH = (height * that.video.videoWidth) / width;
-                that.cameraTexture.repeat.x = 1;
+                var vW=width/2;
+                var vH = (height * that.video.videoWidth) / vW;
+                that.cameraTexture.repeat.x = vW / that.video.videoWidth;
                 that.cameraTexture.repeat.y = vH / that.video.videoHeight;
                 that.cameraTexture.offset.x = 0;
                 that.cameraTexture.offset.y = 0;
