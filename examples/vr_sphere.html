@@ -47,6 +47,12 @@
             vr.VRObject.getObjectByName("__panoContainer").visible = true;
             //vr.controls.enable=false;
         }
+        vr.loadProgressManager.onProgress=function () {
+            console.log("onProgress")
+        }
+        vr.loadProgressManager.onError=function () {
+            console.log("onError")
+        }
         vr.playPanorama('textures/puydesancy.jpg');
         //console.log(vr.controls);
         /*setInterval(function () {

@@ -1,5 +1,5 @@
 /*
- *Copyright © 2017 mxreality authors
+ *Copyright © 2017 mxreality.js authors
  */
 
 
@@ -78,7 +78,7 @@ VR.prototype.init=function () {
 VR.prototype.playPanorama=function (recUrl,recType,objName) {
     objName=objName||"__panoContainer";
     var that = this;
-    that._containerRadius=(that.recType.box == recType) ? (that.vrbox.width / 2) : that.vrbox.radius;
+    that._containerRadius=(that.recType.box == recType|| that.recType.slice==recType) ? (that.vrbox.width / 2.1) : that.vrbox.radius;
 
     that.autoHideLeftTime = that.defaultAutoHideLeftTime;
     that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
