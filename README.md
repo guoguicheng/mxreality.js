@@ -1,5 +1,8 @@
 ### mix reality 混合现实网页版
 
+### 播放器功能结构图
+![结构图](https://github.com/guoguicheng/mxreality.js/raw/master/docs/mxreality.js.png)
+
 * 展示中的全景图片和视频资源来自网络 
 
 #### 全景图小行星视角
