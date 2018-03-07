@@ -51,6 +51,9 @@
             vr.VRObject.getObjectByName("__panoContainer").visible = true;
             vr.asteroidForward();
         }
+        vr.loadProgressManager.onProgress=function () {
+            
+        }
         vr.sphere2BoxPano("textures/puydesancy.jpg",1024,1024,function (sliceArray) {
             vr.playPanorama(sliceArray, vr.recType.slice);
         });

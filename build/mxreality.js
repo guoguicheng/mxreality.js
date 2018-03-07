@@ -265,18 +265,19 @@ VR.prototype.playPanorama=function (recUrl,recType,objName) {
         cube.visible=false;
         that.VRObject.add(cube);
         if(that.asteroidConfig.enable){
-            cubeCamera2 = new THREE.CubeCamera(that.cameraPara.near, that.cameraPara.far, that.asteroidConfig.cubeResolution);
-            cubeCamera2.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
-            //cubeCamera2.rotation.z=Math.PI;
-            that.VRObject.add(cubeCamera2);
+            that.cubeCamera = new THREE.CubeCamera(that._containerRadius, that.cameraPara.far, that.asteroidConfig.cubeResolution);
+            var cubeCameraTexture=that.cubeCamera.renderTarget.texture;
+            cubeCameraTexture.minFilter = THREE.LinearMipMapLinearFilter;
+
+            that.VRObject.add(that.cubeCamera);
             material = new THREE.MeshBasicMaterial({
-                envMap: cubeCamera2.renderTarget.texture, side: THREE.BackSide
+                envMap: that.cubeCamera.renderTarget.texture, side: THREE.BackSide
             });
             sphere = new THREE.Mesh(new THREE.SphereGeometry(that._containerRadius, 180, 180), material);
             sphere.position.set(0,0,0);
             that.VRObject.add(sphere);
             that.asteroidForward=function(callback){
-                cubeCamera2.update(that.renderer, that.scene);
+                that.cubeCamera.update(that.renderer, that.scene);
                 asteroidForward(callback);
             }
         }else {
@@ -358,9 +359,11 @@ VR.prototype.playPanorama=function (recUrl,recType,objName) {
             }
             eventTester("canplay");
             var texture = new THREE.VideoTexture(video);
-            texture.minFilter = THREE.LinearFilter;
-            //texture.format = THREE.RGBFormat;
             texture.generateMipmaps = false;
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            //texture.format = THREE.RGBFormat;
+
             texture.format = THREE.RGBAFormat;
 
             that.VRObject.add(buildTexture(texture));
@@ -410,7 +413,7 @@ VR.prototype.playPanorama=function (recUrl,recType,objName) {
                     that.camera.position.y = 0;
                     that.camera.fov = defaultFov;
                     clearInterval(asteroidForwardTimer);
-                    that._controlTarget=AVR.cameraVector(that.camera);
+                    that._controlTarget={x:0.0001,y:0,z:0};
                     AVR.bindOrientationEnevt(that,that._controlTarget);
                     if(void 0 !== callback){
                         // Wait for the controller to initialize to complete the callback.
@@ -1245,7 +1248,7 @@ var AVR= {
 
                     param = param || {};
 
-                    var alpha = scope.deviceOrientation.alpha ? THREE.Math.degToRad(scope.deviceOrientation.alpha-scope.beginAlpha) : 0; // Z
+                    var alpha = scope.deviceOrientation.alpha ? THREE.Math.degToRad(void 0 === scope.beginAlpha ? scope.deviceOrientation.alpha :scope.deviceOrientation.alpha-scope.beginAlpha) : 0; // Z
                     var beta = scope.deviceOrientation.beta ? THREE.Math.degToRad(scope.deviceOrientation.beta) : 0; // X'
                     var gamma = scope.deviceOrientation.gamma ? THREE.Math.degToRad(scope.deviceOrientation.gamma) : 0; // Y''
                     var orient = scope.screenOrientation ? THREE.Math.degToRad(scope.screenOrientation) : 0; // O
