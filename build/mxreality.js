@@ -285,34 +285,7 @@ VR.prototype.playPanorama=function (recUrl,recType,objName) {
         imgPanoToolBar();
 
     } else {
-        var phiStart = 0;
-        if(AVR.OS.isiOS()) {
-            phiStart = Math.PI / 2;
-        }else if(AVR.OS.isGooglePixel()){
-            if (AVR.isCrossScreen()) {
-                phiStart = Math.PI/2 ;
-            }else{
-                phiStart = Math.PI;
-            }
-        }else if(AVR.OS.isSamsung()){
-            if (AVR.isCrossScreen()) {
-                phiStart = Math.PI/2 ;
-            }else{
-                phiStart = Math.PI/2;
-            }
-        }else if(AVR.OS.isMiOS()){
-            if (AVR.isCrossScreen()) {
-                phiStart = -Math.PI/2 ;
-            }
-        }else if (!AVR.OS.isMobile()) {
-            phiStart -= Math.PI / 2;
-
-        } else {
-            if (!AVR.isCrossScreen()) {
-                phiStart = Math.PI / 2;
-            }
-        }
-
+        var phiStart = AVR.isMobileDevice()?Math.PI/2:-Math.PI/2;
         var geometry = geometry = new THREE.SphereBufferGeometry(this.vrbox.radius, this.vrbox.widthSegments, this.vrbox.heightSegments, phiStart);
         geometry.scale(-1, 1, 1); //x取反（面朝里）
         if (that.recType.video == recType) {
@@ -437,6 +410,7 @@ VR.prototype.playPanorama=function (recUrl,recType,objName) {
                     that.camera.position.y = 0;
                     that.camera.fov = defaultFov;
                     clearInterval(asteroidForwardTimer);
+                    that._controlTarget=AVR.cameraVector(that.camera);
                     AVR.bindOrientationEnevt(that,that._controlTarget);
                     if(void 0 !== callback){
                         // Wait for the controller to initialize to complete the callback.
@@ -1206,10 +1180,10 @@ var AVR= {
             this.autoRotateSpeed = 1.0; // 30 seconds per round when fps is 60
 
             this.deviceOrientation = {};
-            this.screenOrientation = window.orientation ? window.orientation : 0;
+            this.screenOrientation = 0;
 
             var scope = this;
-
+            //scope.object.lookAt(new THREE.Vector3(0,0,1));
             scope.defaultDirectionOfRotation = true;
             scope.gyroEnable = true;
             scope.usingGyro = AVR.OS.isMobile() ? true : false;
@@ -1271,16 +1245,18 @@ var AVR= {
 
                     param = param || {};
 
-                    var alpha = scope.deviceOrientation.alpha ? THREE.Math.degToRad(scope.deviceOrientation.alpha) : 0; // Z
+                    var alpha = scope.deviceOrientation.alpha ? THREE.Math.degToRad(scope.deviceOrientation.alpha-scope.beginAlpha) : 0; // Z
                     var beta = scope.deviceOrientation.beta ? THREE.Math.degToRad(scope.deviceOrientation.beta) : 0; // X'
                     var gamma = scope.deviceOrientation.gamma ? THREE.Math.degToRad(scope.deviceOrientation.gamma) : 0; // Y''
                     var orient = scope.screenOrientation ? THREE.Math.degToRad(scope.screenOrientation) : 0; // O
                     if (scope.gyroEnable) {
-                        tempAlpha = alpha,tempBeta = beta,tempGamma = gamma;
+                        tempAlpha = alpha, tempBeta = beta, tempGamma = gamma;
                     } else {
-                        alpha = tempAlpha,beta = tempBeta,gamma = tempGamma;
+                        alpha = tempAlpha, beta = tempBeta, gamma = tempGamma;
                     }
-                    //AVR.msgBox("alpha="+scope.deviceOrientation.alpha.toFixed(2)+",beta="+scope.deviceOrientation.beta.toFixed(2)+",gamma="+scope.deviceOrientation.gamma.toFixed(2)+",orient="+window.orientation,0.5,document.body)
+                    /*AVR.msgBox("alpha="+Math.round(scope.deviceOrientation.alpha-scope.beginAlpha)+
+                        ',beta='+Math.round(scope.deviceOrientation.beta)+
+                        ',gamma='+Math.round(scope.deviceOrientation.gamma),36,document.body)*/
                     //AVR.msgBox("x="+scope.object.position.x.toFixed(2)+",y="+scope.object.position.y.toFixed(2)+",z="+scope.object.position.z.toFixed(2) ,0.5,document.body);
                     var currentQ = new THREE.Quaternion().copy(scope.object.quaternion);
 
@@ -1479,6 +1455,7 @@ var AVR= {
 
             function deviceorientation(event) {
                 scope.deviceOrientation = event;
+                void 0 === scope.beginAlpha && (scope.beginAlpha = scope.deviceOrientation.alpha);
             }
 
             function orientationchange(event) {
