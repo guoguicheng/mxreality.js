@@ -10,30 +10,22 @@
         body{
             padding: 0px;
             margin: 0px;
-
         }
     </style>
 </head>
 <body style="background: #ededed;">
 <div id="container"></div>
+<input type="button" value="stop" id="stop">
 <div id="info">
 </div>
 <script type="text/javascript">
 
-   var a=function () {
-       this.b='sssss';
-       var b=456;
-       var c=789;
-   }
-   a.prototype.show=function () {
-
-       console.log(b,c);
-   }
-
-   var s=new a();
-   var b=123;
-   var c=111;
-   s.show();
+   var t=setTimeout(function () {
+       console.log('abcd');
+   },3000);
+   document.getElementById('stop').addEventListener("click",function () {
+       clearTimeout(t);
+   })
 </script>
 </body>
 </html>

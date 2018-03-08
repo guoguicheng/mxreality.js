@@ -1560,7 +1560,7 @@ var AVR= {
         return {'vector':lookAtVector,'timesVector':timesVector};
     },
     bindCameraEvent:function (vr,options) {
-        options=options||{hover:function (e) {},leave:function(e){},on:function(e){},empty:function(e){},move:function(e){}};
+        options=options||{trigger:function(e){},empty:function(e){},move:function(e){}};
         var that = this;
         var scale=options.scale || 0.05;
         var vectorRadius = options.vectorRadius;
@@ -1637,7 +1637,7 @@ var AVR= {
                         offset += 2;
                     } else {
                         clearInterval(Ctimer);
-                        options.on(e);
+                        options.trigger(e);
                     }
                     mIndex++;
                 }, speed);
