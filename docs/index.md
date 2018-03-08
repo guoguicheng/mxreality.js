@@ -1,4 +1,4 @@
 + 1-VR API  
-    - 1.1 [API](VRAPI.md)
+    - 1.1 [VR](VRAPI.md)
 + 2-AR API  
-    - 2.1 [网页AR](ARAPI.md)
+    - 2.1 [AR](ARAPI.md)
