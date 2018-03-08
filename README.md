@@ -1,4 +1,6 @@
-### mix reality 混合现实网页版
+### mix reality 混合现实网页版  
+
+[在线文档](https://github.com/guoguicheng/mxreality.js/tree/master/docs/index.md)  
 
 ### 播放器功能结构图
 ![结构图](https://github.com/guoguicheng/mxreality.js/raw/master/docs/mxreality.js.png)
