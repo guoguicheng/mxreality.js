@@ -21,7 +21,7 @@ var VR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.defaultVolume=0.3;
     this.sliceSegment=0;
     this._controlTarget={x:0.0001,y:0,z:0};
-    this.recType={"video":"video","box":"box","slice":"slice"};
+    this.resType={"video":"video","box":"box","slice":"slice"};
     this.asteroidConfig={enable:false,assteroidFPS:36,assteroidFov:135,asteroidForwardTime:2000,asteroidWaitTime:1000,asteroidDepressionRate:0.5,asteroidTop:1,cubeResolution:2048};
     this.VRhint="请取消屏幕翻转锁定后装入VR盒子中";
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
@@ -75,10 +75,10 @@ VR.prototype.init=function () {
         AVR.bindOrientationEnevt(that,that._controlTarget);
     }, false);
 };
-VR.prototype.playPanorama=function (recUrl,recType,objName) {
+VR.prototype.playPanorama=function (recUrl,resType,objName) {
     objName=objName||"__panoContainer";
     var that = this;
-    that._containerRadius=(that.recType.box == recType|| that.recType.slice==recType) ? (that.vrbox.width / 2.1) : that.vrbox.radius;
+    that._containerRadius=(that.resType.box == resType|| that.resType.slice==resType) ? (that.vrbox.width / 2.1) : that.vrbox.radius;
 
     that.autoHideLeftTime = that.defaultAutoHideLeftTime;
     that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
@@ -212,7 +212,7 @@ VR.prototype.playPanorama=function (recUrl,recType,objName) {
         that.videoToolBar.btn.style.borderBottom = "0.6rem solid transparent";
     }
 
-    if (that.recType.box == recType) {
+    if (that.resType.box == resType) {
         var textures = [];
         var materials = [];
 
@@ -241,7 +241,7 @@ VR.prototype.playPanorama=function (recUrl,recType,objName) {
             that.loadProgressManager.onLoad();
         }
         imgPanoToolBar();
-    }else if(that.recType.slice==recType){
+    }else if(that.resType.slice==resType){
         var cubeGeometry = new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth, that.sliceSegment, that.sliceSegment, that.sliceSegment);
         //cubeGeometry.scale(-1, 1, 1)
         var textureLoader = new THREE.TextureLoader(that.loadProgressManager);
@@ -289,7 +289,7 @@ VR.prototype.playPanorama=function (recUrl,recType,objName) {
         var phiStart = AVR.isMobileDevice()?Math.PI/2:-Math.PI/2;
         var geometry = geometry = new THREE.SphereBufferGeometry(this.vrbox.radius, this.vrbox.widthSegments, this.vrbox.heightSegments, phiStart);
         geometry.scale(-1, 1, 1); //x取反（面朝里）
-        if (that.recType.video == recType) {
+        if (that.resType.video == resType) {
 
             var video = AVR.createTag('video', {
                 'webkit-playsinline': true,

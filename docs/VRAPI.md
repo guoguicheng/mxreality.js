@@ -11,8 +11,8 @@
   
     播放器类别指定  
 
-    vr.recType={"video":"video","box":"box","slice":"slice"};  
-    //全景视频则是vr.recType.video  正六面体为vr.recType.box 切片并补天播放器类别为vr.recType.slice
+    vr.resType={"video":"video","box":"box","slice":"slice"};  
+    //全景视频则是vr.resType.video  正六面体为vr.resType.box 切片并补天播放器类别为vr.resType.slice
     
     初始化全景容器参数,如果全景图为正六面体则指定width、height、depth 3个参数，适用于box和slice类别；  
     如果为球体则设置radius、widthSegments、heightSegments ，适用于video和默认类别  
@@ -69,7 +69,7 @@
 
     /**
     * resource 全景资源地址
-    * resourceType 全景资源类别vr.recType.[box/video/slice]
+    * resourceType 全景资源类别vr.resType.[box/video/slice]
     * objName 播放器对象name值 默认为 __panoContainer
     **/
     vr.playPanorama(resource,resourceType,objName);
