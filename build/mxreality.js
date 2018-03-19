@@ -893,23 +893,13 @@ AR.prototype.init=function () {
             audio: self.openAudio,
             video: {
                 facingMode: {
-                    exact: self.cameraIndex ? "environment" : "user"
+                    exact: (self.cameraIndex ? "user" : "environment")
                 }
             }
         }
         navigator.getUserMedia(medias, successCallback, errorCallback);
     } else {
         alert('Native device meadia streaming(getUserMdeia) not supported in this browser.')
-    }
-
-    function successFunc(stream) {
-        self.video.src = window.URL && window.URL.createObjectURL(stream)
-        self.video.play();
-        self.localStream = stream;
-    }
-
-    function errorFunc(e) {
-        alert('Error!' + e)
     }
 
     function successCallback(stream) {
@@ -921,7 +911,6 @@ AR.prototype.init=function () {
     };
     self.closeCamera = function () {
         self.video.src = '';
-        self.localStream.stop();
     }
 }
 AR.prototype._createCanvas=function(id){
