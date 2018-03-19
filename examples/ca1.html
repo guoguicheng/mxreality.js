@@ -25,11 +25,12 @@
         });
 
         //video.style.display = "none";
-
-        video.style.position="absolute";
+        video.style.zIndex="-9999999";
+        //video.style.position="absolute";
         video.oncanplaythrough = function () {
             //video.style.marginTop = "-"+video.videoHeight -2+"px";
-            video.style.top = "-"+video.videoHeight -2+"px";
+            //video.style.top = "-"+video.videoHeight -2+"px";
+
         }
         document.body.appendChild(video);
 
