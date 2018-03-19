@@ -928,6 +928,7 @@ AR.prototype.init=function () {
                 });
             });
     }
+    alert('ssss')
     enumerateDevices().then(function () {
         self.constraints = {
             audio: self.openAudio,
