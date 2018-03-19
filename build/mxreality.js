@@ -892,6 +892,7 @@ AR.prototype.init=function () {
 
             // First get ahold of the legacy getUserMedia, if present
             var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;//navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+            window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
             // Some browsers just don't implement it - return a rejected promise with an error
             // to keep a consistent interface
