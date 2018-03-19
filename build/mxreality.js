@@ -895,14 +895,16 @@ AR.prototype.init=function () {
     // Some browsers partially implement mediaDevices. We can't just assign an object
     // with getUserMedia as it would overwrite existing properties.
     // Here, we will just add the getUserMedia property if it's missing.
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    navigator.getUserMedia= navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;//navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+    alert(void 0 === navigator.mediaDevices.getUserMedia);
     if (void 0 === navigator.mediaDevices.getUserMedia) {
         alert('navigator.mediaDevices.getUserMedia')
         navigator.mediaDevices.getUserMedia = function (constraints) {
 
             // First get ahold of the legacy getUserMedia, if present
-            var getUserMedia = navigator.getUserMedia;
+            var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;//navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+            window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
             // Some browsers just don't implement it - return a rejected promise with an error
             // to keep a consistent interface
@@ -922,12 +924,9 @@ AR.prototype.init=function () {
                 devices.forEach(function (device) {
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
-                        alert("kind deviceId")
                     } else if (device.kind === "video") {
                         self._cameras.push(device.id);
-                        alert("kind id")
                     }
-                    alert("kind")
                 });
             });
     }
