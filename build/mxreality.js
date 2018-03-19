@@ -839,7 +839,6 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 
     this.cameraIndex = 1;//0为前置摄像头，否则为后置
 
-    this._cameras=[];
     this._controlTarget={x:0.0001,y:0,z:0};
     this._windowWidth = window.innerWidth;
     this._windowHeight = window.innerHeight;
@@ -848,13 +847,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.cameraReady=false;
     this.scene.add(this.camera);
     this.clock = new THREE.Clock();
-    this.cameraVideo={
-        width: {min: this._windowWidth, ideal: this._windowWidth, max: this._windowWidth},
-        height: {min: this._windowHeight, ideal: this._windowHeight, max: this._windowHeight},
-        //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
-        //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
-        frameRate: 15,//{ideal:10,max:15},
-    }
+
     this.effect = AVR.stereoEffect(this.renderer);
 
 }
@@ -870,7 +863,8 @@ AR.prototype.init=function () {
         'x5-video-player-type': 'h5',
         'x5-video-player-fullscreen': true,
         'x5-video-orientation': 'portrait',
-        'style': 'object-fit: fill'
+        'style': 'object-fit: fill',
+        'autoplay':"autoplay"
     }, {
         'allowsInlineMediaPlayback': true
     });
@@ -899,8 +893,7 @@ AR.prototype.init=function () {
                 audio: self.openAudio,
                 video: {
                     facingMode: {
-                        exact: "environment"
-                        //exact: 'user'
+                        exact: self.cameraIndex?"user":"environment"
                     }
                 }
             }
