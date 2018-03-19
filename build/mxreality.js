@@ -954,7 +954,7 @@ AR.prototype.play=function () {
                 var vW=width/2;
                 var vH = (height * that.video.videoWidth) / vW;
                 that.cameraTexture.repeat.x = vW / that.video.videoWidth;
-                that.cameraTexture.repeat.y = vH / that.video.videoHeight;
+                that.cameraTexture.repeat.y = 1;
                 that.cameraTexture.offset.x = 0;
                 that.cameraTexture.offset.y = 0;
             }
