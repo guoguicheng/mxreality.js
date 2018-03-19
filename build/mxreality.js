@@ -875,7 +875,7 @@ AR.prototype.init=function () {
         'allowsInlineMediaPlayback': true
     });
 
-    this.video.style.display = "none";
+    this.video.style.display = "block";
     document.body.appendChild(this.video);
     this.video.oncanplaythrough = function () {
         self.cameraReady = true;
@@ -899,8 +899,8 @@ AR.prototype.init=function () {
                 audio: self.openAudio,
                 video: {
                     facingMode: {
-                        //exact: "environment"
-                        exact: 'user'
+                        exact: "environment"
+                        //exact: 'user'
                     }
                 }
             }
@@ -931,7 +931,7 @@ AR.prototype.init=function () {
 
     function successFunc(stream) {
         self.video.src = window.URL && window.URL.createObjectURL(stream)
-        video.play();
+        self.video.play();
         self.localStream = stream;
     }
 
@@ -946,7 +946,7 @@ AR.prototype.init=function () {
     function errorCallback(err) {
         alert(err);
     };
-    self.closeCamear = function () {
+    self.closeCamera = function () {
         self.video.src = '';
         self.localStream.stop();
     }
