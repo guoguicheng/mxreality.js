@@ -869,7 +869,8 @@ AR.prototype.init=function () {
         'allowsInlineMediaPlayback': true
     });
 
-    this.video.style.display = "none";
+    //this.video.style.display = "none";
+    this.video.style.zIndex="-999999";
     document.body.appendChild(this.video);
     this.video.oncanplaythrough = function () {
         self.cameraReady = true;
