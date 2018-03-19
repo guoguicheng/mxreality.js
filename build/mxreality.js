@@ -895,14 +895,14 @@ AR.prototype.init=function () {
     // Some browsers partially implement mediaDevices. We can't just assign an object
     // with getUserMedia as it would overwrite existing properties.
     // Here, we will just add the getUserMedia property if it's missing.
-    alert(void 0 === navigator.mediaDevices.getUserMedia)
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
     if (void 0 === navigator.mediaDevices.getUserMedia) {
         alert('navigator.mediaDevices.getUserMedia')
         navigator.mediaDevices.getUserMedia = function (constraints) {
 
             // First get ahold of the legacy getUserMedia, if present
-            var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;//navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-            window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+            var getUserMedia = navigator.getUserMedia;
 
             // Some browsers just don't implement it - return a rejected promise with an error
             // to keep a consistent interface
