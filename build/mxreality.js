@@ -877,8 +877,8 @@ AR.prototype.init=function () {
 
     this.video.style.display = "none";
     document.body.appendChild(this.video);
-    this.video.oncanplaythrough=function () {
-        self.cameraReady=true;
+    this.video.oncanplaythrough = function () {
+        self.cameraReady = true;
         if (self.video.readyState === self.video.HAVE_ENOUGH_DATA) {
             self.cameraTexture = new THREE.VideoTexture(self.video);
             self.cameraTexture.generateMipmaps = false;
@@ -889,87 +889,67 @@ AR.prototype.init=function () {
             self.cameraTexture.needsUpdate = true;
         }
     }
-    // Older browsers might not implement mediaDevices at all, so we set an empty object first
-    void 0 === navigator.mediaDevices && (navigator.mediaDevices = {});
 
-    // Some browsers partially implement mediaDevices. We can't just assign an object
-    // with getUserMedia as it would overwrite existing properties.
-    // Here, we will just add the getUserMedia property if it's missing.
-    navigator.getUserMedia= navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;//navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
     window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
-    alert(void 0 === navigator.mediaDevices.getUserMedia);
-    if (void 0 === navigator.mediaDevices.getUserMedia) {
-        alert('navigator.mediaDevices.getUserMedia')
-        navigator.mediaDevices.getUserMedia = function (constraints) {
-
-            // First get ahold of the legacy getUserMedia, if present
-            var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;//navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-            window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
-
-            // Some browsers just don't implement it - return a rejected promise with an error
-            // to keep a consistent interface
-            if (!getUserMedia) {
-                return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
-            }
-
-            // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
-            return new Promise(function (resolve, reject) {
-                getUserMedia.call(navigator, constraints, resolve, reject);
-            });
-        }
-    }
-    function enumerateDevices() {
-        return navigator.mediaDevices.enumerateDevices()
-            .then(function (devices) {
-                devices.forEach(function (device) {
-                    if (device.kind === "videoinput") {
-                        self._cameras.push(device.deviceId);
-                    } else if (device.kind === "video") {
-                        self._cameras.push(device.id);
+    var exArray = [];
+    if (navigator.getUserMedia) {
+        if (AVR.OS.isiOS()) {
+            var medias = {
+                audio: self.openAudio,
+                video: {
+                    facingMode: {
+                        //exact: "environment"
+                        exact: 'user'
                     }
-                });
-            });
-    }
-    enumerateDevices().then(function () {
-        self.constraints = {
-            audio: self.openAudio,
-            video: {
-                width: self.cameraVideo.width,
-                height: self.cameraVideo.height,
-                //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
-                //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
-                frameRate: self.cameraVideo.frameRate,//{ideal:10,max:15},
-                //deviceId: {exact: self.frontCamera?'user':'environment'}
-                deviceId: {exact: self._cameras[self.cameraIndex]},
-                optional: [{
-                    'sourceId': self._cameras[self.cameraIndex]
-                }],
-                facingMode: {exact: self.cameraIndex ? "user" : "environment"}
-            }
-        };
-        navigator.mediaDevices.getUserMedia(self.constraints).then(
-            function (stream) {
-                alert("stream")
-                // Older browsers may not have srcObject
-                if ("srcObject" in self.video) {
-                    self.video.srcObject = stream;
-                } else if ("videoStream" in self.video) {
-                    self.video.videoStream = stream;
-                } else {
-                    // Avoid using this in new browsers, as it is going away.
-                    self.video.src = window.URL && window.URL.createObjectURL(stream);
                 }
-                self.video.play();
-                document.body.addEventListener("click", function (e) {
-                    self.video.play();
-                }, false);
             }
-        ).catch(
-            function (err) {
-                alert(err.name + ": " + err.message)
-            }
-        );
-    });
+
+            navigator.getUserMedia(medias, successCallback, errorCallback);
+        } else {
+            MediaStreamTrack.getSources(function (sourceInfos) {
+                for (var i = 0; i != sourceInfos.length; ++i) {
+                    var sourceInfo = sourceInfos[i];
+                    if (sourceInfo.kind === "video") {
+                        exArray.push(sourceInfo.id)
+                    }
+                }
+                navigator.getUserMedia({
+                    "video": {
+                        "optional": [{
+                            "sourceId": exArray[1]
+                        }]
+                    },
+                    "audio": self.openAudio
+                }, successFunc, errorFunc)
+            })
+        }
+
+    } else {
+        alert('Native device meadia streaming(getUserMdeia) not supported in this browser.')
+    }
+
+    function successFunc(stream) {
+        self.video.src = window.URL && window.URL.createObjectURL(stream)
+        video.play();
+        self.localStream = stream;
+    }
+
+    function errorFunc(e) {
+        alert('Error!' + e)
+    }
+
+    function successCallback(stream) {
+        self.video.srcObject = stream;
+    };
+
+    function errorCallback(err) {
+        alert(err);
+    };
+    self.closeCamear = function () {
+        self.video.src = '';
+        self.localStream.stop();
+    }
 }
 AR.prototype._createCanvas=function(id){
     var canvasobj=document.getElementById(id);
