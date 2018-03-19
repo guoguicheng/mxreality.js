@@ -835,7 +835,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 
     this.constraints = {};
     this.video = null;
-    this.openAudio = true;
+    this.openAudio = false;
 
     this.cameraIndex = 1;//0为前置摄像头，否则为后置
 
@@ -928,7 +928,8 @@ AR.prototype.init=function () {
                 //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
                 frameRate: self.cameraVideo.frameRate,//{ideal:10,max:15},
                 //deviceId: {exact: self.frontCamera?'user':'environment'}
-                deviceId: {exact: self._cameras[self.cameraIndex]}
+                deviceId: {exact: self._cameras[self.cameraIndex]},
+                facingMode:{exact: self.cameraIndex?"user":"environment",}
             }
         };
         navigator.mediaDevices.getUserMedia(self.constraints).then(
