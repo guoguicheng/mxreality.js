@@ -25,7 +25,9 @@
         });
 
         //video.style.display = "none";
-        video.style.marginTop=-99999;
+        video.style.position="absolute";
+        video.style.marginTop="-99999px";
+        video.style.top="-99999px";
         document.body.appendChild(video);
 
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
