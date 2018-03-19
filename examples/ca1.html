@@ -26,8 +26,10 @@
 
         //video.style.display = "none";
         video.style.position="absolute";
-        video.style.marginTop="-99999px";
-        video.style.top="-99999px";
+        video.oncanplaythrough = function () {
+            video.style.marginTop = "-"+video.videoHeight -2+"px";
+            video.style.top = "-"+video.videoHeight -2+"px";
+        }
         document.body.appendChild(video);
 
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
