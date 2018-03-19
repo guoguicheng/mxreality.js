@@ -8,29 +8,29 @@
 <body>
 
 <script type="text/javascript">
-    video = AVR.createTag('video', {
-        'webkit-playsinline': true,
-        'playsinline': true,
-        'preload': 'auto',
-        'x-webkit-airplay': 'allow',
-        'x5-playsinline': true,
-        'x5-video-player-type': 'h5',
-        'x5-video-player-fullscreen': true,
-        'x5-video-orientation': 'portrait',
-        'style': 'object-fit: fill',
-        'autoplay':"autoplay"
-    }, {
-        'allowsInlineMediaPlayback': true
-    });
+    window.onload=function () {
+        video = AVR.createTag('video', {
+            'webkit-playsinline': true,
+            'playsinline': true,
+            'preload': 'auto',
+            'x-webkit-airplay': 'allow',
+            'x5-playsinline': true,
+            'x5-video-player-type': 'h5',
+            'x5-video-player-fullscreen': true,
+            'x5-video-orientation': 'portrait',
+            'style': 'object-fit: fill',
+            'autoplay':"autoplay"
+        }, {
+            'allowsInlineMediaPlayback': true
+        });
 
-    video.style.display = "block";
-    document.body.appendChild(video);
+        video.style.display = "block";
+        document.body.appendChild(video);
 
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-    window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
-    var exArray = [];
-    if (navigator.getUserMedia) {
-        if (AVR.OS.isiOS()) {
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+        var exArray = [];
+        if (navigator.getUserMedia) {
             var medias = {
                 audio: false,
                 video: {
@@ -42,50 +42,22 @@
             }
 
             navigator.getUserMedia(medias, successCallback, errorCallback);
+
+
         } else {
-            MediaStreamTrack.getSources(function (sourceInfos) {
-                for (var i = 0; i != sourceInfos.length; ++i) {
-                    var sourceInfo = sourceInfos[i];
-                    if (sourceInfo.kind === "video") {
-                        exArray.push(sourceInfo.id)
-                    }
-                }
-                navigator.getUserMedia({
-                    "video": {
-                        "optional": [{
-                            "sourceId": exArray[1]
-                        }]
-                    },
-                    "audio": false
-                }, successFunc, errorFunc)
-            })
+            alert('Native device meadia streaming(getUserMdeia) not supported in this browser.')
         }
 
-    } else {
-        alert('Native device meadia streaming(getUserMdeia) not supported in this browser.')
+
+        function successCallback(stream) {
+            video.srcObject = stream;
+        };
+
+        function errorCallback(err) {
+            alert(err);
+        }
     }
 
-    function successFunc(stream) {
-        video.src = window.URL && window.URL.createObjectURL(stream)
-        video.play();
-        localStream = stream;
-    }
-
-    function errorFunc(e) {
-        alert('Error!' + e)
-    }
-
-    function successCallback(stream) {
-        video.srcObject = stream;
-    };
-
-    function errorCallback(err) {
-        alert(err);
-    };
-    function closeCamera() {
-        video.src = '';
-        localStream.stop();
-    }
 </script>
 </body>
 </html>
