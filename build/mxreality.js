@@ -831,7 +831,6 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     AVR.setCameraPara(that,cameraPara,cameraPosition);
     this.scene = scene;
     this.renderer = renderer;
-    this.renderer.alpha=true;
     this.container = container;
 
     this.constraints = {};
@@ -871,7 +870,7 @@ AR.prototype.init=function () {
     });
 
     //this.video.style.display = "none";
-    this.video.style.zIndex="-1";
+    this.video.style.zIndex="-99999";
     this.video.style.position="absolute";
     this.video.style.left="0px";
     this.video.style.top="0px";
