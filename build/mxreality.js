@@ -913,6 +913,9 @@ AR.prototype.init=function () {
                 getUserMedia.call(navigator, constraints, resolve, reject);
             });
         }
+    }else{
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
     }
 
     function enumerateDevices() {
@@ -942,21 +945,19 @@ AR.prototype.init=function () {
         };
         navigator.mediaDevices.getUserMedia(self.constraints).then(
             function (stream) {
+                self.videoStream = stream;
                 // Older browsers may not have srcObject
                 if ("srcObject" in self.video) {
                     self.video.srcObject = stream;
                 } else {
                     // Avoid using this in new browsers, as it is going away.
-                    self.video.src = window.URL.createObjectURL(stream);
+                    self.video.src = window.URL && window.URL.createObjectURL(stream);
                 }
-                self.video.onloadedmetadata = function (e) {
+                self.video.srcObject=stream;
+                self.video.play();
+                document.body.addEventListener("click", function (e) {
                     self.video.play();
-                    document.body.addEventListener("click", function (e) {
-                        self.video.play();
-                    }, false);
-
-                }
-
+                }, false);
             }
         ).catch(
             function (err) {
