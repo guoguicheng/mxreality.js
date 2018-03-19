@@ -886,38 +886,17 @@ AR.prototype.init=function () {
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
     window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
-    var exArray = [];
+
     if (navigator.getUserMedia) {
-        if (AVR.OS.isiOS()) {
-            var medias = {
-                audio: self.openAudio,
-                video: {
-                    facingMode: {
-                        exact: self.cameraIndex?"environment":"user"
-                    }
+        var medias = {
+            audio: self.openAudio,
+            video: {
+                facingMode: {
+                    exact: self.cameraIndex ? "environment" : "user"
                 }
             }
-
-            navigator.getUserMedia(medias, successCallback, errorCallback);
-        } else {
-            MediaStreamTrack.getSources(function (sourceInfos) {
-                for (var i = 0; i != sourceInfos.length; ++i) {
-                    var sourceInfo = sourceInfos[i];
-                    if (sourceInfo.kind === "video") {
-                        exArray.push(sourceInfo.id)
-                    }
-                }
-                navigator.getUserMedia({
-                    "video": {
-                        "optional": [{
-                            "sourceId": exArray[1]
-                        }]
-                    },
-                    "audio": self.openAudio
-                }, successFunc, errorFunc)
-            })
         }
-
+        navigator.getUserMedia(medias, successCallback, errorCallback);
     } else {
         alert('Native device meadia streaming(getUserMdeia) not supported in this browser.')
     }
