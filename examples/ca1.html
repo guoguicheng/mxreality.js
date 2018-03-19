@@ -60,7 +60,9 @@
         var videoCanvas=canvas2.getContext('2d');
         // 将视频帧绘制到Canvas对象上,Canvas每60ms切换帧，形成肉眼视频效果
         setInterval(function () {
-            videoCanvas.drawImage(video, 0, 0,window.innerWidth,window.innerHeight);
+            if(video) {
+                videoCanvas.drawImage(video, 0, 0, window.innerWidth, window.innerHeight);
+            }
         }, 60);
     }
 
