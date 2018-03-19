@@ -26,6 +26,7 @@
 
                 navigator.getUserMedia(medias, successCallback, errorCallback);
             } else {
+                alert('android');
                 MediaStreamTrack.getSources(function(sourceInfos) {
                     for(var i = 0; i != sourceInfos.length; ++i) {
                         var sourceInfo = sourceInfos[i];
