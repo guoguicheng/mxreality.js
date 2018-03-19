@@ -13,7 +13,7 @@
         window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
         var exArray = [];
         if(navigator.getUserMedia) {
-            if(isiOS) {
+            if(isiOS()) {
                 var medias = {
                     audio: false,
                     video: {
