@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<video id="video" autoplay="autoplay" preload="auto" webkit-playsinline="true" playsinline="true" x-webkit-airplay="allow" x5-video-player-type="h5" x5-video-player-fullscreen="true" x5-video-orientation="portraint" style="object-fit:fill"></video>
+<video id="video" autoplay="autoplay" preload="auto" webkit-playsinline="true" playsinline="true" x-webkit-airplay="allow" x5-video-player-type="h5" x5-video-player-fullscreen="true" x5-video-orientation="portraint" style="object-fit:fill" width="100%"></video>
 <script type="text/javascript">
     getMedia()
     function getMedia() {
@@ -18,7 +18,8 @@
                     audio: false,
                     video: {
                         facingMode: {
-                            exact: "environment"
+                            //exact: "environment"
+                            exact:'user'
                         }
                     }
                 }
