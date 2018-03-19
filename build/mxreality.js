@@ -914,22 +914,20 @@ AR.prototype.init=function () {
             });
         }
     }
-
     function enumerateDevices() {
         return navigator.mediaDevices.enumerateDevices()
             .then(function (devices) {
                 devices.forEach(function (device) {
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
-                    }else if(device.kind === "video"){
+                    } else if (device.kind === "video") {
                         self._cameras.push(device.id);
                     }
                 });
             });
     }
-
     enumerateDevices().then(function () {
-        self.constraints = self.constraints.length > 0 ? self.constraints : {
+        self.constraints = {
             audio: self.openAudio,
             video: {
                 width: self.cameraVideo.width,
@@ -939,21 +937,21 @@ AR.prototype.init=function () {
                 frameRate: self.cameraVideo.frameRate,//{ideal:10,max:15},
                 //deviceId: {exact: self.frontCamera?'user':'environment'}
                 deviceId: {exact: self._cameras[self.cameraIndex]},
-                optional:[{
-                    'sourceId':self._cameras[self.cameraIndex]
+                optional: [{
+                    'sourceId': self._cameras[self.cameraIndex]
                 }],
-                facingMode:{exact: self.cameraIndex?"user":"environment"}
+                facingMode: {exact: self.cameraIndex ? "user" : "environment"}
             }
         };
         navigator.mediaDevices.getUserMedia(self.constraints).then(
             function (stream) {
+                alert("stream")
                 // Older browsers may not have srcObject
                 if ("srcObject" in self.video) {
                     self.video.srcObject = stream;
-                }else if("videoStream" in self.video){
-                    alert("videoStream");
+                } else if ("videoStream" in self.video) {
                     self.videoStream = stream;
-                }else {
+                } else {
                     // Avoid using this in new browsers, as it is going away.
                     self.video.src = window.URL && window.URL.createObjectURL(stream);
                 }
