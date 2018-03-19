@@ -951,7 +951,7 @@ AR.prototype.play=function () {
 
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             if(that.cameraReady) {
-                var vW=width/2;
+                var vW=(width * that.video.videoHeight) / height;
                 var vH = (height * that.video.videoWidth) / width;
                 that.cameraTexture.repeat.x = vW / that.video.videoWidth;
                 that.cameraTexture.repeat.y = vH / that.video.videoHeight;
