@@ -870,7 +870,7 @@ AR.prototype.init=function () {
         'allowsInlineMediaPlayback': true
     });
 
-    this.video.style.display = "block";
+    this.video.style.display = "none";
     document.body.appendChild(this.video);
     this.video.oncanplaythrough = function () {
         self.cameraReady = true;
