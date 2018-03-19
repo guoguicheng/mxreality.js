@@ -893,7 +893,7 @@ AR.prototype.init=function () {
             audio: self.openAudio,
             video: {
                 facingMode: {
-                    exact: (self.cameraIndex ? "user" : "environment")
+                    exact: self.cameraIndex ? "environment" : "user"
                 }
             }
         }
@@ -909,9 +909,6 @@ AR.prototype.init=function () {
     function errorCallback(err) {
         alert(err);
     };
-    self.closeCamera = function () {
-        self.video.src = '';
-    }
 }
 AR.prototype._createCanvas=function(id){
     var canvasobj=document.getElementById(id);
