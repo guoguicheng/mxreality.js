@@ -895,6 +895,7 @@ AR.prototype.init=function () {
     // Some browsers partially implement mediaDevices. We can't just assign an object
     // with getUserMedia as it would overwrite existing properties.
     // Here, we will just add the getUserMedia property if it's missing.
+    alert(void 0 === navigator.mediaDevices.getUserMedia)
     if (void 0 === navigator.mediaDevices.getUserMedia) {
         alert('navigator.mediaDevices.getUserMedia')
         navigator.mediaDevices.getUserMedia = function (constraints) {
@@ -919,7 +920,6 @@ AR.prototype.init=function () {
         return navigator.mediaDevices.enumerateDevices()
             .then(function (devices) {
                 devices.forEach(function (device) {
-                    alert('forEach')
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
                     } else if (device.kind === "video") {
@@ -928,7 +928,6 @@ AR.prototype.init=function () {
                 });
             });
     }
-    alert('ssss')
     enumerateDevices().then(function () {
         self.constraints = {
             audio: self.openAudio,
@@ -946,7 +945,6 @@ AR.prototype.init=function () {
                 facingMode: {exact: self.cameraIndex ? "user" : "environment"}
             }
         };
-        alert('enumerateDevices().then')
         navigator.mediaDevices.getUserMedia(self.constraints).then(
             function (stream) {
                 alert("stream")
