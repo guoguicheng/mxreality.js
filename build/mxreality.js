@@ -871,6 +871,9 @@ AR.prototype.init=function () {
 
     //this.video.style.display = "none";
     this.video.style.zIndex="-999999";
+    this.video.style.position="absolute";
+    this.video.style.left="0px";
+    this.video.style.top="0px";
     document.body.appendChild(this.video);
     this.video.oncanplaythrough = function () {
         self.cameraReady = true;
