@@ -861,11 +861,19 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 AR.prototype.init=function () {
     var self = this;
     AVR.bindOrientationEnevt(self, self._controlTarget);
-    this.video = document.createElement('video');
-    this.video.setAttribute("autoplay", "autoplay");
-    //this.video.style.height=this._windowHeight+"px";
-    //this.video.style.width=this._windowWidth+"px";
-    //this.video.style.background="#ffffff";
+    this.video = AVR.createTag('video', {
+        'webkit-playsinline': true,
+        'playsinline': true,
+        'preload': 'auto',
+        'x-webkit-airplay': 'allow',
+        'x5-playsinline': true,
+        'x5-video-player-type': 'h5',
+        'x5-video-player-fullscreen': true,
+        'x5-video-orientation': 'portrait',
+        'style': 'object-fit: fill'
+    }, {
+        'allowsInlineMediaPlayback': true
+    });
 
     this.video.style.display = "none";
     document.body.appendChild(this.video);
@@ -929,7 +937,7 @@ AR.prototype.init=function () {
                 frameRate: self.cameraVideo.frameRate,//{ideal:10,max:15},
                 //deviceId: {exact: self.frontCamera?'user':'environment'}
                 deviceId: {exact: self._cameras[self.cameraIndex]},
-                facingMode:{exact: self.cameraIndex?"user":"environment",}
+                facingMode:{exact: self.cameraIndex?"user":"environment"}
             }
         };
         navigator.mediaDevices.getUserMedia(self.constraints).then(
