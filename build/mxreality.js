@@ -864,7 +864,8 @@ AR.prototype.init=function () {
         'x5-video-player-fullscreen': true,
         'x5-video-orientation': 'portrait',
         'style': 'object-fit: fill',
-        'autoplay':"autoplay"
+        'autoplay':"autoplay",
+        'width':'100%'
     }, {
         'allowsInlineMediaPlayback': true
     });
