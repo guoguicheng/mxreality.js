@@ -921,6 +921,8 @@ AR.prototype.init=function () {
                 devices.forEach(function (device) {
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
+                    }else if(device.kind === "video"){
+                        self._cameras.push(device.id);
                     }
                 });
             });
@@ -937,20 +939,24 @@ AR.prototype.init=function () {
                 frameRate: self.cameraVideo.frameRate,//{ideal:10,max:15},
                 //deviceId: {exact: self.frontCamera?'user':'environment'}
                 deviceId: {exact: self._cameras[self.cameraIndex]},
+                optional:[{
+                    'sourceId':self._cameras[self.cameraIndex]
+                }],
                 facingMode:{exact: self.cameraIndex?"user":"environment"}
             }
         };
         navigator.mediaDevices.getUserMedia(self.constraints).then(
             function (stream) {
-                self.videoStream = stream;
                 // Older browsers may not have srcObject
                 if ("srcObject" in self.video) {
                     self.video.srcObject = stream;
-                } else {
+                }else if("videoStream" in self.video){
+                    alert("videoStream");
+                    self.videoStream = stream;
+                }else {
                     // Avoid using this in new browsers, as it is going away.
                     self.video.src = window.URL && window.URL.createObjectURL(stream);
                 }
-                self.video.srcObject=stream;
                 self.video.play();
                 document.body.addEventListener("click", function (e) {
                     self.video.play();
