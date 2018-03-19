@@ -922,9 +922,12 @@ AR.prototype.init=function () {
                 devices.forEach(function (device) {
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
+                        alert("kind deviceId")
                     } else if (device.kind === "video") {
                         self._cameras.push(device.id);
+                        alert("kind id")
                     }
+                    alert("kind")
                 });
             });
     }
