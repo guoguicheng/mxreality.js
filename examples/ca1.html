@@ -24,7 +24,7 @@
             'allowsInlineMediaPlayback': true
         });
 
-        video.style.display = "block";
+        video.style.display = "none";
         document.body.appendChild(video);
 
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -56,6 +56,12 @@
         function errorCallback(err) {
             alert(err);
         }
+        var canvas2 =document.createElement('canvas');
+        var videoCanvas=canvas2.getContext('2d');
+        // 将视频帧绘制到Canvas对象上,Canvas每60ms切换帧，形成肉眼视频效果
+        setInterval(function () {
+            videoCanvas.drawImage(video, 0, 0,window.innerWidth,window.innerHeight);
+        }, 60);
     }
 
 </script>
