@@ -896,6 +896,7 @@ AR.prototype.init=function () {
     // with getUserMedia as it would overwrite existing properties.
     // Here, we will just add the getUserMedia property if it's missing.
     if (void 0 === navigator.mediaDevices.getUserMedia) {
+        alert('navigator.mediaDevices.getUserMedia')
         navigator.mediaDevices.getUserMedia = function (constraints) {
 
             // First get ahold of the legacy getUserMedia, if present
@@ -918,6 +919,7 @@ AR.prototype.init=function () {
         return navigator.mediaDevices.enumerateDevices()
             .then(function (devices) {
                 devices.forEach(function (device) {
+                    alert('forEach')
                     if (device.kind === "videoinput") {
                         self._cameras.push(device.deviceId);
                     } else if (device.kind === "video") {
@@ -943,6 +945,7 @@ AR.prototype.init=function () {
                 facingMode: {exact: self.cameraIndex ? "user" : "environment"}
             }
         };
+        alert('enumerateDevices().then')
         navigator.mediaDevices.getUserMedia(self.constraints).then(
             function (stream) {
                 alert("stream")
