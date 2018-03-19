@@ -954,7 +954,7 @@ AR.prototype.init=function () {
                 if ("srcObject" in self.video) {
                     self.video.srcObject = stream;
                 } else if ("videoStream" in self.video) {
-                    self.videoStream = stream;
+                    self.video.videoStream = stream;
                 } else {
                     // Avoid using this in new browsers, as it is going away.
                     self.video.src = window.URL && window.URL.createObjectURL(stream);
