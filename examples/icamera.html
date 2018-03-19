@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<video id="video" autoplay="autoplay" preload="auto" webkit-playsinline="true" playsinline="true" x-webkit-airplay="allow" x5-video-player-type="h5" x5-video-player-fullscreen="true" x5-video-orientation="portraint" style="object-fit:fill"></video>
+<script type="text/javascript">
+    getMedia()
+    function getMedia() {
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+        var exArray = [];
+        if(navigator.getUserMedia) {
+            if(isiOS) {
+                var medias = {
+                    audio: false,
+                    video: {
+                        facingMode: {
+                            exact: "environment"
+                        }
+                    }
+                }
+
+                navigator.getUserMedia(medias, successCallback, errorCallback);
+            } else {
+                MediaStreamTrack.getSources(function(sourceInfos) {
+                    for(var i = 0; i != sourceInfos.length; ++i) {
+                        var sourceInfo = sourceInfos[i];
+                        if(sourceInfo.kind === "video") {
+                            exArray.push(sourceInfo.id)
+                        }
+                    }
+                    navigator.getUserMedia({
+                        "video": {
+                            "optional": [{
+                                "sourceId": exArray[1]
+                            }]
+                        },
+                        "audio": false
+                    }, successFunc, errorFunc)
+                })
+            }
+
+        } else {
+            alert('Native device meadia streaming(getUserMdeia) not supported in this browser.')
+        }
+    }
+
+    function successFunc(stream) {
+        document.getElementById('video').src = window.URL && window.URL.createObjectURL(stream)
+        video.play();
+    }
+
+    function errorFunc(e) {
+        alert('Error!' + e)
+    }
+
+    function successCallback(stream) {
+        var video = document.getElementById("video");
+        video.srcObject = stream;
+    };
+
+    function errorCallback(err) {
+        alert(err);
+    };
+
+    function closeMedia() {
+        document.getElementById('video').src = '';
+    }
+    function isiOS() {
+        return /(iphone|ipad|ipod|ios)/i.test(navigator.userAgent.toLowerCase());
+    }
+</script>
+</body>
+</html>
