@@ -893,7 +893,7 @@ AR.prototype.init=function () {
             audio: self.openAudio,
             video: {
                 facingMode: {
-                    exact: self.cameraIndex?"environment":"user"
+                    exact: "user"
                 }
             }
         }
