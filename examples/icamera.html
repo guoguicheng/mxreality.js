@@ -13,7 +13,7 @@
         window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
         var exArray = [];
         if(navigator.getUserMedia) {
-            if(isiOS()) {
+            if(false) {
                 var medias = {
                     audio: false,
                     video: {
@@ -26,7 +26,6 @@
 
                 navigator.getUserMedia(medias, successCallback, errorCallback);
             } else {
-                alert('android');
                 MediaStreamTrack.getSources(function(sourceInfos) {
                     for(var i = 0; i != sourceInfos.length; ++i) {
                         var sourceInfo = sourceInfos[i];
