@@ -839,8 +839,6 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.cameraIndex = 1;//0为前置摄像头，否则为后置
 
     this._controlTarget={x:0.0001,y:0,z:0};
-    this._windowWidth = window.innerWidth;
-    this._windowHeight = window.innerHeight;
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
     this.cameraReady=false;
@@ -848,14 +846,11 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.clock = new THREE.Clock();
     this.tempCanvas=document.createElement('canvas');
     this.effect = AVR.stereoEffect(this.renderer);
+    this.takeScreenShot=false;
 
 }
 AR.prototype.init=function () {
     var self = this;
-    window.addEventListener('resize', function () {
-        this.renderer.clear();
-        this.effect.clear();
-    }
     AVR.bindOrientationEnevt(self, self._controlTarget);
     this.video = AVR.createTag('video', {
         'webkit-playsinline': true,
@@ -922,8 +917,9 @@ AR.prototype.takeCameraPhoto=function() {
     ctx.drawImage(this.video, 0, 0,window.innerWidth,window.innerHeight); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
     return ctx.toDataURL();
 }
-AR.prototype.takeScenePhoto=function () {
-    var ctx;
+AR.prototype.takeScreenShot=function () {
+    this.takeScreenShot=true;
+    return this._screenshot;
 }
 AR.prototype.play=function () {
     var that=this;
@@ -933,16 +929,20 @@ AR.prototype.play=function () {
         var width = window.innerWidth;
         var height = window.innerHeight;
         that.camera.aspect = width / height;
+        if(that.takeScreenShot=true){
+            that.takeScreenShot=false;
+            that._screenshot=that.renderer.domElement.toDataURL();
+        }
         if(that.cameraReady) {
-            that.cameraTexture.repeat.y = window.innerHeight / that.video.videoHeight;
+            that.cameraTexture.repeat.y = height / that.video.videoHeight;
             that.cameraTexture.offset.x = 0;
             that.cameraTexture.offset.y = 0;
             if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
-                that.cameraTexture.repeat.x = window.innerWidth / (2 * that.video.videoWidth);
+                that.cameraTexture.repeat.x = width / (2 * that.video.videoWidth);
                 that.effect.setSize(width, height);
                 that.effect.render(that.scene, that.camera);
             } else {
-                that.cameraTexture.repeat.x = window.innerWidth / that.video.videoWidth;
+                that.cameraTexture.repeat.x = width / that.video.videoWidth;
                 that.renderer.setSize(width, height);
                 that.renderer.setClearColor(new THREE.Color(0xffffff));
                 that.renderer.render(that.scene, that.camera);
@@ -952,6 +952,7 @@ AR.prototype.play=function () {
         if (that.controls) {
             that.controls.update(that.clock.getDelta());
         }
+
     }
 
     function animate() {
