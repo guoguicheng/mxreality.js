@@ -918,7 +918,7 @@ AR.prototype.takeCameraPhoto=function() {
     return ctx.toDataURL();
 }
 AR.prototype.takeScreenShot=function () {
-    this.takeScreenShot=true;
+    this._takeScreenShot=true;
     return this._screenshot;
 }
 AR.prototype.play=function () {
@@ -929,8 +929,8 @@ AR.prototype.play=function () {
         var width = window.innerWidth;
         var height = window.innerHeight;
         that.camera.aspect = width / height;
-        if(that.takeScreenShot=true){
-            that.takeScreenShot=false;
+        if(that._takeScreenShot){
+            that._takeScreenShot=false;
             that._screenshot=that.renderer.domElement.toDataURL();
         }
         if(that.cameraReady) {
