@@ -852,6 +852,10 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
 }
 AR.prototype.init=function () {
     var self = this;
+    window.addEventListener('resize', function () {
+        this.renderer.clear();
+        this.effect.clear();
+    }
     AVR.bindOrientationEnevt(self, self._controlTarget);
     this.video = AVR.createTag('video', {
         'webkit-playsinline': true,
