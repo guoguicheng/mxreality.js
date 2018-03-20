@@ -871,8 +871,8 @@ AR.prototype.init=function () {
     this.video.style.position="absolute";
     this.video.style.left="0px";
     this.video.style.top="0px";
-    this.video.style.width=window.innerWidth/2;
-    this.video.style.height=window.innerHeight/2;
+    this.video.style.width=(window.innerWidth/2)+"px";
+    this.video.style.height=(window.innerHeight/2)+"px";
     document.body.appendChild(this.video);
     this.video.oncanplaythrough = function () {
         self.cameraReady = true;
