@@ -36,7 +36,7 @@
         container.appendChild(renderer.domElement);
 
         scene = new THREE.Scene();
-
+        console.log(renderer);
         var vr=new VR(scene,renderer,container,{'fov':60});
         vr.vrbox.radius=50;
         vr.init();
@@ -68,6 +68,7 @@
             console.log(vr.controls.target);
             console.log(vr.controls.object.position);
         },36)*/
+
 
     }
 

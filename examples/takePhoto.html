@@ -32,9 +32,7 @@
         var scene, renderer;
         var container, mesh;
         container = document.getElementById( 'container' );
-        renderer = new THREE.WebGLRenderer({
-            preserveDrawingBuffer: true
-        });
+        renderer = new THREE.WebGLRenderer();
         scene = new THREE.Scene();
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
@@ -76,7 +74,7 @@
         }
         animate();
         document.getElementById('takePhoto').addEventListener("click",function () {
-            window.open(renderer.domElement.toDataURL("image/jpeg"),"_blank")
+            window.open(ar.takeCameraPhoto(),"_blank")
         })
     }
 

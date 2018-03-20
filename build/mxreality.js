@@ -832,7 +832,6 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.scene = scene;
     this.renderer = renderer;
     this.container = container;
-
     this.constraints = {};
     this.video = null;
     this.openAudio = false;
@@ -847,7 +846,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.cameraReady=false;
     this.scene.add(this.camera);
     this.clock = new THREE.Clock();
-
+    this.tempCanvas=document.createElement('canvas');
     this.effect = AVR.stereoEffect(this.renderer);
 
 }
@@ -913,32 +912,14 @@ AR.prototype.init=function () {
         alert(err);
     };
 }
-AR.prototype._createCanvas=function(id){
-    var canvasobj=document.getElementById(id);
-    if(canvasobj ===null) {
-        canvasobj = document.createElement('canvas');
-        canvasobj.style.width = this._windowWidth + "px";
-        canvasobj.style.height = this._windowHeight + "px";
-        canvasobj.id = id;
-        canvasobj.style.background="#ffffff";
-        document.body.appendChild(canvasobj);
-    }
-    return canvasobj;
+AR.prototype.takeCameraPhoto=function() {
+    var ctx = this.tempCanvas.getContext('2d');
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+    ctx.drawImage(this.video, 0, 0,window.innerWidth,window.innerHeight); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
+    return ctx.toDataURL();
 }
-//拍照
-AR.prototype.showPhoto=function() {
-    var canvas1=this._createCanvas('_content');
-    var photoCanvas = canvas1.getContext('2d');
-    photoCanvas.drawImage(this.video, 0, 0,this._windowWidth,this._windowHeight); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
-}
-//视频
-AR.prototype.showVedio=function() {
-    var canvas2 =this._createCanvas('_content');
-    var videoCanvas=canvas2.getContext('2d');
-    // 将视频帧绘制到Canvas对象上,Canvas每60ms切换帧，形成肉眼视频效果
-    setInterval(function () {
-        videoCanvas.drawImage(this.video, 0, 0,this._windowWidth,this._windowHeight);
-    }, 60);
+AR.prototype.takeScenePhoto=function () {
+    var ctx;
 }
 AR.prototype.play=function () {
     var that=this;
@@ -948,28 +929,22 @@ AR.prototype.play=function () {
         var width = window.innerWidth;
         var height = window.innerHeight;
         that.camera.aspect = width / height;
-        AVR.msgBox("iW="+width+",iH="+height+",vW="+that.video.videoWidth+",vH="+that.video.videoHeight,36,document.body);
-        if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
-            if(that.cameraReady) {
-                that.cameraTexture.repeat.x = window.innerWidth/(2*that.video.videoWidth);
-                that.cameraTexture.repeat.y = window.innerHeight/that.video.videoHeight;
-                that.cameraTexture.offset.x = 0;
-                that.cameraTexture.offset.y = 0;
+        if(that.cameraReady) {
+            that.cameraTexture.repeat.y = window.innerHeight / that.video.videoHeight;
+            that.cameraTexture.offset.x = 0;
+            that.cameraTexture.offset.y = 0;
+            if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+                that.cameraTexture.repeat.x = window.innerWidth / (2 * that.video.videoWidth);
+                that.effect.setSize(width, height);
+                that.effect.render(that.scene, that.camera);
+            } else {
+                that.cameraTexture.repeat.x = window.innerWidth / that.video.videoWidth;
+                that.renderer.setSize(width, height);
+                that.renderer.setClearColor(new THREE.Color(0xffffff));
+                that.renderer.render(that.scene, that.camera);
             }
-            that.effect.setSize(width, height);
-            that.effect.render(that.scene, that.camera);
-        } else {
-            if(that.cameraReady) {
-                that.cameraTexture.repeat.x = window.innerWidth/that.video.videoWidth;
-                that.cameraTexture.repeat.y = window.innerHeight/that.video.videoHeight;
-                that.cameraTexture.offset.x = 0;
-                that.cameraTexture.offset.y = 0;
-            }
-            that.renderer.setSize(width, height);
-            that.renderer.setClearColor(new THREE.Color(0xffffff));
-            that.renderer.render(that.scene, that.camera);
+            that.camera.updateProjectionMatrix();
         }
-        that.camera.updateProjectionMatrix();
         if (that.controls) {
             that.controls.update(that.clock.getDelta());
         }
