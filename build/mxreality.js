@@ -846,8 +846,7 @@ var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.clock = new THREE.Clock();
     this.tempCanvas=document.createElement('canvas');
     this.effect = AVR.stereoEffect(this.renderer);
-    this.takeScreenShot=false;
-
+    this._takeScreenShot=false;
 }
 AR.prototype.init=function () {
     var self = this;
@@ -917,21 +916,17 @@ AR.prototype.takeCameraPhoto=function() {
     ctx.drawImage(this.video, 0, 0,window.innerWidth,window.innerHeight); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
     return ctx.toDataURL();
 }
-AR.prototype.takeScreenShot=function () {
+AR.prototype.takeScreenShot=function (callback) {
     this._takeScreenShot=true;
-    return this._screenshot;
+    this._takeScreenShotCallback=callback;
 }
 AR.prototype.play=function () {
     var that=this;
-
     function render() {
-
-
         if(that._takeScreenShot){
             that._takeScreenShot=false;
-            that._screenshot=that.renderer.domElement.toDataURL();
+            that._takeScreenShotCallback(that.renderer.domElement.toDataURL());
         }
-
         if(that.cameraReady) {
             var width = window.innerWidth;
             var height = window.innerHeight;

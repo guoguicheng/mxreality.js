@@ -74,7 +74,9 @@
         }
         animate();
         document.getElementById('takePhoto').addEventListener("click",function () {
-            window.open(ar.takeScreenShot(),"_blank")
+            ar.takeScreenShot(function (screenshot) {
+                window.open(screenshot,"_blank")
+            });
         })
     }
 
