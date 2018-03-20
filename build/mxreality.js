@@ -926,14 +926,16 @@ AR.prototype.play=function () {
 
     function render() {
 
-        var width = window.innerWidth;
-        var height = window.innerHeight;
-        that.camera.aspect = width / height;
+
         if(that._takeScreenShot){
             that._takeScreenShot=false;
             that._screenshot=that.renderer.domElement.toDataURL();
         }
+
         if(that.cameraReady) {
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+            that.camera.aspect = width / height;
             that.cameraTexture.repeat.y = height / that.video.videoHeight;
             that.cameraTexture.offset.x = 0;
             that.cameraTexture.offset.y = 0;
