@@ -74,8 +74,8 @@
         }
         animate();
         document.getElementById('takePhoto').addEventListener("click",function () {
-            alert('click')
-            window.open(ar.takeCameraPhoto(),"_blank")
+            var wi = window.open('about:blank', '_blank');
+            wi.location.href=ar.takeCameraPhoto();
         },false)
     }
 
