@@ -951,10 +951,8 @@ AR.prototype.play=function () {
         AVR.msgBox("iW="+width+",iH="+height+",vW="+that.video.videoWidth+",vH="+that.video.videoHeight,36,document.body);
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             if(that.cameraReady) {
-                var vW=(width * that.video.videoHeight) / height;
-                var vH = (height * that.video.videoWidth) / width;
-                that.cameraTexture.repeat.x = vW / that.video.videoWidth;
-                that.cameraTexture.repeat.y = 1;
+                that.cameraTexture.repeat.x = window.innerWidth/(2*that.video.videoWidth);
+                that.cameraTexture.repeat.y = window.innerHeight/that.video.videoHeight;
                 that.cameraTexture.offset.x = 0;
                 that.cameraTexture.offset.y = 0;
             }
@@ -962,9 +960,8 @@ AR.prototype.play=function () {
             that.effect.render(that.scene, that.camera);
         } else {
             if(that.cameraReady) {
-                var vW = (width * that.video.videoHeight) / height;
-                that.cameraTexture.repeat.x = vW / that.video.videoWidth;
-                that.cameraTexture.repeat.y = 1;
+                that.cameraTexture.repeat.x = window.innerWidth/that.video.videoWidth;
+                that.cameraTexture.repeat.y = window.innerHeight/that.video.videoHeight;
                 that.cameraTexture.offset.x = 0;
                 that.cameraTexture.offset.y = 0;
             }
