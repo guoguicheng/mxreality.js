@@ -948,13 +948,13 @@ AR.prototype.play=function () {
         var width = window.innerWidth;
         var height = window.innerHeight;
         that.camera.aspect = width / height;
-
+        AVR.msgBox("iW="+width+",iH="+height+",vW="+that.video.videoWidth+",vH="+that.video.videoHeight,36,document.body);
         if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
             if(that.cameraReady) {
                 var vW=(width * that.video.videoHeight) / height;
                 var vH = (height * that.video.videoWidth) / width;
                 that.cameraTexture.repeat.x = vW / that.video.videoWidth;
-                that.cameraTexture.repeat.y = vH / that.video.videoHeight;
+                that.cameraTexture.repeat.y = 1;
                 that.cameraTexture.offset.x = 0;
                 that.cameraTexture.offset.y = 0;
             }
