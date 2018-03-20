@@ -13,7 +13,6 @@
         window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
         var exArray = [];
         if(navigator.getUserMedia) {
-            if(false) {
                 var medias = {
                     audio: false,
                     video: {
@@ -25,37 +24,11 @@
                 }
 
                 navigator.getUserMedia(medias, successCallback, errorCallback);
-            } else {
-                MediaStreamTrack.getSources(function(sourceInfos) {
-                    for(var i = 0; i != sourceInfos.length; ++i) {
-                        var sourceInfo = sourceInfos[i];
-                        if(sourceInfo.kind === "video") {
-                            exArray.push(sourceInfo.id)
-                        }
-                    }
-                    navigator.getUserMedia({
-                        "video": {
-                            "optional": [{
-                                "sourceId": exArray[1]
-                            }]
-                        },
-                        "audio": false
-                    }, successFunc, errorFunc)
-                })
-            }
+
 
         } else {
             alert('Native device meadia streaming(getUserMdeia) not supported in this browser.')
         }
-    }
-
-    function successFunc(stream) {
-        document.getElementById('video').src = window.URL && window.URL.createObjectURL(stream)
-        video.play();
-    }
-
-    function errorFunc(e) {
-        alert('Error!' + e)
     }
 
     function successCallback(stream) {
@@ -67,12 +40,6 @@
         alert(err);
     };
 
-    function closeMedia() {
-        document.getElementById('video').src = '';
-    }
-    function isiOS() {
-        return /(iphone|ipad|ipod|ios)/i.test(navigator.userAgent.toLowerCase());
-    }
 </script>
 </body>
 </html>
