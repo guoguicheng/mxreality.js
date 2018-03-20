@@ -76,6 +76,7 @@
         document.getElementById('takePhoto').addEventListener("click",function () {
             alert('click')
             ar.takeScreenShot(function (screenshot) {
+                alert('callback');
                 window.open(screenshot,"_blank")
             });
         },false)
