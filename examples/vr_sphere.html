@@ -36,7 +36,6 @@
         container.appendChild(renderer.domElement);
 
         scene = new THREE.Scene();
-        console.log(renderer);
         var vr=new VR(scene,renderer,container,{'fov':60});
         vr.vrbox.radius=50;
         vr.init();
@@ -54,20 +53,7 @@
             console.log("onError")
         }
         vr.playPanorama('textures/puydesancy.jpg');
-        // 添加坐标轴到场景
-        var geometryEarth = new THREE.SphereGeometry( 1, 60, 40 );
-        var materialEarth = new THREE.MeshLambertMaterial( {
-            color:0xababab
-        } );
-        meshEarth = new THREE.Mesh( geometryEarth, materialEarth );
-        meshEarth.position.set(0,0,30);
-        meshEarth.castShadow=true;
-        scene.add( meshEarth );
-        //console.log(vr.controls);
-        /*setInterval(function () {
-            console.log(vr.controls.target);
-            console.log(vr.controls.object.position);
-        },36)*/
+
 
 
     }
