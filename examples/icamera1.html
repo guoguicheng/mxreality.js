@@ -1,68 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<video id="video" autoplay="autoplay" preload="auto" webkit-playsinline="true" playsinline="true" x-webkit-airplay="allow" x5-video-player-type="h5" x5-video-player-fullscreen="true" x5-video-orientation="portraint" style="object-fit:fill"></video>
+<!--video用于显示媒体设备的视频流，自动播放-->
+<video id="video" autoplay style="width: 480px;height: 320px"></video>
+<!--拍照按钮-->
+<div>
+    <button id="capture">拍照</button>
+</div>
+<!--描绘video截图-->
+<canvas id="canvas" width="480" height="320"></canvas>
 <script type="text/javascript">
-    function init() {
-        // Older browsers might not implement mediaDevices at all, so we set an empty object first
-        if (navigator.mediaDevices === undefined) {
-            navigator.mediaDevices = {};
+    //访问用户媒体设备的兼容方法
+    function getUserMedia(constrains,success,error){
+        if(navigator.mediaDevices.getUserMedia){
+            //最新标准API
+            navigator.mediaDevices.getUserMedia(constrains).then(success).catch(error);
+        } else if (navigator.webkitGetUserMedia){
+            //webkit内核浏览器
+            navigator.webkitGetUserMedia(constrains).then(success).catch(error);
+        } else if (navigator.mozGetUserMedia){
+            //Firefox浏览器
+            navagator.mozGetUserMedia(constrains).then(success).catch(error);
+        } else if (navigator.getUserMedia){
+            //旧版API
+            navigator.getUserMedia(constrains).then(success).catch(error);
         }
-
-        // Some browsers partially implement mediaDevices. We can't just assign an object
-        // with getUserMedia as it would overwrite existing properties.
-        // Here, we will just add the getUserMedia property if it's missing.
-        if (navigator.mediaDevices.getUserMedia === undefined) {
-            navigator.mediaDevices.getUserMedia = function (constraints) {
-
-                // First get ahold of the legacy getUserMedia, if present
-                var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
-                // Some browsers just don't implement it - return a rejected promise with an error
-                // to keep a consistent interface
-                if (!getUserMedia) {
-                    return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
-                }
-
-                // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
-                return new Promise(function (resolve, reject) {
-                    getUserMedia.call(navigator, constraints, resolve, reject);
-                });
-            }
-        }
-
-        navigator.mediaDevices.getUserMedia({
-            audio: false,
-            video: {
-                facingMode:{
-                    exact:"environment"
-                }
-            }
-        })
-            .then(function (stream) {
-                var video = document.querySelector('video');
-                // Older browsers may not have srcObject
-                if ("srcObject" in video) {
-                    video.srcObject = stream;
-                } else {
-                    // Avoid using this in new browsers, as it is going away.
-                    video.src = window.URL.createObjectURL(stream);
-                }
-                video.onloadedmetadata = function (e) {
-                    video.play();
-                };
-            })
-            .catch(function (err) {
-                alert(err.name + ": " + err.message);
-            });
     }
-    window.onload=function () {
-        init();
+
+    var video = document.getElementById("video");
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+
+    //成功的回调函数
+    function success(stream){
+        //兼容webkit内核浏览器
+        var CompatibleURL = window.URL || window.webkitURL;
+        //将视频流设置为video元素的源
+        video.src = CompatibleURL.createObjectURL(stream);
+        //播放视频
+        video.play();
     }
+
+    //异常的回调函数
+    function error(error){
+        console.log("访问用户媒体设备失败：",error.name,error.message);
+    }
+    if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia){
+        //调用用户媒体设备，访问摄像头
+        getUserMedia({
+            audio:false,
+            video:{width:480,height:320}
+        },success,error);
+    } else {
+        alert("你的浏览器不支持访问用户媒体设备");
+    }
+
+    //注册拍照按钮的单击事件
+    document.getElementById("capture").addEventListener("click",function(){
+        //绘制画面
+        context.drawImage(video,0,0,480,320);
+    });
+
 </script>
-</body>
-</html>
