@@ -871,6 +871,8 @@ AR.prototype.init=function () {
     this.video.style.position="absolute";
     this.video.style.left="0px";
     this.video.style.top="0px";
+    this.video.style.width=window.innerWidth/2;
+    this.video.style.height=window.innerHeight/2;
     document.body.appendChild(this.video);
     this.video.oncanplaythrough = function () {
         self.cameraReady = true;
@@ -925,7 +927,8 @@ AR.prototype.play=function () {
     function render() {
         if(that._takeScreenShot){
             that._takeScreenShot=false;
-            that._takeScreenShotCallback(that.renderer.domElement.toDataURL());
+            var screenshot=that.renderer.domElement.toDataURL();
+            that._takeScreenShotCallback(screenshot);
         }
         if(that.cameraReady) {
             var width = window.innerWidth;
