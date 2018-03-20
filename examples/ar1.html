@@ -74,20 +74,12 @@
         }
         animate();
         document.getElementById('takePhoto').addEventListener("click",function () {
+            var wi = window.open('about:blank', '_blank');
             ar.takeScreenShot(function (screenshot) {
-                newWindow(screenshot,'sss');
+                wi.location.href=screenshot;
             });
         },false)
-        function newWindow(url, id) {
-            var a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('target', '_blank');
-            a.setAttribute('id', id);
-            if(!document.getElementById(id)) {
-                document.body.appendChild(a);
-            }
-            a.click();
-        }
+
     }
 
 
