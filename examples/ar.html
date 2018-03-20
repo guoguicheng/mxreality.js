@@ -23,7 +23,6 @@
 <script src="../build/three.js"></script>
 
 <script src="js/renderers/Projector.js"></script>
-<script src="js/renderers/CanvasRenderer.js"></script>
 <script src="../build/mxreality.js?id=cc"></script>
 
 <script>
@@ -55,7 +54,7 @@
     // Based on https://www.openprocessing.org/sketch/6910
     var Boid = function () {
         var vector = new THREE.Vector3(),
-            _acceleration, _width = 500, _height = 500, _depth = 200, _goal, _neighborhoodRadius = 100,
+            _acceleration, _width = 1500, _height = 1500, _depth = 200, _goal, _neighborhoodRadius = 100,
             _maxSpeed = 4, _maxSteerForce = 0.1, _avoidWalls = false;
         this.position = new THREE.Vector3();
         this.velocity = new THREE.Vector3();
