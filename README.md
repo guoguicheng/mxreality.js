@@ -1,4 +1,8 @@
-### mix reality 混合现实网页版  
+#### MXREALITY 官方版上线,新增VR直播功能，（注意，此版本目前为非免费版本）
+
+[官方地址](https://www.mxreality.cn)
+
+#### mix reality 混合现实网页版  （社区版，将持续更新）
 
 [在线文档](https://github.com/guoguicheng/mxreality.js/tree/master/docs/index.md)  
 
