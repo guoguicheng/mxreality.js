@@ -54,18 +54,22 @@
         if(AVR.isCrossScreen()) {
             vr.effect.separation=1.2;
         }
-
+        vr.loadProgressManager.onLoad=function () {
+            console.log('ssssssssssss')
+            vr.video.muted=true;
+            vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
+        }
         //AVR.useGyroscope=false;
-        vr.init();
+        vr.init(function () {
+            
+        });
 
         vr.playPanorama('http://ov4hj29xx.bkt.clouddn.com/360.mp4',vr.resType.video);
         //vr.playPanorama('http://ov4hj29xx.bkt.clouddn.com/panovideo/960p.mp4',vr.resType.video);
         vr.video.setAttribute("loop","loop");
         vr.video.crossOrigin="Anonymous";
-        vr.loadProgressManager.onLoad=function () {
-            vr.video.muted=true;
-            vr.VRObject.getObjectByName("__panoContainer").visible = true;
-        }
+
+
 
         vr.video.onended=function () {
         }

@@ -36,7 +36,9 @@
         var mesh1,distance=40;
         var vr=new VR(scene,renderer,container);
 
-        vr.init();
+        vr.init(function () {
+            
+        });
 
         // 创建一个平面层
         var planeGeometry = new THREE.PlaneGeometry(60, 60);

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>vr sphere example</title>
+    <title>小行星视角全景图</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
@@ -36,26 +36,37 @@
         container.appendChild(renderer.domElement);
 
         scene = new THREE.Scene();
+
         var vr=new VR(scene,renderer,container,{'fov':60});
-        vr.vrbox.radius=50;
-        vr.init();
+        vr.vrbox.radius=10;
+        vr.asteroidConfig.enable=true;
+        //vr.asteroidConfig.asteroidTop=-1;
+        //vr.effect.separation=5;
+
+        vr.init(function () {
+            
+        });
+        //vr.controls.object.position.set(0,-7,0);
+        //vr.camera.lookAt(0,0,0)
         if(!AVR.isCrossScreen()) {
             vr.useGyroscope = false;
         }
         vr.loadProgressManager.onLoad=function () {
-            vr.VRObject.getObjectByName("__panoContainer").visible = true;
-            //vr.controls.enable=false;
+            vr.VRObject.getObjectByName("__mxrealitySkybox").visible = true;
+
+            vr.asteroidForward(function () {
+                //vr.controls.autoRotate=true;
+            });
         }
-        vr.loadProgressManager.onProgress=function () {
-            console.log("onProgress")
-        }
-        vr.loadProgressManager.onError=function () {
-            console.log("onError")
-        }
+        window.addEventListener("click",function () {
+            //vr.controls.object.position.z=0.0001;
+        });
+        /*setInterval(function () {
+            //console.log(vr.controls.object.position.z);
+            vr.controls.object.position.z=0.0001;
+        },36)*/
+
         vr.playPanorama('textures/puydesancy.jpg');
-
-
-
     }
 
 

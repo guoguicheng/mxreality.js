@@ -40,11 +40,14 @@
         vr.vrbox.width=50;
         vr.vrbox.height=50;
         vr.vrbox.depth=50;
-        vr.init();
+
         vr.sliceSegment=4;
         vr.loadProgressManager.onLoad=function () {
-            vr.VRObject.getObjectByName("__panoContainer").visible = true;
+            vr.VRObject.getObjectByName("__mxrealitySlice").visible = true;
         }
+        vr.init(function () {
+
+        });
         vr.sphere2BoxPano("http://ov4hj29xx.bkt.clouddn.com/puydesancy.jpg",1024,1024,function (sliceArray) {
             vr.playPanorama(sliceArray, vr.resType.slice);
         });

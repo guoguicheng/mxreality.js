@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0px;
-            overflow: hidden;
+            overflow: scroll;
         }
         #example {
             position: absolute;
@@ -20,7 +20,7 @@
 </head>
 <body>
 <div id="example"></div>
-
+<img src="" id="test">
 <script src="../build/three.js"></script>
 <script src="./js/controls/OrbitControls.js"></script>
 <script src="../build/mxreality.js"></script>
@@ -36,17 +36,26 @@
 
 
         scene = new THREE.Scene();
-        //AVR.develop=true;
+        AVR.debug=true;
         vr=new VR(scene,renderer,container,{'fov':80});
         vr.vrbox.width=50;
         vr.vrbox.height=50;
         vr.vrbox.depth=50;
+
         vr.loadProgressManager.onLoad=function () {
-            vr.VRObject.getObjectByName("__panoContainer").visible = true;
+            vr.VRObject.getObjectByName("__mxrealitySkybox").visible = true;
         }
-        vr.init();
-        vr.playPanorama("textures/sun_temple_stripe.jpg",vr.resType.box);
-        //vr.playPanorama("textures/aaa.png",vr.resType.box);
+
+        vr.init(function () {
+            
+        });
+        vr.sphere2BoxPano("textures/puydesancy.jpg",1024,1024,function (img) {
+           //document.getElementById("test").src=img;
+            vr.playPanorama(img,vr.resType.box);
+        });
+
+        //
+        //
 
     }
     init();

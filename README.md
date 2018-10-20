@@ -1,8 +1,15 @@
-#### MXREALITY 官方版上线,新增VR直播功能，（注意，此版本目前为非免费版本）
-
 [官方地址](https://www.mxreality.cn)
 
-#### mix reality 混合现实网页版  （社区版，将持续更新）
+#### MXREALITY 混合现实网页版【欢迎加入开发小组】
+
+##### <font color="#dd0000">免费软件，但受软件版权保护，尊重作者的成果，严格遵守协议内容并且保留播放器版权信息</font>
+
+* [2018-10-20 重要更新]
+* 支持VR直播功能
+* 支持全景视频poster
+* 支持全景图和视频和场景之间随意切换
+* 全景模式切换回默认主视角
+* 播放列表
 
 [在线文档](https://github.com/guoguicheng/mxreality.js/tree/master/docs/index.md)  
 

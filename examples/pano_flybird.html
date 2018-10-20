@@ -221,12 +221,12 @@
         scene = new THREE.Scene();
         var vr=new VR(scene,renderer,container,{'fov':60});
         vr.vrbox.radius=500;
-        vr.init();
+
         if(!AVR.isCrossScreen()) {
             vr.useGyroscope = false;
         }
         vr.loadProgressManager.onLoad=function () {
-            vr.VRObject.getObjectByName("__panoContainer").visible = true;
+            vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
         }
         vr.loadProgressManager.onProgress=function () {
             console.log("onProgress")
@@ -234,6 +234,9 @@
         vr.loadProgressManager.onError=function () {
             console.log("onError")
         }
+        vr.init(function () {
+
+        });
         vr.playPanorama('textures/puydesancy.jpg');
         var SCREEN_WIDTH = window.innerWidth,
             SCREEN_HEIGHT = window.innerHeight,

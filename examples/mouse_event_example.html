@@ -31,12 +31,12 @@
 
         var vr=new VR(scene,renderer,container,{'fov':60});
         vr.vrbox.radius=50;
-        vr.init();
+
         if(!AVR.isCrossScreen()) {
             vr.useGyroscope = false;
         }
         vr.loadProgressManager.onLoad=function () {
-            vr.VRObject.getObjectByName("__panoContainer").visible = true;
+            vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
             //vr.controls.enable=false;
         }
         vr.loadProgressManager.onProgress=function () {
@@ -45,6 +45,9 @@
         vr.loadProgressManager.onError=function () {
             console.log("onError")
         }
+        vr.init(function () {
+
+        });
         vr.playPanorama('textures/puydesancy.jpg');
 
 

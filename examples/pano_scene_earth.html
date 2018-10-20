@@ -50,7 +50,9 @@
         renderer = new THREE.WebGLRenderer();
         container = document.getElementById( 'container' );
         VR=new VR(scene,renderer,container);
-        VR.init();
+        VR.init(function () {
+            
+        });
 
         var envLight=new THREE.AmbientLight(0xffffff,0.5);
         scene.add(envLight);

@@ -1,7 +1,7 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>测试视频</title>
+    <title>小行星视角测试视频</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <style>
 
@@ -50,24 +50,36 @@
         var vr=new VR(scene,renderer,container,{"fov":50});
 
         //vr.playText="<img src='img/play90.png' width='40' height='40'/>";
-        vr.vrbox.radius=600;
+        vr.vrbox.radius=2;
+        vr.asteroidConfig.enable=true;
         if(AVR.isCrossScreen()) {
             vr.effect.separation=1.2;
         }
+        var times=0;
+        vr.loadProgressManager.onLoad=function () {
+            console.log("loaded")
+            if(times<1) {
+                vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
+                vr.asteroidForward();
+                times++;
+            }
+
+        }
 
         //AVR.useGyroscope=false;
-        vr.init();
+        vr.init(function () {
+            
+        });
 
         vr.playPanorama('http://ov4hj29xx.bkt.clouddn.com/360.mp4',vr.resType.video);
         vr.video.setAttribute("loop","loop");
         vr.video.crossOrigin="Anonymous";
-        vr.loadProgressManager.onLoad=function () {
-            //vr.VRObject.getObjectByName("__panoContainer").geometry.applyMatrix(new THREE.Matrix4().makeScale(1.0,0.4,1.0));
-            vr.VRObject.getObjectByName("__panoContainer").visible = true;
-        }
+        vr.video.autoplay=true;
+
 
         vr.video.onended=function () {
         }
+
 
     }
 

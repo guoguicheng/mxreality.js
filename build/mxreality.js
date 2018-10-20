@@ -4,30 +4,37 @@
 
 
 var VR=function (scene,renderer,container,cameraPara,cameraPosition) {
-    AVR.initDomStyle(container);
-    AVR.setCameraPara(this,cameraPara,cameraPosition);
-    this.vrbox={"radius":2, "widthSegments":180, "heightSegments":180,"width":2,"height":2,"depth":2};
     this.scene=scene;
     this.renderer=renderer;
     this.container=container;
+    AVR.initDomStyle(container);
+    AVR.setCameraPara(this,cameraPara,cameraPosition);
+    this.vrbox={"radius":2, "widthSegments":180, "heightSegments":180,"width":2,"height":2,"depth":2};
+
     this.video=null;
     this.audio=null;
-    this.videoToolBar=null;
-    this.autoplayPanoImg=false;
+    this.toolBar=null;
     this.clock = new THREE.Clock();
     this.VRObject=new THREE.Object3D();
     this.defaultAutoHideLeftTime=3;
     this.defaultVoiceHideLeftTime=2;
     this.defaultVolume=0.3;
     this.sliceSegment=0;
-    this._controlTarget={x:0.0001,y:0,z:0};
-    this.resType={"video":"video","box":"box","slice":"slice"};
-    this.asteroidConfig={enable:false,assteroidFPS:36,assteroidFov:135,asteroidForwardTime:2000,asteroidWaitTime:1000,asteroidDepressionRate:0.5,asteroidTop:1,cubeResolution:2048};
+    this._controlTarget=new THREE.Vector3(0,0,0.0001);
+    this._cubeCameraTimes=0.96;
+    this.resType={"video":"video","box":"box","slice":"slice","sliceVideo":"sliceVideo"};
+    this.asteroidConfig={
+        enable:false,
+        asteroidFPS:10,asteroidFov:135,asteroidForwardTime:2600,asteroidWaitTime:2000,
+        asteroidDepressionRate:0.5,asteroidTop:1,cubeResolution:2048,
+        rotationAngleOfZ:0
+    };
     this.VRhint="请取消屏幕翻转锁定后装入VR盒子中";
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
+    this.camera.lookAt(this._controlTarget);
     //this.camera=new THREE.OrthographicCamera(window.innerWidth / -16, window.innerWidth / 16, window.innerHeight / 16, window.innerHeight / -16, -200, 500);
-
-
+    this.cameraEvt={'controlGroup':function () {},'updatePosition':function () {},'hover':function () {},'leave':function () {}};
+    this._takeScreenShot=false;
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
     this.loadProgressManager=new THREE.LoadingManager(function (xhr){
         console.log("loaded");
@@ -40,15 +47,339 @@ var VR=function (scene,renderer,container,cameraPara,cameraPosition) {
     this.scene.add(this.VRObject);
     //this.renderer.setPixelRatio( window.devicePixelRatio );
     this.effect = AVR.stereoEffect(this.renderer);
+    AVR.bindOrientationEnevt(this,this._controlTarget);
 
-}
-VR.prototype.init=function () {
+
+
+};
+VR.prototype.init=function (extendsAnimationFrame) {
     var that=this;
+    var startPos=new THREE.Vector2();
+    var curPos=new THREE.Vector2();
+    that.toolBar = AVR.toolBar(that.container);
+    var toolBar=that.toolBar;
+
+    toolBar.defaultHeight=toolBar.toolbar.clientHeight;
+    toolBar.defaultMaxHeight =toolBar.defaultHeight*5;
+    toolBar.isMouseDown=false;
+    that.container.addEventListener("click", function () {
+        that.autoHideLeftTime = that.defaultAutoHideLeftTime;
+        toolBar.toolbar.style.display = "block";
+    });
+    toolBar.gyroBtn.addEventListener("click", function () {
+        that.gyroBtnClick();
+    }, false);
+    toolBar.vrBtn.addEventListener("click", function () {
+        that.vrBtnClick();
+    }, false);
+    toolBar.moreBtn.addEventListener("click",function () {
+        that.moreBtnClick();
+    },false)
+    toolBar.gyroResetBtn.addEventListener("click",ongyroreset,false);
+    toolBar.toolbar.addEventListener("mousedown",onmousedown,false);
+    toolBar.toolbar.addEventListener("touchstart",onmousedown,false);
+    toolBar.toolbar.addEventListener("mousemove",onmousemove,false);
+    toolBar.toolbar.addEventListener("touchmove",onmousemove,false);
+    toolBar.toolbar.addEventListener("mouseup",onmouseup,false);
+    toolBar.toolbar.addEventListener("touchend",onmouseup,false);
+    toolBar.toolbar.addEventListener("mouseout",function (e) {
+        that.autoHideLeftTime=that.defaultAutoHideLeftTime;
+        toolBar.isActive=false;
+    },false);
+    that.renderer.domElement.addEventListener('wheel', function (e) {
+        var delta = e.deltaY > 0 ? 15 : -15;
+        if (that.camera.fov + delta * 0.05 >= 10 && that.camera.fov + delta * 0.05 <= 120) {
+            fovChange(delta);
+        }
+    }, false);
+
+    toolBar.moreList.addEventListener("mousemove",slide,false);
+    toolBar.moreList.addEventListener("touchmove",slide,false);
+
+    that.moreBtnClick=function(e) {
+        if (toolBar.toolbar.clientHeight > toolBar.defaultHeight) {
+            slideBar(-10);
+        } else {
+            slideBar(6);
+        }
+    }
+    that.vrBtnClick=function(e) {
+        var vrBtn=that.toolBar.vrBtn;
+        if (AVR.isMobileDevice()) {
+            if (AVR.OS.isWeixin() && !AVR.OS.isiOS()) {
+                if (that.video.getAttribute('x5-video-orientation') == "landscape") {
+                    that.video.setAttribute('x5-video-orientation', 'portraint');
+                    btnInactive(vrBtn);
+                } else {
+                    that.video.setAttribute('x5-video-orientation', 'landscape');
+                    btnActive(vrBtn);
+                }
+            } else {
+                if (!AVR.isCrossScreen()) {
+                    btnInactive(vrBtn);
+                    AVR.msgBox(that.VRhint, 5, that.container);
+                } else {
+                    btnActive(vrBtn);
+                    AVR.fullscreen(that.container);
+                }
+            }
+        } else {
+            if (!vrBtn.getAttribute("fullscreen")) {
+                btnActive(vrBtn);
+                vrBtn.setAttribute("fullscreen", "true");
+            } else {
+                btnInactive(vrBtn);
+                vrBtn.removeAttribute("fullscreen");
+            }
+            AVR.fullscreen(that.container);
+        }
+    };
+    that.gyroBtnClick=function(e) {
+        var gyroBtn=that.toolBar.gyroBtn;
+        if (!gyroBtn.getAttribute("active")) {
+            that.controls.gyroFreeze();
+            btnActive(gyroBtn);
+            btnActive(toolBar.circle1);
+            btnActive(toolBar.circle2);
+            gyroBtn.setAttribute("active", "active");
+
+        } else {
+            that.controls.gyroUnfreeze();
+            gyroBtn.removeAttribute("active");
+            btnInactive(gyroBtn);
+            btnInactive(toolBar.circle1);
+            btnInactive(toolBar.circle2);
+
+        }
+    }
+    function ongyroreset() {
+        that.controls && (that.controls.reset());
+    }
+    function onmousedown(e) {
+        toolBar.isMouseDown=true;
+        var x=e.clientX||e.changedTouches[0].clientX;
+        var y=e.clientY||e.changedTouches[0].clientY;
+        startPos.set(x,y);
+        curPos.set(x, y);
+        that.autoHideLeftTime=that.defaultAutoHideLeftTime;
+        toolBar.isActive=true;
+    }
+    function onmouseup(e) {
+        toolBar.isMouseDown=false;
+    }
+    function onmousemove(e) {
+        e.preventDefault();
+        that.autoHideLeftTime=that.defaultAutoHideLeftTime;
+        that.toolBar.isActive=true;
+        if(toolBar.isMouseDown) {
+            var x=e.clientX||e.changedTouches[0].clientX;
+            var y=e.clientY||e.changedTouches[0].clientY;
+            var offsetY=curPos.y-y;
+            if(offsetY>=5){
+                slideBar(6);
+            }
+            if(offsetY<=-5){
+                slideBar(-10);
+            }
+            curPos.set(x, y);
+        }
+    }
+    function slideBar(h) {
+        var animateTimer = setInterval(function () {
+            var step = (toolBar.toolbar.clientHeight + h);
+            if (step >= toolBar.defaultHeight && step <= toolBar.defaultMaxHeight) {
+                toolBar.toolbar.style.height = step + "px";
+                toolBar.isActive = true;
+            } else {
+                clearInterval(animateTimer);
+                if (h > 0) {
+                    toolBar.isActive = true;
+                    toolBar.moreBtn.style.transform = "rotate(-180deg)";
+                    toolBar.moreBtn.style.webkitTransform = "rotate(-180deg)";
+                    toolBar.toolbar.style.height = toolBar.defaultMaxHeight + "px";
+                    toolBar.about.style.display="block";
+                } else {
+                    toolBar.isActive = false;
+                    toolBar.moreBtn.style.transform = "rotate(0deg)";
+                    toolBar.moreBtn.style.webkitTransform = "rotate(0deg)";
+                    toolBar.toolbar.style.height = toolBar.defaultHeight + "px";
+                    toolBar.about.style.display="none";
+                }
+
+            }
+            that.autoHideLeftTime=that.defaultAutoHideLeftTime;
+        }, 1);
+
+    }
+    function slide(e) {
+        that.autoHideLeftTime=that.defaultAutoHideLeftTime;
+        toolBar.isActive = true;
+        var x=e.clientX||e.changedTouches[0].clientX;
+        var y=e.clientY||e.changedTouches[0].clientY;
+        if(toolBar.isMouseDown) {
+            toolBar.moreList.scrollLeft +=(curPos.x-x)*2.5;
+        }
+        curPos.set(x, y);
+    }
+    function fovChange(delta) {
+        that.camera.fov += delta * 0.05;
+        that.camera.updateProjectionMatrix();
+    }
+    that.windowResize=function(){
+        if (!AVR.isFullscreen()) {
+            if (AVR.OS.isWeixin() && !AVR.OS.isiOS()) {
+                if (that.video.getAttribute('x5-video-orientation') == "landscape") {
+                    btnActive(that.toolBar.vrBtn);
+                } else {
+                    btnInactive(that.toolBar.vrBtn);
+                }
+                if (AVR.isCrossScreen()) {
+                    btnActive(that.toolBar.vrBtn);
+                } else {
+                    btnInactive(that.toolBar.vrBtn);
+                }
+            } else {
+                if (AVR.isCrossScreen()) {
+                    btnActive(that.toolBar.vrBtn);
+                } else {
+                    btnInactive(that.toolBar.vrBtn);
+                }
+                btnInactive(that.toolBar.vrBtn);
+            }
+        } else {
+            if (AVR.isMobileDevice()) {
+                if (AVR.isCrossScreen()) {
+                    btnActive(that.toolBar.vrBtn);
+                } else {
+                    btnInactive(that.toolBar.vrBtn);
+                }
+
+            } else {
+                btnActive(that.toolBar.vrBtn);
+            }
+        }
+    };
+    window.addEventListener('resize', function () {
+        bindVolumeEvent();
+    }, false);
+
+    function btnActive(obj) {
+        obj.style.borderColor = "green";
+        obj.style.color = "green";
+
+        if(that.cameraEvt.controlGroup.length) {
+            var pointObj=that.cameraEvt.controlGroup.getObjectByName("__focus");
+            pointObj.visible = true;
+        }
+    }
+
+    function btnInactive(obj) {
+        obj.style.borderColor = "white";
+        obj.style.color = "white";
+
+        if(that.cameraEvt.controlGroup.length) {
+            var pointObj=that.cameraEvt.controlGroup.getObjectByName("__focus");
+            pointObj.visible = false;
+        }
+    }
+
+    that._play = function () {
+        toolBar.btn.style.border = "none";
+        toolBar.btn.style.fontWeight = 800;
+        toolBar.btn.innerHTML = "<b>||</b>";
+    }
+
+    that._pause = function () {
+        toolBar.btn.innerText = "";
+        toolBar.btn.style.borderTop = "0.6rem solid transparent";
+        toolBar.btn.style.borderLeft = "1rem solid white";
+        toolBar.btn.style.borderBottom = "0.6rem solid transparent";
+    }
+
+    function bindVolumeEvent() {
+        var Audio=that.video || that.audio;
+        if (Audio) {
+            toolBar.voice_bar.style.display = "block";
+            var voice_bar = toolBar.voice_bar;
+            var voice_slide_bar = voice_bar.firstChild;
+            var voice_cur_slide_bar = voice_slide_bar.firstChild;
+            var voice_btn = voice_cur_slide_bar.firstChild;
+            var mouseDown = false, touchStartY = 0, touchCurrentY = 0, tempY;
+            Audio.volume = that.defaultVolume;
+            var voice_bar_height=toolBar.voice_bar.clientHeight;
+            var offset_h=(that.container.clientHeight-voice_bar_height)/2;
+            var h_top=voice_bar_height+offset_h;
+            voice_cur_slide_bar.style.height = (Audio.volume * voice_bar_height) + "px";
+            voice_bar.addEventListener("mousedown", function (e) {
+                voice_bar.style.opacity = 1;
+            }, false);
+            voice_slide_bar.addEventListener("click", function (e) {
+                var y=(e.clientY||e.changedTouches[0].clientY)-that.container.offsetTop;
+                that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
+                var cur_h=h_top-y;
+                if(cur_h / voice_bar_height<=1) {
+                    voice_cur_slide_bar.style.height = cur_h + "px";
+                    Audio.volume = cur_h / voice_bar_height;
+                }
+
+            }, false);
+            voice_bar.addEventListener("mouseout",function (e) {
+                mouseDown=false;
+            },false);
+            voice_bar.addEventListener("mousedown", function (e) {
+                mouseDown = true;
+            }, false);
+            voice_bar.addEventListener("mouseup", function (e) {
+                mouseDown = false;
+            }, false);
+            voice_bar.addEventListener("mousemove", function (e) {
+                var y=(e.clientY||e.changedTouches[0].clientY)-that.container.offsetTop;
+                that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
+                if (mouseDown) {
+                    var cur_h=h_top-y;
+                    voice_cur_slide_bar.style.height = cur_h + "px";
+                    if (cur_h / voice_bar_height <= 1)
+                        Audio.volume = cur_h / voice_bar_height;
+                }
+            }, false);
+            voice_bar.addEventListener("touchstart", function (e) {
+                e.preventDefault();
+                that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
+                tempY = voice_cur_slide_bar.clientHeight;
+                touchStartY = e.touches[0].pageY;
+                voice_bar.style.opacity = 1;
+            }, false);
+            voice_bar.addEventListener("touchmove", function (e) {
+                e.preventDefault();
+                that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
+                touchCurrentY = e.touches[0].pageY;
+                var next_h=tempY + (touchStartY - touchCurrentY);
+                if (next_h/voice_bar_height<=1) {
+                    voice_cur_slide_bar.style.height = next_h + "px";
+                    Audio.volume = next_h / voice_bar_height;
+                }
+            }, false);
+            voice_bar.addEventListener("touchend", function (e) {
+                tempY = 0;
+            }, false);
+            setInterval(function () {
+                if (that.voiceHideLeftTime <= 0) {
+                    voice_bar.style.opacity = 0;
+                } else {
+                    that.toolBar.isActive?null:that.voiceHideLeftTime--;
+                }
+            }, 1000);
+
+        }
+    }
+    that.bindVolumeBar=bindVolumeEvent;
     function render() {
+
         var width = that.container.offsetWidth;
         var height = that.container.offsetHeight;
         that.camera.aspect = width / height;
         if((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+            that.cameraEvt.updatePosition();
             that.effect.setSize(width, height);
             that.effect.render(that.scene, that.camera);
         }else{
@@ -56,167 +387,63 @@ VR.prototype.init=function () {
             that.renderer.setClearColor(new THREE.Color(0xffffff));
             that.renderer.render(that.scene, that.camera);
         }
+        if(that._takeScreenShot){
+            that._takeScreenShot=false;
+            var screenshot=that.renderer.domElement.toDataURL("image/jpeg");
+            that._takeScreenShotCallback(screenshot);
+        }
         that.camera.updateProjectionMatrix();
         if(that.controls){
-            that.controls.update(that.clock.getDelta());
+            that.controls.update();
         }
+        extendsAnimationFrame();
     }
 
     function animate() {
-        requestAnimationFrame(animate);
         render();
+        requestAnimationFrame(animate);
     }
     animate();
     //if you don't use an asteroid view,you need to initialize the controller after the asteroid view.
-    if(!that.asteroidConfig.enable){
-        AVR.bindOrientationEnevt(that,that._controlTarget);
-    }
-    window.addEventListener('resize', function () {
-        AVR.bindOrientationEnevt(that,that._controlTarget);
-    }, false);
+    setInterval(function () {
+        if(!toolBar.isActive) {
+            if (that.autoHideLeftTime < 0) {
+                toolBar.toolbar.style.display = "none";
+                that.autoHideLeftTime=that.defaultAutoHideLeftTime;
+                toolBar.isActive = false;
+            } else {
+                that.autoHideLeftTime--;
+            }
+        }
+        that.windowResize();
+    }, 1000);
+
 };
-VR.prototype.playPanorama=function (recUrl,resType,objName) {
-    objName=objName||"__panoContainer";
+VR.prototype.takeScreenShot=function (callback) {
+    this._takeScreenShot=true;
+    this._takeScreenShotCallback=callback;
+};
+VR.prototype.playPanorama=function (recUrl,resType) {
+    var ids=['__mxrealitySkybox',"__mxrealitySlice","__mxrealityDefault"];
+    for(var i in ids){
+        var obj=this.VRObject.getObjectByName(ids[i]);
+        obj && (obj.visible=false);
+        this.cubeCameraSphere &&(this.cubeCameraSphere.visible=false);
+    }
     var that = this;
-    that._containerRadius=(that.resType.box == resType|| that.resType.slice==resType) ? (that.vrbox.width / 2.1) : that.vrbox.radius;
+    var toolBar=that.toolBar;
+    that._containerRadius=(that.resType.box == resType|| that.resType.slice==resType) ? (that.vrbox.width / 2) : that.vrbox.radius;
 
     that.autoHideLeftTime = that.defaultAutoHideLeftTime;
     that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
 
-    that.videoToolBar = AVR.videoToolBar(that.container);
-
-    that.container.addEventListener("click", function () {
-        that.autoHideLeftTime = that.defaultAutoHideLeftTime;
-        that.videoToolBar.toolbar.style.display = "block";
-    });
-    that.videoToolBar.gyroBtn.addEventListener("click", function () {
-        if (!this.getAttribute("active")) {
-            that.controls.gyroFreeze();
-            btnActive(this);
-            btnActive(that.videoToolBar.circle1);
-            btnActive(that.videoToolBar.circle2);
-            this.setAttribute("active", "active");
-
-        } else {
-            that.controls.gyroUnfreeze();
-            this.removeAttribute("active");
-            btnInactive(this);
-            btnInactive(that.videoToolBar.circle1);
-            btnInactive(that.videoToolBar.circle2);
-
-        }
-    }, false);
-    that.videoToolBar.vrBtn.addEventListener("click", function (e) {
-
-        if (AVR.isMobileDevice()) {
-            if (AVR.OS.isWeixin() && !AVR.OS.isiOS()) {
-                if (that.video.getAttribute('x5-video-orientation') == "landscape") {
-                    that.video.setAttribute('x5-video-orientation', 'portraint');
-                    btnInactive(this);
-                } else {
-                    that.video.setAttribute('x5-video-orientation', 'landscape');
-                    btnActive(this);
-                }
-            } else {
-                if (!AVR.isCrossScreen()) {
-                    btnInactive(this);
-                    AVR.msgBox(that.VRhint, 5, that.container);
-                } else {
-                    btnActive(this);
-                    AVR.fullscreen(that.container);
-                }
-            }
-        } else {
-            if (!this.getAttribute("fullscreen")) {
-                btnActive(this);
-                this.setAttribute("fullscreen", "true");
-            } else {
-                btnInactive(this);
-                this.removeAttribute("fullscreen");
-            }
-            AVR.fullscreen(that.container);
-        }
-    }, false);
-    that.renderer.domElement.addEventListener( 'wheel', function(e) {
-        var delta = e.deltaY > 0 ? 15 : -15;
-        if (that.camera.fov + delta * 0.05 >= 10 && that.camera.fov + delta * 0.05 <= 120) {
-            fovChange(delta);
-        }
-    }, false );
-    function fovChange(delta){
-        that.camera.fov += delta * 0.05;
-        that.camera.updateProjectionMatrix();
-    }
-    window.addEventListener('resize', function () {
-        if (!AVR.isFullscreen()) {
-            if (AVR.OS.isWeixin() && !AVR.OS.isiOS()) {
-                if (that.video.getAttribute('x5-video-orientation') == "landscape") {
-                    btnActive(that.videoToolBar.vrBtn);
-                } else {
-                    btnInactive(that.videoToolBar.vrBtn);
-                }
-                AVR.isCrossScreen(function (ret) {
-                    if (ret) {
-                        btnActive(that.videoToolBar.vrBtn);
-                    } else {
-                        btnInactive(that.videoToolBar.vrBtn);
-                    }
-                });
-            } else {
-                AVR.isCrossScreen(function (ret) {
-                    if (ret) {
-                        btnActive(that.videoToolBar.vrBtn);
-                    } else {
-                        btnInactive(that.videoToolBar.vrBtn);
-                    }
-                });
-                btnInactive(that.videoToolBar.vrBtn);
-            }
-        } else {
-
-            if (AVR.isMobileDevice()) {
-                AVR.isCrossScreen(function (ret) {
-                    if (ret) {
-                        btnActive(that.videoToolBar.vrBtn);
-                    } else {
-                        btnInactive(that.videoToolBar.vrBtn);
-                    }
-                });
-
-            } else {
-                btnActive(that.videoToolBar.vrBtn);
-            }
-        }
-        bindVolumeEvent();
-    }, false);
-    function btnActive(obj) {
-        obj.style.borderColor = "green";
-        obj.style.color = "green";
-    }
-
-    function btnInactive(obj) {
-        obj.style.borderColor = "white";
-        obj.style.color = "white";
-    }
-
-    that._play=function() {
-        that.videoToolBar.btn.style.border = "none";
-        that.videoToolBar.btn.style.fontWeight = 800;
-        that.videoToolBar.btn.innerHTML = "<b>||</b>";
-    }
-
-    that._pause=function() {
-        that.videoToolBar.btn.innerText = "";
-        that.videoToolBar.btn.style.borderTop = "0.6rem solid transparent";
-        that.videoToolBar.btn.style.borderLeft = "1rem solid white";
-        that.videoToolBar.btn.style.borderBottom = "0.6rem solid transparent";
-    }
-
     if (that.resType.box == resType) {
+        that.toolBar.timeInfo.style.display="none";
         var textures = [];
         var materials = [];
 
         var imageObj = new Image();
+        imageObj.crossOrigin="Anonymous";
         imageObj.src = recUrl;
         imageObj.onload = function () {
             var canvas, context;
@@ -233,286 +460,285 @@ VR.prototype.playPanorama=function (recUrl,resType,objName) {
                 textures[i].needsUpdate = true;
                 materials.push(new THREE.MeshBasicMaterial({map: textures[i]}));
             }
-            var Box = new THREE.Mesh(new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth), new THREE.MultiMaterial(materials));
-            Box.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
-            Box.visible=false;
-            Box.name = objName;
-            that.VRObject.add(Box);
+            var Box=that.VRObject.getObjectByName("__mxrealitySkybox");
+            if(!Box) {
+                var Box = new THREE.Mesh(new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth), new THREE.MultiMaterial(materials));
+                Box.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
+                Box.visible = false;
+                Box.name = "__mxrealitySkybox";
+                Box.matrixAutoUpdate=false;
+                Box.updateMatrix();
+                that.VRObject.add(Box);
+                toolBar.btn.addEventListener("click", function (e) {
+                    that.controls.autoRotate ? that._pause() : that._play();
+                    that.controls.autoRotate = !that.controls.autoRotate;
+                });
+            }else{
+                Box.material=materials;
+            }
             that.loadProgressManager.onLoad();
         }
-        imgPanoToolBar();
-    }else if(that.resType.slice==resType){
-        var cubeGeometry = new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth, that.sliceSegment, that.sliceSegment, that.sliceSegment);
+
+    }else if(that.resType.slice==resType) {
         //cubeGeometry.scale(-1, 1, 1)
+        that.toolBar.timeInfo.style.display="none";
         var textureLoader = new THREE.TextureLoader(that.loadProgressManager);
         textureLoader.mapping = THREE.UVMapping;
-        var materials=[];
-        for(var i=0;i<recUrl.length;i++){
-            materials.push(new THREE.MeshBasicMaterial({map:textureLoader.load(recUrl[i])}));
+        var materials = [];
+        for (var i = 0; i < recUrl.length; i++) {
+            var texture=textureLoader.load(recUrl[i]);
+            materials.push(new THREE.MeshBasicMaterial({map: texture}));
         }
-        var faceId=0;
+
+        var cubeGeometry = new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth, that.sliceSegment, that.sliceSegment, that.sliceSegment);
+        var faceId = 0;
         var uv = [new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1), new THREE.Vector2(0, 1)];
-        for (var i = 0, l = cubeGeometry.faces.length; i < l; i+=2) {
+
+        for (var i = 0, l = cubeGeometry.faces.length; i < l; i += 2) {
             cubeGeometry.faces[i].materialIndex = faceId;
             cubeGeometry.faces[i + 1].materialIndex = faceId;
             cubeGeometry.faceVertexUvs[0][i] = [uv[3], uv[0], uv[2]];
             cubeGeometry.faceVertexUvs[0][i + 1] = [uv[0], uv[1], uv[2]];
             faceId++;
         }
-        var cube=new THREE.Mesh(cubeGeometry,materials);
-        cube.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
-        cube.name = objName;
-        cube.visible=false;
-        that.VRObject.add(cube);
-        if(that.asteroidConfig.enable){
+        var obj = that.VRObject.getObjectByName("__mxrealitySlice");
+        if (obj) {
+            obj.material = materials;
+            obj.geometry = cubeGeometry;
+            obj.updateMatrix();
+        }else {
+
+            var cube = new THREE.Mesh(cubeGeometry, materials);
+            cube.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
+            cube.name = "__mxrealitySlice";
+            cube.visible = false;
+            cube.matrixAutoUpdate=false;
+            cube.updateMatrix();
+            that.VRObject.add(cube);
             that.cubeCamera = new THREE.CubeCamera(that._containerRadius, that.cameraPara.far, that.asteroidConfig.cubeResolution);
-            var cubeCameraTexture=that.cubeCamera.renderTarget.texture;
+            var cubeCameraTexture = that.cubeCamera.renderTarget.texture;
             cubeCameraTexture.minFilter = THREE.LinearMipMapLinearFilter;
 
             that.VRObject.add(that.cubeCamera);
             material = new THREE.MeshBasicMaterial({
                 envMap: that.cubeCamera.renderTarget.texture, side: THREE.BackSide
             });
-            sphere = new THREE.Mesh(new THREE.SphereGeometry(that._containerRadius, 180, 180), material);
-            sphere.position.set(0,0,0);
-            that.VRObject.add(sphere);
-            that.asteroidForward=function(callback){
+            that.cubeCameraSphere = new THREE.Mesh(new THREE.SphereGeometry(that._containerRadius*that._cubeCameraTimes, 180, 180), material);
+            that.cubeCameraSphere.position.set(0,0,0);
+            that.cubeCameraSphere.name="__mxrealitySlice";
+            that.cubeCameraSphere.visible=false;
+            that.cubeCameraSphere.matrixAutoUpdate=false;
+            that.cubeCameraSphere.updateMatrix();
+            that.VRObject.add(that.cubeCameraSphere);
+
+            toolBar.btn.addEventListener("click", function (e) {
+                that.controls.autoRotate ? that._pause() : that._play();
+                that.controls.autoRotate = !that.controls.autoRotate;
+            });
+        }
+        if (that.asteroidConfig.enable) {
+            that.cubeCameraSphere.visible=true;
+            that.asteroidForward = function (callback) {
                 that.cubeCamera.update(that.renderer, that.scene);
                 asteroidForward(callback);
             }
-        }else {
-            that._controlTarget = {x: -0.001, y: 0, z: 0};
+        }else{
+            that.cubeCameraSphere.visible=false;
         }
-        imgPanoToolBar();
-
     } else {
-        var phiStart = AVR.isMobileDevice()?Math.PI/2:-Math.PI/2;
-        var geometry = geometry = new THREE.SphereBufferGeometry(this.vrbox.radius, this.vrbox.widthSegments, this.vrbox.heightSegments, phiStart);
-        geometry.scale(-1, 1, 1); //x取反（面朝里）
-        if (that.resType.video == resType) {
+        if (that.resType.video == resType || that.resType.sliceVideo==resType) {
+            if(!that.video){
+                var video = that.video = AVR.createTag('video', {
+                    'webkit-playsinline': true,
+                    'playsinline': true,
+                    'preload': 'auto',
+                    'x-webkit-airplay': 'allow',
+                    'x5-playsinline': true,
+                    'x5-video-player-type': 'h5',
+                    'x5-video-player-fullscreen': true,
+                    'x5-video-orientation': 'portrait',
+                    'width': AVR.Broswer.isIE() ? 1920 : "auto",
+                    'height': AVR.Broswer.isIE() ? 960 : "auto",
+                    'style': 'object-fit: fill',
+                    'loop':"loop"
+                }, {
+                    'allowsInlineMediaPlayback': true,
+                    'crossOrigin': "Anonymous"
+                });
 
-            var video = AVR.createTag('video', {
-                'webkit-playsinline': true,
-                'playsinline': true,
-                'preload': 'auto',
-                'x-webkit-airplay': 'allow',
-                'x5-playsinline': true,
-                'x5-video-player-type': 'h5',
-                'x5-video-player-fullscreen': true,
-                'x5-video-orientation': 'portrait',
-                'width': AVR.Broswer.isIE() ? 1920 : 2048,
-                'height': AVR.Broswer.isIE() ? 960 : 1024,
-                'src': recUrl,
-                'style': 'object-fit: fill'
-            }, {
-                'allowsInlineMediaPlayback': true
-            });
-
-            var buffTimer = false;
-
-            setInterval(function (e) {
-                that.videoToolBar.playProgress.style.width = (video.currentTime / video.duration) * 100 + "%";
-                that.videoToolBar.curTime.innerText = AVR.formatSeconds(video.currentTime);
-                that.videoToolBar.totalTime.innerText = AVR.formatSeconds(video.duration);
-                if (that.autoHideLeftTime < 0 && !video.paused) {
-                    that.videoToolBar.toolbar.style.display = "none";
-                } else {
-                    that.autoHideLeftTime--;
+            }else{
+                var video = that.video;
+                for(var node=0;node<video.childNodes.length;node++){
+                    video.removeChild(video.childNodes[node]);
                 }
-            }, 1000);
+            }
+            if(that.resType.sliceVideo==resType){
+                if(Hls.isSupported()) {
+                    that.hls = new Hls();
+                    that.hls.attachMedia(video);
+                    that.hls.loadSource(recUrl);
+                    that.hls.on(Hls.Events.MANIFEST_PARSED,function () {
+                        video.play();
+                    })
+                }else{
+                    var source = AVR.createTag("source",{
+                        src:recUrl,
+                        type:'application/x-mpegURL'
+                    },null);
 
-            video.addEventListener("canplaythrough", function (e) {
-                if (!buffTimer) {
-                    buffTimer = setInterval(function (e) {
+                    video.appendChild(source);
+                }
+            }else if(video.canPlayType("application/vnd.apple.mpegurl")){
+                video.src = recUrl;
+            }else {
+                video.src = recUrl;
+            }
+            video.removeEventListener("canplaythrough", canplayThrough);
+            toolBar.progressBar.removeEventListener("click", changeProgress);
+            toolBar.btn.removeEventListener("click", btnPlay);
+            video.addEventListener("canplaythrough", canplayThrough, false);
+            toolBar.progressBar.addEventListener("click", changeProgress, false);
+            toolBar.btn.addEventListener("click", btnPlay, false);
+            video.load();
+            try {
+                video.play();
+            }catch (e){}
+
+            function btnPlay(e) {
+                if(video.paused){
+                    that._play();
+                    video.play();
+                }else {
+                    that._pause();
+                    video.pause();
+                }
+            }
+            function changeProgress(e) {
+                var x = (e.clientX || e.changedTouches[0].clientX) - that.container.offsetLeft;
+                video.currentTime = video.duration * (x / this.clientWidth);
+            }
+            that.video.buffTimer=null;
+            function canplayThrough(e) {
+                if (!that.video.buffTimer) {
+                    that.video.buffTimer = setInterval(function (e) {
                         var allBuffered = 0;
                         if (video.buffered.length != 0) {
                             allBuffered += video.buffered.end(0);
                         }
                         if (allBuffered >= video.duration) {
-                            clearInterval(buffTimer);
+                            clearInterval(that.video.buffTimer);
                         }
-                        that.videoToolBar.loadedProgress.style.width = (allBuffered / video.duration) * 100 + "%";
+                        toolBar.loadedProgress.style.width = (allBuffered / video.duration) * 100 + "%";
                     }, 500);
 
                 }
-            }, false);
-
-            that.videoToolBar.progressBar.addEventListener("click", function (e) {
-                video.currentTime = video.duration * (e.clientX / this.clientWidth);
-            }, false);
-
-            that.videoToolBar.btn.addEventListener("click", function (e) {
-                video.paused ? (function () {
-                    that._play();
-                    video.play();
-                })() : (function () {
-                    that._pause();
-                    video.pause();
-                })();
-            });
-
-            that.video = video;
-            var eventTester = function(e){
-                that.video.addEventListener(e,function(){
-                    that.loadProgressManager.onLoad();
-                },false);
             }
-            eventTester("canplay");
             var texture = new THREE.VideoTexture(video);
             texture.generateMipmaps = false;
             texture.minFilter = THREE.LinearFilter;
             texture.magFilter = THREE.LinearFilter;
             //texture.format = THREE.RGBFormat;
-
             texture.format = THREE.RGBAFormat;
+            buildTexture(texture);
 
-            that.VRObject.add(buildTexture(texture));
-
-
+            that.video.progressTimer=setInterval(function (e) {
+                toolBar.playProgress.style.width = (video.currentTime / video.duration) * 100 + "%";
+                toolBar.curTime.innerText = AVR.formatSeconds(video.currentTime);
+                toolBar.totalTime.innerText = AVR.formatSeconds(video.duration);
+                if (that.autoHideLeftTime < 0 && !video.paused) {
+                    toolBar.toolbar.style.display = "none";
+                } else {
+                    that.autoHideLeftTime--;
+                }
+            }, 1000);
+            that.loadProgressManager.onLoad();
         }else {
-            imgPanoToolBar();
+
             new THREE.TextureLoader(that.loadProgressManager).load(recUrl, function (texture) {
-                that.VRObject.add(buildTexture(texture));
+                buildTexture(texture,true);
             });
         }
-        function buildTexture(texture) {
-            material = new THREE.MeshBasicMaterial({overdraw: true, map: texture});
-            mesh = new THREE.Mesh(geometry, material);
-            mesh.visible=false;
-            mesh.name = objName;
-            //mesh.material.map=;
 
-            //that.VRObject.add(mesh);
-            if(that.asteroidConfig.enable){
-                that.asteroidForward=function(callback){
+        function buildTexture(texture,isImg) {
+            isImg = isImg || false;
+            material = new THREE.MeshBasicMaterial({overdraw: true, map: texture});
+            var obj=that.VRObject.getObjectByName("__mxrealityDefault");
+            if (obj) {
+                obj.material = material;
+            } else {
+
+                var phiStart = -Math.PI / 2;
+                var geometry = new THREE.SphereBufferGeometry(that.vrbox.radius, that.vrbox.widthSegments, that.vrbox.heightSegments, phiStart);
+                geometry.scale(-1, 1, 1); //x取反（面朝里）
+                mesh = new THREE.Mesh(geometry, material);
+                mesh.visible = false;
+                mesh.name = "__mxrealityDefault";
+                if(isImg){
+                    mesh.matrixAutoUpdate=false;
+                    mesh.updateMatrix();
+                    that.toolBar.timeInfo.style.display="none";
+                }
+                that.VRObject.add(mesh);
+            }
+            if (that.asteroidConfig.enable) {
+                that.asteroidForward = function (callback) {
                     asteroidForward(callback);
                 }
             }
-            return mesh;
-            //that.renderer.setPixelRatio(window.devicePixelRatio);
         }
     }
     function asteroidForward(callback) {
+        that.controls && (that.controls.reset(),that.controls.enable=false);
         var config = that.asteroidConfig;
         var defaultFov = that.camera.fov;
-        var s = that._containerRadius;
+        var s = that._containerRadius*(that._cubeCameraTimes*0.9);
         that.camera.position.y = s * config.asteroidTop;
-        that.camera.fov = config.assteroidFov;
-        //that.camera.lookAt(0,0,0);
-        var v = s / config.asteroidForwardTime * config.assteroidFPS;
+        that.camera.rotation.x = THREE.Math.degToRad(-90);
+
+        that.camera.fov = config.asteroidFov;
+
+        var t=config.asteroidForwardTime * config.asteroidFPS / 300;
+        var v = s / t;
         var sFov = that.camera.fov - defaultFov;
-        var vFov = sFov / config.asteroidForwardTime * config.assteroidFPS;
-        var vRo = Math.PI / 2 / config.asteroidForwardTime * config.assteroidFPS;
-        //console.log("s=",s,"speed v=",v,"sFov=",sFov,"speed sfov=",vFov,"vRo=",vRo)
-        that.camera.lookAt(0, 0, AVR.isMobileDevice() ? -0.001 : 0.001);
+        var vFov = sFov / t;
+        var vRo = Math.PI / 2 / t;
+        var yDown=false,fovDone=false;
+        var tmpTarget=new THREE.Vector3(that._controlTarget.x,that._controlTarget.y,that._controlTarget.z);
+
         setTimeout(function () {
             var asteroidForwardTimer = setInterval(function () {
-                //console.log("new y=",config.asteroidTop*that.camera.position.y -v);
-
-                if (config.asteroidTop * that.camera.position.y - v <= 0) {
-                    that.camera.position.y = 0;
-                    that.camera.fov = defaultFov;
-                    clearInterval(asteroidForwardTimer);
-                    that._controlTarget={x:0.0001,y:0,z:0};
-                    AVR.bindOrientationEnevt(that,that._controlTarget);
-                    if(void 0 !== callback){
-                        // Wait for the controller to initialize to complete the callback.
-                        var controlTimer=setInterval(function () {
-                            if(that.controls){
-                                clearInterval(controlTimer);
-                                callback();
-                            }
-                        })
-
-                    }
-                } else {
+                if (config.asteroidTop * that.camera.position.y - v >= 0) {
                     that.camera.position.y -= (v * config.asteroidTop);
-                    that.camera.fov -= vFov;
-                    that.camera.rotateOnAxis(new THREE.Vector3(1, 0, 0), vRo * config.asteroidTop);
+                    //tmpTarget.z +=0.1;
+                    that.camera.lookAt(tmpTarget);
+                    tmpTarget.z *=1.25;
+                    //that.camera.rotateOnAxis(new THREE.Vector3(1, 0, 0), vRo * config.asteroidTop);
+                    //that.camera.rotation.x += vRo * config.asteroidTop;
+                } else {
+                    yDown = true;
                 }
-                that.camera.updateProjectionMatrix();
-            }, config.assteroidFPS);
+                if (that.camera.fov - vFov >= defaultFov) {
+                    that.camera.fov -= vFov;
+                } else {
+                    fovDone = true;
+                }
+                if (yDown && fovDone) {
+                    clearInterval(asteroidForwardTimer);
+                    that.controls.enable = true;
+                    //that.controls.reset();
+                    that.camera.position.y=0;
+                    //that.camera.rotation.x=THREE.Math.degToRad(-90);
+                    that.camera.fov = defaultFov;
+                    //that.controls.rotationUp(THREE.Math.degToRad(-90))
+
+                    if (void 0 !== callback) {
+                        callback();
+                    }
+                }
+            }, config.asteroidFPS);
         }, config.asteroidWaitTime);
     }
-    function imgPanoToolBar() {
-        setInterval(function (e) {
-            if (that.autoHideLeftTime < 0) {
-                that.videoToolBar.toolbar.style.display = "none";
-            } else {
-                that.autoHideLeftTime--;
-            }
-        }, 1000);
-        that.videoToolBar.btn.addEventListener("click", function (e) {
-            that.controls.autoRotate ? that._pause() : that._play();
-            that.controls.autoRotate = !that.controls.autoRotate;
-        });
-    }
 
-    function bindVolumeEvent() {
-        var Audio=that.video || that.audio
-        if (Audio) {
-            that.videoToolBar.voice_bar.style.display = "block";
-            var voice_bar = that.videoToolBar.voice_bar;
-            var voice_slide_bar = voice_bar.firstChild;
-            var voice_cur_slide_bar = voice_slide_bar.firstChild;
-            var voice_btn = voice_cur_slide_bar.firstChild;
-            var mouseDown = false, touchStartY = 0, touchCurrentY = 0, tempY;
-            Audio.volume = that.defaultVolume;
-            voice_cur_slide_bar.style.height = (Audio.volume * that.container.clientHeight) + "px";
-            voice_bar.addEventListener("mousedown", function (e) {
-                voice_bar.style.opacity = 1;
-            }, false);
-            voice_slide_bar.addEventListener("click", function (e) {
-                e.preventDefault();
-                that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
-                voice_cur_slide_bar.style.height = this.clientHeight - e.clientY + "px";
-                Audio.volume = (this.clientHeight - e.clientY) / this.clientHeight;
-
-            }, false);
-            voice_btn.addEventListener("mousedown", function (e) {
-                mouseDown = true;
-            }, false);
-            voice_btn.addEventListener("mouseup", function (e) {
-                mouseDown = false;
-            }, false);
-            voice_bar.addEventListener("mousemove", function (e) {
-                that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
-                if (mouseDown) {
-                    voice_cur_slide_bar.style.height = this.clientHeight - e.clientY + "px";
-                    if ((this.clientHeight - e.clientY) / this.clientHeight <= 1)
-                        Audio.volume = (this.clientHeight - e.clientY) / this.clientHeight;
-                }
-            }, false);
-            voice_bar.addEventListener("touchstart", function (e) {
-                e.preventDefault();
-                that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
-                tempY = voice_cur_slide_bar.clientHeight;
-                touchStartY = e.touches[0].pageY;
-                voice_bar.style.opacity = 1;
-            }, false);
-            voice_bar.addEventListener("touchmove", function (e) {
-                e.preventDefault();
-                that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
-                touchCurrentY = e.touches[0].pageY;
-                voice_cur_slide_bar.style.height = tempY + (touchStartY - touchCurrentY) + "px";
-                if (voice_cur_slide_bar.clientHeight / this.clientHeight <= 1)
-                    Audio.volume = voice_cur_slide_bar.clientHeight / this.clientHeight;
-            }, false);
-            voice_bar.addEventListener("touchend", function (e) {
-                tempY = 0;
-            }, false);
-            setInterval(function () {
-                if (that.voiceHideLeftTime <= 0) {
-                    voice_bar.style.opacity = 0;
-                } else {
-                    that.voiceHideLeftTime--;
-                }
-            }, 1000);
-
-        }
-    }
-
-    bindVolumeEvent();
 };
 
 VR.prototype.sphere2BoxPano=function(img,w,h,callback) {
@@ -521,7 +747,7 @@ VR.prototype.sphere2BoxPano=function(img,w,h,callback) {
     var canvasArr=[],finishNum=0;
     var i=0;
     var image = new Image();
-    image.crossOrigin="anonymous";
+    image.crossOrigin="Anonymous";
     image.src = img;
     image.onload = function() {
         for (var id in fases) {
@@ -585,7 +811,7 @@ VR.prototype.sphere2BoxPano=function(img,w,h,callback) {
 
         gl.uniform1i(u_Sampler, 0);//将0号纹理传给着色器中的取样器变量
 
-        //gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
+        gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
         if(finishNum<5){
             finishNum++;
@@ -650,11 +876,11 @@ VR.prototype.sphere2BoxPano=function(img,w,h,callback) {
         gl.useProgram(shaderProgram);
 
         //启用顶点缓冲区数组
-        //gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-        //shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+        gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+        shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
         //gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
-        //shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-        //shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+        shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+        shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
         return shaderProgram;
     }
 
@@ -810,7 +1036,7 @@ VR.prototype.sphere2BoxPano=function(img,w,h,callback) {
                 for(var row=0;row<that.sliceSegment;row++){
                     for(var col=0;col<that.sliceSegment;col++){
                         canvasCtx.putImageData(tmpctx.getImageData(col*(h/that.sliceSegment),row*(h/that.sliceSegment),h*(col+1)/that.sliceSegment,h*(row+1)/that.sliceSegment),0,0);
-                        sliceArray.push(canvasCell.toDataURL());
+                        sliceArray.push(canvasCell.toDataURL("image/jpeg"));
                     }
                 }
             }
@@ -820,7 +1046,7 @@ VR.prototype.sphere2BoxPano=function(img,w,h,callback) {
                 tmpctx.drawImage(canvasArr[idx], 0, 0, -w, -h);
                 ctx.drawImage(tmp, w * idx, 0, w, h);
             }
-            return c.toDataURL();
+            return c.toDataURL("image/jpeg");
         }
     };
 
@@ -828,19 +1054,20 @@ VR.prototype.sphere2BoxPano=function(img,w,h,callback) {
 
 var AR=function (scene,renderer,container,cameraPara,cameraPosition) {
     var that = this;
-    AVR.setCameraPara(that,cameraPara,cameraPosition);
     this.scene = scene;
     this.renderer = renderer;
     this.container = container;
+    AVR.setCameraPara(that,cameraPara,cameraPosition);
     this.constraints = {};
     this.video = null;
     this.openAudio = false;
 
     this.cameraIndex = 1;//0为前置摄像头，否则为后置
 
-    this._controlTarget={x:0.0001,y:0,z:0};
+    this._controlTarget=new THREE.Vector3(0.0001,0,0);
     this.camera=new THREE.PerspectiveCamera(this.cameraPara.fov,this.cameraPara.aspect , this.cameraPara.near, this.cameraPara.far);
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
+
     this.cameraReady=false;
     this.scene.add(this.camera);
     this.clock = new THREE.Clock();
@@ -916,7 +1143,7 @@ AR.prototype.takeCameraPhoto=function() {
     var ctx = this.tempCanvas.getContext('2d');
     ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
     ctx.drawImage(this.video, 0, 0,window.innerWidth,window.innerHeight); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
-    return ctx.toDataURL();
+    return ctx.toDataURL("image/jpeg");
 }
 AR.prototype.takeScreenShot=function (callback) {
     this._takeScreenShot=true;
@@ -927,7 +1154,7 @@ AR.prototype.play=function () {
     function render() {
         if(that._takeScreenShot){
             that._takeScreenShot=false;
-            var screenshot=that.renderer.domElement.toDataURL();
+            var screenshot=that.renderer.domElement.toDataURL("image/jpeg");
             that._takeScreenShotCallback(screenshot);
         }
         if(that.cameraReady) {
@@ -965,15 +1192,10 @@ AR.prototype.play=function () {
 
 var AVR= {
     debug: false,
-    startGyro:function () {
-        var self=this;
+    startGyro:function (callback) {
         window.addEventListener("deviceorientation", orientationHandler, false);
         function orientationHandler(event) {
-            /*"左右旋转：rotate alpha{" + Math.round(event.alpha) + "deg)";
-            "前后旋转：rotate beta{" + Math.round(event.beta) + "deg)";
-            "扭转设备：rotate gamma{" + Math.round(event.gamma) + "deg);*/
-            //AVR.msgBox(Math.sin(Math.round(event.beta-90)),36,document.body);
-            self.gyroEvent=event;
+            callback(event);
         }
     },
     stereoEffect : function ( renderer ) {
@@ -981,6 +1203,7 @@ var AVR= {
         // API
         /*Angle of deviation*/
         this.separation = 1;
+
 
         /*
          * Distance to the non-parallax or projection plane
@@ -1090,8 +1313,9 @@ var AVR= {
 
             this.domElement = ( void 0 !== domElement ) ? domElement : document;
             this.object = object;
+            this.object.rotation.reorder( 'YXZ' );
 
-            this.enable = false;
+            this.enable = !0;
 
             this.target = new THREE.Vector3();
 
@@ -1107,24 +1331,24 @@ var AVR= {
 
             // Set to true to enable damping (inertia)
             // If damping is enabled, you must call controls.update() in your animation loop
-            this.enableDamping = false;
-            this.dampingFactor = 0.25;
+            this.enableDamping = !1;
+            this.dampingFactor = 0.05;
 
-            this.rotateSpeed = 0.3;
+            this.rotateSpeed = 0.25;
 
             // Set to true to automatically rotate around the target
             // If auto-rotate is enabled, you must call controls.update() in your animation loop
-            this.autoRotate = false;
+            this.autoRotate = !1;
             this.autoRotateSpeed = 1.0; // 30 seconds per round when fps is 60
 
             this.deviceOrientation = {};
             this.screenOrientation = 0;
 
             var scope = this;
-            //scope.object.lookAt(new THREE.Vector3(0,0,1));
-            scope.defaultDirectionOfRotation = true;
-            scope.gyroEnable = true;
-            scope.usingGyro = AVR.OS.isMobile() ? true : false;
+
+            scope.defaultDirectionOfRotation = !0;
+            scope.gyroEnable = !1;
+            scope.usingGyro = AVR.OS.isMobile()?!0:!1;
             scope._defaultTargetY = scope.target.y;
             scope._defaultCameraFov = scope.object.fov;
             scope._defaultCameraY = scope.object.position.y;
@@ -1134,6 +1358,7 @@ var AVR= {
 
             var EPS = 0.000001;
 
+            var isFirst=true;
             // current position in spherical coordinates
             var spherical = new THREE.Spherical();
             var sphericalDelta = new THREE.Spherical();
@@ -1141,7 +1366,59 @@ var AVR= {
             var rotateStart = new THREE.Vector2();
             var rotateEnd = new THREE.Vector2();
             var rotateDelta = new THREE.Vector2();
+            var rotateOffsetDelta=new THREE.Vector3(0,0,0);
 
+            var lastGamma = 0, lastBeta = 0;
+
+            var tempAlpha = 0, tempBeta = 0, tempGamma = 0;
+
+            this.target0 = this.target.clone();
+            this.position0 = this.object.position.clone();
+            this.rotation0 = this.object.rotation.clone();
+            this.zoom0 = this.object.zoom;
+            //
+            // public methods
+            //
+
+
+            this.getPolarAngle = function () {
+
+                return spherical.phi;
+
+            };
+
+            this.getAzimuthalAngle = function () {
+
+                return spherical.theta;
+
+            };
+
+            this.saveState = function () {
+
+                scope.target0.copy( scope.target );
+                scope.position0.copy( scope.object.position );
+                scope.rotation0.copy( scope.object.rotation );
+                scope.zoom0= scope.object.zoom;
+
+            };
+
+            this.reset = function (config) {
+
+                this.resetVar();
+                scope.dispatchEvent(changeEvent);
+                (config && config.target0) ? scope.target.copy(config.target0) : scope.target.copy(scope.target0);
+                (config && config.position0) ? scope.object.position.copy(config.position0) : scope.object.position.copy(scope.position0);
+                (config && config.rotation0) ? scope.object.rotation.copy(config.rotation0) : scope.object.rotation.copy(scope.rotation0);
+                (config && config.zoom0) ? (scope.zoom = zoom0) : scope.zoom0;
+
+            };
+            this.resetVar=function () {
+                tempAlpha=0;
+                tempBeta=0;
+                tempGamma=0;
+                lastGamma=0;
+                lastBeta=0;
+            }
             var setObjectQuaternion = function () {
                 var zee = new THREE.Vector3(0, 0, 1);
                 var euler = new THREE.Euler();
@@ -1164,6 +1441,7 @@ var AVR= {
 
             // this method is exposed, but perhaps it would be better if we can make it private...
             this.update = function () {
+
                 var offset = new THREE.Vector3();
 
                 // so camera.up is the orbit axis
@@ -1173,14 +1451,11 @@ var AVR= {
 
                 var lastPosition = new THREE.Vector3();
                 var lastQuaternion = new THREE.Quaternion();
-                var lastGamma = 0, lastBeta = 0;
 
-                var tempAlpha = 0, tempBeta = 0, tempGamma = 0;
                 return function update(param) {
                     if (!scope.enable) {
                         return;
                     }
-
                     param = param || {};
 
                     var alpha = scope.deviceOrientation.alpha ? THREE.Math.degToRad(void 0 === scope.beginAlpha ? scope.deviceOrientation.alpha :scope.deviceOrientation.alpha-scope.beginAlpha) : 0; // Z
@@ -1192,21 +1467,18 @@ var AVR= {
                     } else {
                         alpha = tempAlpha, beta = tempBeta, gamma = tempGamma;
                     }
-                    /*AVR.msgBox("alpha="+Math.round(scope.deviceOrientation.alpha-scope.beginAlpha)+
-                        ',beta='+Math.round(scope.deviceOrientation.beta)+
-                        ',gamma='+Math.round(scope.deviceOrientation.gamma),36,document.body)*/
-                    //AVR.msgBox("x="+scope.object.position.x.toFixed(2)+",y="+scope.object.position.y.toFixed(2)+",z="+scope.object.position.z.toFixed(2) ,0.5,document.body);
+
                     var currentQ = new THREE.Quaternion().copy(scope.object.quaternion);
 
                     setObjectQuaternion(currentQ, alpha, beta, gamma, orient);
+
                     var currentAngle = Quat2Angle(currentQ.x, currentQ.y, currentQ.z, currentQ.w);
                     if (!param.init) {
                         // currentAngle.z = Left-right
                         // currentAngle.y = Up-down
                         rotateLeft((lastGamma - currentAngle.z));
-                        rotateUp((lastBeta - currentAngle.y));
+                        //rotateUp((lastBeta - currentAngle.y));
                     }
-
 
                     lastBeta = currentAngle.y;
                     lastGamma = currentAngle.z;
@@ -1238,11 +1510,15 @@ var AVR= {
 
                     // rotate offset back to "camera-up-vector-is-up" space
                     offset.applyQuaternion(quatInverse);
+
                     position.copy(scope.target).add(offset);
-
-                    scope.object.lookAt(scope.target);
-
-                    if (scope.enableDamping === true) {
+                    if( scope.deviceOrientation && scope.gyroEnable){
+                        setObjectQuaternion(scope.object.quaternion, alpha+Math.PI+rotateOffsetDelta.x, beta+rotateOffsetDelta.y, gamma+rotateOffsetDelta.z, orient);
+                        //return true;
+                    }else {
+                        scope.object.lookAt(scope.target);
+                    }
+                    if (scope.enableDamping && !scope.gyroEnable) {
                         sphericalDelta.theta *= ( 1 - scope.dampingFactor );
                         sphericalDelta.phi *= ( 1 - scope.dampingFactor );
                     } else {
@@ -1263,7 +1539,6 @@ var AVR= {
 
                         return true;
                     }
-
                     return false;
                 };
             }();
@@ -1330,38 +1605,48 @@ var AVR= {
                 var euler = new THREE.Vector3(pitch, roll, yaw);
                 return euler;
             }
-
+            function calcDeltaLeft(x,clientWidth) {
+                return 2 * Math.PI * x / clientWidth * scope.rotateSpeed
+            }
+            function calcDeltaUp(y,clientHeight) {
+                return 2 * Math.PI * y / clientHeight * scope.rotateSpeed
+            }
             var mouseDown = false;
 
-            function mousedown(event) {
+            function mousedown(e) {
                 mouseDown = true;
-                rotateStart.set(event.clientX, event.clientY);
+                var x=e.clientX||e.changedTouches[0].clientX;
+                var y=e.clientY||e.changedTouches[0].clientY;
+                rotateStart.set(x, y);
             }
 
-            function mousemove(event) {
-                rotateEnd.set(event.clientX, event.clientY);
+            function mousemove(e) {
+
+                var x=e.clientX||e.changedTouches[0].clientX;
+                var y=e.clientY||e.changedTouches[0].clientY;
+                rotateEnd.set(x, y);
                 rotateDelta.subVectors(rotateEnd, rotateStart);
 
                 // rotating across whole screen goes 360 degrees around
                 var clientWidth = (void 0 !== scope.domElement.clientWidth) ? scope.domElement.clientWidth : window.innerWidth;
-                rotateLeft(2 * Math.PI * rotateDelta.x / clientWidth * scope.rotateSpeed);
+                rotateLeft(calcDeltaLeft(rotateDelta.x,clientWidth));
 
                 // rotating up and down along whole screen attempts to go 360, but limited to 180
                 var clientHeight = (void 0 !== scope.domElement.clientHeight) ? scope.domElement.clientHeight : window.innerHeight;
-                rotateUp(2 * Math.PI * rotateDelta.y / clientHeight * scope.rotateSpeed);
+                rotateUp(calcDeltaUp(rotateDelta.y,clientHeight));
 
                 rotateStart.copy(rotateEnd);
-                scope.update();
             }
 
             function mouseup(event) {
-                mouseDown = false;
+                mouseDown = !1;
             }
 
             function touchstart(event) {
                 //console.log( 'handleTouchStartRotate' );
+                mouseDown=!0;
                 rotateStart.set(event.touches[0].pageX, event.touches[0].pageY);
-                scope.usingGyro = false;
+                scope.usingGyro = !1;
             }
 
             function touchmove(event) {
@@ -1374,21 +1659,21 @@ var AVR= {
 
                 // rotating across whole screen goes 360 degrees around
                 var clientWidth = (void 0 != scope.domElement.clientWidth) ? scope.domElement.clientWidth : window.innerWidth;
-                rotateLeft(2 * Math.PI * rotateDelta.x / clientWidth * scope.rotateSpeed);
+                rotateLeft(calcDeltaLeft(rotateDelta.x,clientWidth));
 
                 // rotating up and down along whole screen attempts to go 360, but limited to 180
                 var clientHeight = (void 0 !== scope.domElement.clientHeight) ? scope.domElement.clientHeight : window.innerHeight;
-                rotateUp(2 * Math.PI * rotateDelta.y / clientHeight * scope.rotateSpeed);
+                rotateUp(calcDeltaUp(rotateDelta.y,clientHeight));
 
                 rotateStart.copy(rotateEnd);
-
-                scope.update();
-                scope.usingGyro = false;
+                rotateOffsetDelta.x += calcDeltaLeft(rotateDelta.x, clientWidth)+calcDeltaUp(rotateDelta.y, clientHeight);
+                scope.usingGyro = !1;
             }
 
             function touchend(event) {
                 //console.log( 'handleTouchEnd' );
-                scope.usingGyro = AVR.OS.isMobile() ? true : false;
+                scope.usingGyro =  AVR.OS.isMobile() ? !0 : !1;
+                mouseDown=false;
             }
 
             function deviceorientation(event) {
@@ -1408,6 +1693,8 @@ var AVR= {
             this.gyroUnfreeze = function () {
                 scope.gyroEnable = true;
             };
+            this.rotationLeft=rotateLeft;
+            this.rotationUp=rotateUp;
 
             this.domElement.addEventListener("mousedown", mousedown, false);
             this.domElement.addEventListener('mousemove', function (e) {
@@ -1426,11 +1713,12 @@ var AVR= {
             rotateStart.set(clientWidth / 2, clientHeight / 2);
 
             // force an update at start
-            rotateLeft(THREE.Math.degToRad(-90));
+            //rotateLeft(THREE.Math.degToRad(-180));
             setTimeout(function () {
-                scope.enable = true;
+                //scope.enable = true;
                 scope.update({init: true});
-            }, 0);
+                scope.saveState();
+            },10);
             return this;
         }
         controls.prototype=Object.create(THREE.EventDispatcher.prototype);
@@ -1438,7 +1726,7 @@ var AVR= {
         return new controls(object,domElement);
     },
     setCameraPara: function (that, cameraPara, cameraPosition) {
-        that.cameraPara = {"fov": 90, "aspect": window.innerWidth / window.innerHeight, "near": 0.001, "far": 1000};
+        that.cameraPara = {"fov": 90, "aspect": that.container.innerWidth / that.container.innerHeight, "near": 0.001, "far": 1000};
         that.cameraPosition = {"x": 0, "y": 0, "z": 0};
         if (cameraPara) {
             for (var property in cameraPara) {
@@ -1494,24 +1782,40 @@ var AVR= {
         }
         return {'vector':lookAtVector,'timesVector':timesVector};
     },
+    bindRaycaster:function (event,vr,callback) {
+
+        var vector = AVR.screenPosTo3DCoordinate(event, vr.container, vr.camera);
+        //在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
+        var raycaster = new THREE.Raycaster(vr.camera.position, vector.sub(vr.camera.position).normalize());
+
+        //射线和模型求交，选中一系列直线
+        var intersects = raycaster.intersectObjects(vr.scene.children,true);
+
+        if (intersects.length) {
+            callback.success(intersects);
+        } else {
+            callback.empty();
+        }
+    },
     bindCameraEvent:function (vr,options) {
         options=options||{trigger:function(e){},empty:function(e){},move:function(e){}};
         var that = this;
-        var scale=options.scale || 0.05;
+        var scale=options.scale || 0.022;
         var vectorRadius = options.vectorRadius;
-        var radius = vectorRadius*scale/2;
+        var radius = vectorRadius*scale;
         var tube = vectorRadius*(scale/6);
         var pointSize=vectorRadius*(scale/8);
         var radialSegments = 2;
         var tubularSegments = options.tubularSegments || 60;
-        var speed=options.speed || 36;
+        var speed=options.speed ||36;
         var ControlGroup = new THREE.Group();
         ControlGroup.name = "__controlHandle";
 
+        //AVR.msgBox(radius,10,document.body)
         var waitGeometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments, 2 * Math.PI);
         var waitMaterial = [];
         for (var i = 0; i < waitGeometry.faces.length / 2; i++) {
-            waitMaterial[i] = new THREE.MeshBasicMaterial({color: 0xcccccc,depthTest:false});
+            waitMaterial[i] = new THREE.MeshBasicMaterial({color: 0xe7dada,depthTest:false});
         }
         var faceId = 0;
         var uv = [new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1), new THREE.Vector2(0, 1)];
@@ -1523,13 +1827,13 @@ var AVR= {
             faceId++;
         }
         var wait = new THREE.Mesh(waitGeometry, waitMaterial);
-        wait.lookAt(vr.camera.position)
+        //wait.lookAt(vr.camera.position)
         wait.name = "__wait";
         wait.visible=false;
         ControlGroup.add(wait);
 
         var cameraPointer = new THREE.Mesh(new THREE.CircleGeometry(tube, 4), new THREE.MeshBasicMaterial({
-            color: 0xffffff,wireframe: true,depthTest:false
+            color: 0xe7dada,wireframe: true,depthTest:false
         }));
         cameraPointer.lookAt(vr.camera.position);
         cameraPointer.name = "__focus";
@@ -1539,8 +1843,11 @@ var AVR= {
         ControlGroup.position.set(0, 0, 0.1)
         var timer = null;
         var lastCameraVector=new THREE.Vector3();
+
+
         var updatePosition = function () {
-            ControlGroup.lookAt(vr.camera.position);
+            ControlGroup.lookAt(0,0,0);
+            wait.lookAt(0,0,0);
             var v=that.cameraVector(vr.camera,vectorRadius);
             cameraPointer.visible = true;
             ControlGroup.position.set(v.timesVector.x,v.timesVector.y,v.timesVector.z);
@@ -1560,10 +1867,11 @@ var AVR= {
             wait.visible=true;
             var offset = 0;
             var mIndex = 0;
+            //AVR.msgBox("hover"+wait.name,0.1,document.body)
             if(!Ctimer) {
                 Ctimer = setInterval(function () {
                     if (mIndex < waitGeometry.faces.length / 4) {
-                        waitMaterial[mIndex].color = new THREE.Color(0xff0000)
+                        waitMaterial[mIndex].color = new THREE.Color(0xe07575)
                         waitGeometry.needsUpdate = true;
                         waitGeometry.faces[offset].materialIndex = mIndex;
                         waitGeometry.faces[offset + 1].materialIndex = mIndex;
@@ -1572,6 +1880,7 @@ var AVR= {
                         offset += 2;
                     } else {
                         clearInterval(Ctimer);
+                        Ctimer=null;
                         options.trigger(e);
                     }
                     mIndex++;
@@ -1580,10 +1889,11 @@ var AVR= {
         }
         var leave=function (e) {
             clearInterval(Ctimer);
+            //AVR.msgBox("leave",0.1,document.body)
             Ctimer=null;
             faceId = 0;
             for (var i = 0, l = waitGeometry.faces.length; i < l; i += 2) {
-                waitMaterial[faceId].color = new THREE.Color(0xcccccc)
+                waitMaterial[faceId].color = new THREE.Color(0xe7dada)
                 waitGeometry.needsUpdate = true;
                 waitGeometry.faces[i].materialIndex = faceId;
                 waitGeometry.faces[i + 1].materialIndex = faceId;
@@ -1594,11 +1904,23 @@ var AVR= {
             wait.visible=false;
         }
         vr.VRObject.add(ControlGroup);
-        return {controlGroup:ControlGroup,updatePosition:updatePosition,hover:hover,leave:leave};
+        vr.cameraEvt.controlGroup=ControlGroup;
+        vr.cameraEvt.updatePosition=updatePosition;
+        vr.cameraEvt.hover=hover;
+        vr.cameraEvt.leave=leave;
+        //vr.cameraEvt={'controlGroup':ControlGroup,'updatePosition':updatePosition,'hover':hover,'leave':leave};
     },
-    screenPosTo3DCoordinate:function(event,container,camera) {
-        var x = event.clientX - container.offsetLeft;
-        var y = event.clientY - container.offsetTop;
+    screenPosTo3DCoordinate:function(e,container,camera) {
+        var clientX=e.clientX||(e.touches?e.touches[0].clientX:0);
+        var clientY=e.clientY||(e.touches?e.touches[0].clientY:0);
+        var scrollTop=document.body.scrollTop || document.documentElement.scrollTop;
+        var scrollLeft=document.body.scrollLeft || document.documentElement.scrollLeft;
+        var offsetTop=container.offsetTop;
+        var offsetLeft=container.offsetLeft;
+        var x=clientX-(offsetLeft-scrollLeft);
+        var y=clientY-(offsetTop-scrollTop);
+        x=(x>=0?x:0);
+        y=(y>=0?y:0);
         //console.log(x,y);
         var W = container.clientWidth;
         var H = container.clientHeight;
@@ -1606,7 +1928,8 @@ var AVR= {
         mouse.x = 2 * x / W - 1;
         mouse.y = 1 - 2 * y / H;
         var vector = new THREE.Vector3(mouse.x, mouse.y, 0).unproject(camera);
-        return vector;
+        return vector.sub(camera.position).normalize();
+        //return vector;
     },
     objectPosToScreenPos:function (object,container,camera) {
         var vector = new THREE.Vector3();
@@ -1633,43 +1956,24 @@ var AVR= {
                     document.webkitExitFullscreen ? document.webkitExitFullscreen() : '';
         }
     },
-    isFullscreen: function (callback) {
-        var that = this;
+    isFullscreen: function () {
 
-        function c_back(e) {
-            callback(that.isFullscreen());
-        }
-
-        if (typeof callback === "function") {
-            //监听状态变化
-            window.removeEventListener('fullscreenchange', c_back, false);
-            window.removeEventListener('webkitfullscreenchange', c_back, false);
-            window.removeEventListener('mozfullscreenchange', c_back, false);
-            window.removeEventListener('msFullscreenChange', c_back, false);
-
-            window.addEventListener('fullscreenchange', c_back, false);
-            window.addEventListener('webkitfullscreenchange', c_back, false);
-            window.addEventListener('mozfullscreenchange', c_back, false);
-            window.addEventListener('msFullscreenChange', c_back, false);
-
-        } else {
-            return document.fullscreenElement ||
-                document.msFullscreenElement ||
-                document.mozFullScreenElement ||
-                document.webkitFullscreenElement || false;
-        }
+        return document.fullscreenElement ||
+            document.msFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.webkitFullscreenElement || false;
     },
-    videoToolBar: function (container) {
-        var pre = "_videoToolBar";
+    toolBar: function (container) {
+        var pre = "_toolBar";
         var toolbar = this.createTag('div', {
-            'style': '-moz-user-select:none;-webkit-user-select:none;user-select:none;position:absolute;background:rgba(0,0,0,.6);z-index:9999;width:100%;height:2.2rem;bottom:0rem',
+            'style': '-moz-user-select:none;-webkit-user-select:none;user-select:none;position:absolute;background:rgba(0,0,0,.2);width:100%;height:2.2rem;bottom:0rem',
             'class': pre + 'Area'
         });
 
         var btn = this.createTag('div', {
             'style': 'position:inherit;border-top:0.6rem solid transparent;border-left:1rem solid white;border-bottom:0.6rem solid transparent;bottom:0.25rem;left:1rem;color:#fff;font-weight:800;cursor:pointer',
             'class': pre + 'Btn'
-        })
+        });
         toolbar.appendChild(btn);
         var timeInfo = this.createTag('div', {
             'style': 'position:inherit;bottom:0.25rem;left:2.8rem;color:#fff;font-size:0.75rem'
@@ -1687,9 +1991,63 @@ var AVR= {
             'innerText': '00:00'
         });
         timeInfo.appendChild(totalTime);
-
         toolbar.appendChild(timeInfo);
+        var tt=document.styleSheets[0];
+        tt.insertRule("@keyframes moreTip{from {top:0.75rem;} to{top:1rem}}",0);//写入样式
+        if(!AVR.Broswer.isIE()) {
+            tt.insertRule("@-webkit-keyframes moreTip{from {top:0.75rem;} to{top:1rem}}", 0);//写入样式
+        }
 
+
+        var moreBtn=this.createTag('span',{
+            'style':'width:2.2rem;height:2.2rem;position:inherit;left:50%;margin-left:-1.1rem;margin-top:-0.75rem;color:#fff;font-size:1.5rem;' +
+            'cursor:pointer;animation:moreTip 1s infinite;-moz-animation:moreTip 1s infinite;-webkit-animation:moreTip 1s infinite;'
+        },{
+            'innerText':''
+        });
+        var moreList=this.createTag("div",{
+            'style':"width:100%;height:auto;position:inherit;background:rgba(0,0,0,0);top:2.4rem;bottom:1.8rem;overflow: hidden;"
+        },null);
+        var moreListUl=this.createTag("ul",{
+            'style':'display:flex;display: -webkit-flex;display: -webkit-box;display: -moz-box;display: -ms-flexbox;margin:0;padding:0;list-style:none;height:100%;'
+        },null);
+
+        moreList.appendChild(moreListUl);
+        toolbar.appendChild(moreBtn);
+        toolbar.appendChild(moreList);
+
+        var about = this.createTag('div', {
+            'style':'width:2.2rem;height:2.2rem;position:inherit;right:1rem;margin-left:-1.1rem;margin-top:0.6rem;color:#fff;font-size:1.2rem;cursor:pointer;display:none',
+            "copy":"&#67;&#111;&#112;&#121;&#114;&#105;&#103;&#104;&#116;&#32;&#169;&#32;&#50;&#48;&#49;&#56;&#32;&#87;&#87;&#87;&#46;&#77;&#88;&#82;&#69;&#65;&#76;&#73;&#84;&#89;&#46;&#67;&#78;&#46;&#32;&#65;&#108;&#108;&#32;&#114;&#105;&#103;&#104;&#116;&#115;&#32;&#114;&#101;&#115;&#101;&#114;&#118;&#101;&#100;&#46;",
+
+        },{
+            'innerText':'？',
+        });
+        function unicode2ascii(str){
+            var code = str.match(/&#(\d+);/g);
+            var s="";
+            for (var i = 0; i < code.length; i++)
+                s += String.fromCharCode(code[i].replace(/[&#;]/g, ''));
+            return s;
+        }
+        about.addEventListener("click",function () {
+            var str=this.getAttribute('copy');
+            alert(unicode2ascii(str));
+        },false);
+        about.addEventListener("mouseover",function () {
+            var str=this.getAttribute('copy');
+            this.setAttribute('title',unicode2ascii(str));
+        },false);
+        toolbar.appendChild(about);
+
+        var gyroResetBtn = this.createTag('div', {
+            'style': 'border:0.125rem solid white;border-radius:1rem;width:1rem;height:1rem;position:inherit;right:5.8rem;line-height:1rem;bottom:0.25rem;cursor:pointer'
+        });
+        var gyroResetBtnChild = this.createTag('div', {
+            'style': 'border:0.08rem solid white;border-radius:8rem;background:rgba(240,240,240,0.6);width:0.3rem;left:0.26rem;top:0.26rem;height:0.3rem;position:inherit;line-height:0.3rem;cursor:pointer'
+        });
+        gyroResetBtn.appendChild(gyroResetBtnChild);
+        toolbar.appendChild(gyroResetBtn);
         var gyroBtn = this.createTag('div', {
             'style': 'border:0.125rem solid white;border-radius:1rem;width:1.4rem;height:1rem;position:inherit;right:3.5rem;line-height:1rem;bottom:0.25rem;cursor:pointer'
         });
@@ -1699,7 +2057,7 @@ var AVR= {
         gyroBtn.appendChild(circle1);
         var circle2 = this.createTag('div', {
             'style': 'position:inherit;width:1rem;height:0.4rem;line-height:0.4rem;border:0.0625rem solid white;border-radius:0.6rem/0.2rem;margin-top:0.25rem;margin-left:0.175rem;transform:rotate(90deg)'
-        })
+        });
         gyroBtn.appendChild(circle2);
         toolbar.appendChild(gyroBtn);
         var vrBtn = this.createTag('div', {
@@ -1711,15 +2069,15 @@ var AVR= {
         toolbar.appendChild(vrBtn);
 
         var progressBar = this.createTag('div', {
-            'style': 'position:inherit;top:0rem;width:100%;height:0.3125rem;background:rgba(255,255,255,.7);cursor:pointer'
+            'style': 'position:inherit;top:0rem;width:100%;height:0.1rem;background:rgba(255,255,255,.3);cursor:pointer'
         });
 
         var loaded_progress = this.createTag('div', {
-            'style': 'position:inherit;width:0%;height:0.3125rem;background:rgba(255,255,255,.7)'
+            'style': 'position:inherit;width:0%;height:0.1rem;background:rgba(255,255,255,.3)'
         });
         progressBar.appendChild(loaded_progress);
         var play_progress = this.createTag('div', {
-            'style': 'position:inherit;width:0%;height:0.3125rem;background:rgba(28, 175, 252,.8)'
+            'style': 'position:inherit;width:0%;height:0.1rem;background:rgba(28, 175, 252,.6)'
         });
         progressBar.appendChild(play_progress);
 
@@ -1728,22 +2086,18 @@ var AVR= {
         container.appendChild(toolbar);
 
         var voice_bar = this.createTag('div', {
-            'style': '-moz-user-select:none;-webkit-user-select:none;user-select:none;position:absolute;width:2rem;height:100%;background:rgba(0,0,0,0);right:0rem;top:0rem;text-align:center;display:none'
+            'style': '-moz-user-select:none;-webkit-user-select:none;user-select:none;position:absolute;width:2rem;height:60%;background:rgba(0,0,0,0);left:0rem;top:20%;text-align:center;display:none;border-radius:1rem;'
         });
         var voice_slide_bar = this.createTag('div', {
-            'style': 'position:inherit;width:0.25rem;background:rgba(255,255,255,.1);height:100%;left:0.875rem;cursor:pointer;'
+            'style': 'position:inherit;width:0.25rem;background:rgba(255,255,255,.1);height:100%;left:0.875rem;cursor:pointer;border-radius:1rem;'
         });
         voice_bar.appendChild(voice_slide_bar);
 
         var voice_cur_slide = this.createTag('div', {
-            'style': 'position:inherit;width:100%;background:rgba(255, 255, 255,.6);bottom:0rem;'
+            'style': 'position:inherit;width:100%;background:rgba(255, 255, 255,.6);bottom:0rem;;border-radius:1rem;'
         });
         voice_slide_bar.appendChild(voice_cur_slide);
 
-        var voice_slide_btn = this.createTag('div', {
-            'style': 'position:inherit;width:1rem;height:1rem;border-radius:1rem;background:rgba(255,255,255,0.6);top:0rem;margin-left:-0.375rem;cursor:pointer'
-        });
-        voice_cur_slide.appendChild(voice_slide_btn);
 
         container.appendChild(voice_bar);
 
@@ -1754,14 +2108,19 @@ var AVR= {
             'curTime': curTime,
             'splitTime': splitTime,
             'totalTime': totalTime,
+            'moreBtn':moreBtn,
+            'moreList':moreList,
+            'moreListUl':moreListUl,
             'vrBtn': vrBtn,
             'progressBar': progressBar,
             'loadedProgress': loaded_progress,
             'playProgress': play_progress,
+            'gyroResetBtn':gyroResetBtn,
             'gyroBtn': gyroBtn,
             "circle1": circle1,
             "circle2": circle2,
-            "voice_bar": voice_bar
+            "voice_bar": voice_bar,
+            "about":about
         };
     },
     msgBox: function (msg, timeout, container) {
@@ -1800,37 +2159,22 @@ var AVR= {
             return false;
         }
     },
-    bindOrientationEnevt: function (that,target) {
+    bindOrientationEnevt: function (that) {
         if (void 0 === that.controls) {
-            if (AVR.isMobileDevice()) {
-                target.y = -1;
-            }
             that.controls = AVR.orbitControls(that.camera, that.renderer.domElement);
-            var target = new THREE.Vector3(target.x, target.y, target.z);
-            that.controls.target = target;
-            that.controls.update(that.clock.getDelta());
+            that.controls.target = that._controlTarget.clone();
         }
     },
     //横屏判断
     isCrossScreen: function (callback) {
         var that = this;
-
-        if (typeof callback === "function") {
-            function c_back(e) {
-                callback(that.isCrossScreen());
-            }
-
-            window.removeEventListener('orientationchange', c_back, false);
-            window.addEventListener('orientationchange', c_back, false);
-        } else {
-            if (window.orientation == 180 || window.orientation == 0) {
-                /*Vertical screen*/
-                return false;
-            }
-            if (window.orientation == 90 || window.orientation == -90) {
-                /*is Cross Screen*/
-                return true;
-            }
+        if (window.orientation == 180 || window.orientation == 0) {
+            /*Vertical screen*/
+            return false;
+        }
+        if (window.orientation == 90 || window.orientation == -90) {
+            /*is Cross Screen*/
+            return true;
         }
     },
     initDomStyle: function (container) {
@@ -1843,9 +2187,16 @@ var AVR= {
         container.style.left = "0px";
         container.style.top = "0px";
         container.style.overflow = "hidden";
+        var style = document.createElement('style');
+        document.getElementsByTagName('head')[0].appendChild(style);
+
+        document.body.addEventListener("touchmove",bodyPreventDefault);
         document.oncontextmenu = function () {
             return false;
         };
+        function bodyPreventDefault(e) {
+            e.preventDefault();
+        }
         document.onkeydown = function () {
             if (!this.debug && window.event && window.event.keyCode == 123) {
                 event.keyCode = 0;
@@ -2003,6 +2354,8 @@ var AVR= {
 var head=document.getElementsByTagName('head')[0];
 head.appendChild(AVR.createTag('meta',{'name':'viewport','content':"width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0,minimal-ui,user-scalable=no"}));
 head.appendChild(AVR.createTag('meta',{'name':'google','content':"notranslate"}));
+head.appendChild(AVR.createTag('meta',{'name':'full-screen','content':"yes"}));
+
 if(AVR.debug) {
     window.onerror = function (msg, url, l) {
         var txt = "There was an error on this page.\n\n";

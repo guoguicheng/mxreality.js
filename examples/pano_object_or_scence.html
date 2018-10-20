@@ -35,7 +35,9 @@
 
     scene = new THREE.Scene();
     vr=new VR(scene,renderer,container,'',{'y':80});
-    vr.init();
+    vr.init(function () {
+        
+    });
 
     light = new THREE.DirectionalLight(0xffffff, 1);//设置平行光源
     light.position.set( 400, 400, 200 );//设置光源向量
