@@ -76,6 +76,9 @@ VR.prototype.init = function (extendsAnimationFrame) {
     toolBar.moreBtn.addEventListener("click", function () {
         that.moreBtnClick();
     }, false)
+    that.container.addEventListener('touchstart', touchStart, false);
+    that.container.addEventListener('touchmove', touchMove, false);
+    that.container.addEventListener('touchend', touchEnd, false);
     toolBar.gyroResetBtn.addEventListener("click", ongyroreset, false);
     toolBar.toolbar.addEventListener("mousedown", onmousedown, false);
     toolBar.toolbar.addEventListener("touchstart", onmousedown, false);
@@ -156,15 +159,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
     function ongyroreset() {
         that.controls && (that.controls.reset());
     }
-    function onmousedown(e) {
-        toolBar.isMouseDown = true;
-        var x = e.clientX || e.changedTouches[0].clientX;
-        var y = e.clientY || e.changedTouches[0].clientY;
-        startPos.set(x, y);
-        curPos.set(x, y);
-        that.autoHideLeftTime = that.defaultAutoHideLeftTime;
-        toolBar.isActive = true;
-
+    function touchStart(e) {
         if (e.targetTouches) {
             [].forEach.call(e.targetTouches, function (touch) {
                 if (spots[touch.identifier]) {
@@ -179,9 +174,18 @@ VR.prototype.init = function (extendsAnimationFrame) {
             }, 1);
         }
     }
-    function onmouseup(e) {
-        toolBar.isMouseDown = false;
 
+    function onmousedown(e) {
+        toolBar.isMouseDown = true;
+        var x = e.clientX || e.changedTouches[0].clientX;
+        var y = e.clientY || e.changedTouches[0].clientY;
+        startPos.set(x, y);
+        curPos.set(x, y);
+        that.autoHideLeftTime = that.defaultAutoHideLeftTime;
+        toolBar.isActive = true;
+    }
+
+    function touchEnd(e) {
         if (e.targetTouches) {
             [].forEach.call(e.changedTouches, function (touch) {
                 var spot = spots[touch.identifier];
@@ -197,9 +201,14 @@ VR.prototype.init = function (extendsAnimationFrame) {
 
         }
     }
+    function onmouseup(e) {
+        toolBar.isMouseDown = false;
+    }
+    function touchMove(e) {
+        touches = e.touches;
+    }
     function onmousemove(e) {
         e.preventDefault();
-        touches = e.touches;
         that.autoHideLeftTime = that.defaultAutoHideLeftTime;
         that.toolBar.isActive = true;
         if (toolBar.isMouseDown) {
@@ -238,7 +247,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
                 if (that.controls.object.fov - s1 < 140 && that.controls.object.fov - s1 > 10 && _s) {
                     that.controls.enable = false;
                     that.controls.object.fov -= s1;
-                    that.controls.dampingFactor = vr.controls.defaultDampingFactor * vr.controls.object.defaultFov / vr.controls.object.fov;
+                    that.controls.dampingFactor = that.controls.defaultDampingFactor * that.controls.object.defaultFov / that.controls.object.fov;
                 }
                 _s = s;
                 num = 0;
