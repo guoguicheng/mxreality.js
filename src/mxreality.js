@@ -76,9 +76,15 @@ VR.prototype.init = function (extendsAnimationFrame) {
     toolBar.moreBtn.addEventListener("click", function () {
         that.moreBtnClick();
     }, false)
-    that.container.addEventListener('touchstart', touchStart, false);
-    that.container.addEventListener('touchmove', touchMove, false);
-    that.container.addEventListener('touchend', touchEnd, false);
+    that.container.addEventListener('touchstart', function (e) {
+        that.touchStart(e);
+    }, false);
+    that.container.addEventListener('touchmove', function (e) {
+        that.touchMove(e);
+    }, false);
+    that.container.addEventListener('touchend', function (e) {
+        that.touchEnd(e);
+    }, false);
     toolBar.gyroResetBtn.addEventListener("click", ongyroreset, false);
     toolBar.toolbar.addEventListener("mousedown", onmousedown, false);
     toolBar.toolbar.addEventListener("touchstart", onmousedown, false);
@@ -159,7 +165,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
     function ongyroreset() {
         that.controls && (that.controls.reset());
     }
-    function touchStart(e) {
+    that.touchStart = function (e) {
         if (e.targetTouches) {
             [].forEach.call(e.targetTouches, function (touch) {
                 if (spots[touch.identifier]) {
@@ -185,7 +191,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
         toolBar.isActive = true;
     }
 
-    function touchEnd(e) {
+    that.touchEnd = function (e) {
         if (e.targetTouches) {
             [].forEach.call(e.changedTouches, function (touch) {
                 var spot = spots[touch.identifier];
@@ -204,7 +210,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
     function onmouseup(e) {
         toolBar.isMouseDown = false;
     }
-    function touchMove(e) {
+    that.touchMove = function (e) {
         touches = e.touches;
     }
     function onmousemove(e) {
@@ -247,7 +253,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
                 if (that.controls.object.fov - s1 < 140 && that.controls.object.fov - s1 > 10 && _s) {
                     that.controls.enable = false;
                     that.controls.object.fov -= s1;
-                    that.controls.dampingFactor = that.controls.defaultDampingFactor * that.controls.object.defaultFov / that.controls.object.fov;
+                    that.controls.dampingFactor = that.controls.defaultDampingFactor;
                 }
                 _s = s;
                 num = 0;
