@@ -253,7 +253,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
                 if (that.controls.object.fov - s1 < 140 && that.controls.object.fov - s1 > 10 && _s) {
                     that.controls.enable = false;
                     that.controls.object.fov -= s1;
-                    that.controls.dampingFactor = that.controls.defaultDampingFactor;
+                    that.controls.dampingFactor = that.controls.defaultDampingFactor * that.controls.object.defaultFov / that.controls.object.fov;
                 }
                 _s = s;
                 num = 0;
