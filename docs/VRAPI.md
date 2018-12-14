@@ -11,7 +11,7 @@
   
     播放器类别指定  
 
-    vr.resType={"video":"video","box":"box","slice":"slice"};  
+    vr.resType={"video":"video","box":"box","slice":"slice","sliceVideo":"sliceVideo"};  
     //全景视频则是vr.resType.video  正六面体为vr.resType.box 切片并补天播放器类别为vr.resType.slice
     
     初始化全景容器参数,如果全景图为正六面体则指定width、height、depth 3个参数，适用于box和slice类别；  
