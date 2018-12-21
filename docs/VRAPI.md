@@ -12,17 +12,26 @@
 
 开发分为四个步骤，
 1、创建DOM渲染容器提供给webGL渲染显示场景
+
     <div id='example'></div>
+
 2、获取渲染容器，初始化渲染器，绑定到该容器
+
     container=document.getElementById('example')
     renderer = new THREE.WebGLRenderer();
     container.appendChild(renderer.domElement);
+
 3、初始化3D场景
+
     scene = new THREE.Scene();
+
 4、将场景、容器和渲染器绑定到VR播放器，以及播放器设置视角FOV设置
+
     var vr=new VR(scene,renderer,container,{"fov":50});
     vr.init()
+
 5、播放VR
+
     vr.playPanorama('360.mp4',vr.resType.video);
 
 
