@@ -75,8 +75,11 @@
     vr.controls.gyroUnFreeze()
 
 #### 截屏
+
     vr.takeScreenShot(function(screenshotImg){})
+
 #### 全景图切片
+
     全景图切片大小设置
     vr.sliceSegment=0; 
     如果全景图切片的话需要指定，最终切片数量=sliceSegment*sliceSegment*6 片
@@ -85,6 +88,7 @@
     vr.sphere2BoxPano(img, width, height,function (imgArray) {})
     
 #### 小行星视角初始化参数
+
     不启用小行星视角
     vr.asteroidConfig.enable=false
 
