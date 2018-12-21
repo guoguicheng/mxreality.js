@@ -1,53 +1,42 @@
-初始化VR  
+### VR API 接口文档
     
-    /**
-    * scene 当前3d场景
-    * renderer 3d渲染器
-    * container 3d对象容器
-    * cameraPara 相机初始化参数，默认为{"fov": 90, "aspect": window.innerWidth / window.innerHeight, "near": 0.001, "far": 1000};
-    * cameraPosition 相机初始化位置，默认为{"x": 0, "y": 0, "z": 0};
-    **/
-    var vr=new VR(scene,renderer,container,cameraPara,cameraPosition)
-  
-    播放器类别指定  
+#### 依赖
 
-    vr.resType={"video":"video","box":"box","slice":"slice","sliceVideo":"sliceVideo"};  
-    //全景视频则是vr.resType.video  正六面体为vr.resType.box 切片并补天播放器类别为vr.resType.slice
-    
-    初始化全景容器参数,如果全景图为正六面体则指定width、height、depth 3个参数，适用于box和slice类别；  
-    如果为球体则设置radius、widthSegments、heightSegments ，适用于video和默认类别  
+为了能结合强大的webGL引擎，制作出可结合自定义渲染场景，并且可与场景中的物体交互处理事件，而不仅限于全景视频图片的播放器，因此该播放器牺牲了部分加载性能而集成了threejs 强大的3D引擎，所以只要开发者具备一定的threejs开发能力，就很容易打造出各式各样的webVR产品。
 
-    vr.vrbox={"radius":2, "widthSegments":180, "heightSegments":180,"width":2,"height":2,"depth":2};  
+#### 开发入门基础
+
+要求开发人员具备良好的javascript基础；有自定义开发则需要具备threejs基础
+
+#### 开发流程
+
+开发分为四个步骤，
+1、创建DOM渲染容器提供给webGL渲染显示场景
+    <div id='example'></div>
+2、获取渲染容器，初始化渲染器，绑定到该容器
+    container=document.getElementById('example')
+    renderer = new THREE.WebGLRenderer();
+    container.appendChild(renderer.domElement);
+3、初始化3D场景
+    scene = new THREE.Scene();
+4、将场景、容器和渲染器绑定到VR播放器，以及播放器设置视角FOV设置
+    var vr=new VR(scene,renderer,container,{"fov":50});
+    vr.init()
+5、播放VR
+    vr.playPanorama('360.mp4',vr.resType.video);
 
 
-    vr.scene; //存放当前场景
-    vr.renderer; //存放当前渲染器
-    vr.container; //存放当前容器对象
-    vr.video; //在播放器类播放全景视频是存放该视频对象
-    vr.audio; //如果赋值音频对象则在全景播放器右侧会显示音频音量控制条
-    vr.videoToolBar; //存放播放器工具栏对象
-    vr.autoplayPanoImg=false; //播放器镜头是否自动旋转
-    vr.VRObject=new THREE.Object3D(); //存放当前vr播放器对象
-    vr.defaultAutoHideLeftTime=3; //播放器工具栏自动隐藏时间
-    vr.defaultVoiceHideLeftTime=2; //播放器音量控制条隐藏时间
-    vr.defaultVolume=0.3; //默认音量大小
-    vr.sliceSegment=0; //如果全景图切片的话需要指定，最终切片数量=sliceSegment*sliceSegment*6 片
-    vr._controlTarget={x:0.0001,y:0,z:0}; //控制器默认初始镜头
-    
-    //小行星视角配置
-    vr.asteroidConfig={
-        enable:false, //是否使用小行星视角
-        assteroidFPS:36, //视角移动速度，值越小，移动越快 ms
-        assteroidFov:135, //俯视视角大小
-        asteroidForwardTime:2000, //小行星视角到正常视角更新完成总耗时 ms
-        asteroidWaitTime:1000, //小行星开始之前等待时间 ms
-        asteroidDepressionRate:0.5, //
-        asteroidTop:1, //小行星视角方向[1 俯视/-1 仰视]
-        cubeResolution:2048 //立体相机宽度
-    };
-    vr.VRhint="请取消屏幕翻转锁定后装入VR盒子中"; //VR 模式提示文字
-    vr.camera;//存放当前相机对象
-    
+#### 可播放的资源类型
+
+    VR播放类别：
+    vr.resType.video 播放VR视频
+    vr.resType.box 天空盒子模式
+    vr.resType.slice 全景图片切片模式
+    vr.resType.sliceVideo 全景视频分片模式或者是HLS直播模式
+
+#### 资源加载精度回调
+
+    在全景播放前面定义资源加载状态回调方法：
     //全景资源加载完成回调
     vr.loadProgressManager.onLoad(xhr){
         console.log("loaded");
@@ -60,25 +49,61 @@
     vr.loadProgressManager.onError(xhr,cl) {
         console.log(xhr,cl);
     }
-    
-开始渲染播放器
-    
-    vr.init()
-    
-播放全景图
 
-    /**
-    * resource 全景资源地址
-    * resourceType 全景资源类别vr.resType.[box/video/slice]
-    * objName 播放器对象name值 默认为 __panoContainer
-    **/
-    vr.playPanorama(resource,resourceType,objName);
-    
-切片器
+#### 场景对象
 
-    /**
-    * img 全景图地址
-    * w,h 转成6面时每个面的宽高
-    * callback 切片完成回调切片的base64编码集 
-    **/
-    sphere2BoxPano(img,w,h,callback)
+    vr.scene; //获取当前场景
+    vr.renderer; //获取当前渲染器
+    vr.container; //获取当前容器对象
+    vr.video; //获取播放全景视频对象
+    vr.audio; //获取音频对象
+    
+#### 自动旋转
+
+    设置播放器镜头自动旋转
+    vr.controls.autoRotate=true
+
+    设置自动旋转速度为1.2
+    vr.controls.autoRotateSpeed=1.2
+
+#### 陀螺仪
+
+    关闭陀螺仪
+    vr.controls.gyroFreeze()
+
+    开启陀螺仪
+    vr.controls.gyroUnFreeze()
+
+#### 截屏
+    vr.takeScreenShot(function(screenshotImg){})
+#### 全景图切片
+    全景图切片大小设置
+    vr.sliceSegment=0; 
+    如果全景图切片的话需要指定，最终切片数量=sliceSegment*sliceSegment*6 片
+
+    全景图切片,width,height 越大，切出来的图片空间占用越大，清晰度也越好，（注意，不建议设置的太大，切片需要占用大量的内存，部分浏览器会崩溃）
+    vr.sphere2BoxPano(img, width, height,function (imgArray) {})
+    
+#### 小行星视角初始化参数
+    不启用小行星视角
+    vr.asteroidConfig.enable=false
+
+    视角移动速度，值越小，移动越快 ms
+    vr.asteroidConfig.assteroidFPS=36
+
+    俯视视角大小
+    vr.asteroidConfig.assteroidFov=135
+
+    小行星视角到正常视角更新完成总耗时 ms
+    vr.asteroidConfig.asteroidForwardTime=2000
+
+    小行星开始之前等待时间 ms
+    vr.asteroidConfig.asteroidWaitTime=1000
+
+    vr.asteroidConfig.asteroidDepressionRate=0.5
+    
+    小行星视角方向[1 俯视/-1 仰视]
+    vr.asteroidConfig.asteroidTop=1
+    
+    立体相机宽度
+    vr.asteroidConfig.cubeResolution=2048
