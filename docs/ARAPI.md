@@ -1,40 +1,65 @@
-    /**
-    * scene 当前3d场景
-    * renderer 3d渲染器
-    * container 3d对象容器
-    * cameraPara 相机初始化参数，默认为{"fov": 90, "aspect": window.innerWidth / window.innerHeight, "near": 0.001, "far": 1000};
-    * cameraPosition 相机初始化位置，默认为{"x": 0, "y": 0, "z": 0};
-    **/
-    var ar=new AR(scene,renderer,container,cameraPara,cameraPosition) {
+开发分为四个步骤，
+1、创建DOM渲染容器提供给webGL渲染显示场景
+
+    <div id='example'></div>
+
+2、获取渲染容器，初始化渲染器，绑定到该容器
+
+    container=document.getElementById('example')
+    renderer = new THREE.WebGLRenderer();
+    container.appendChild(renderer.domElement);
+
+3、初始化3D场景
+
+    scene = new THREE.Scene();
+
+4、初始化AR模式
+
+     ar=new AR(scene,renderer);
+     使用后摄像头
+     ar.cameraIndex=1;
+
+     初始化AR
+     ar.init();
+     ar.play();
+
+#### 场景对象
+
+    获取当前场景
+    ar.scene;
     
-    ar.scene; //存放当前场景
-    ar.renderer; //存放当前渲染器
-    ar.container; //存放当前容器对象
+    获取当前渲染器
+    ar.renderer;
     
-    ar.video; //存放当前设备摄像头视频对象
-    ar.openAudio = true; //是否启用录音
+    获取当前容器对象
+    ar.container;
     
-    ar.cameraIndex = 1;//0为前置摄像头，否则为后置
+    获取摄像头视频对象
+    ar.camera;
     
-    ar._windowWidth = window.innerWidth;  //窗口宽
-    ar._windowHeight = window.innerHeight; //窗口高
-    ar.camera; //存放当前场景摄像头对象
-    
-    //当前设备摄像头参数
+    获取音频对象
+    ar.audio;
+  
+    当前设备摄像头参数
     ar.cameraVideo={
-        width: {min: this._windowWidth, ideal: this._windowWidth, max: this._windowWidth},
-        height: {min: this._windowHeight, ideal: this._windowHeight, max: this._windowHeight},
-        //facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
+        width: {
+            min: this._windowWidth, 
+            ideal: this._windowWidth, 
+            max: this._windowWidth
+        },
+        height: {
+            min: this._windowHeight, 
+            ideal: this._windowHeight,
+            max: this._windowHeight
+        },
+        facingMode:self.frontCamera?"user":"environment",    /* 使用前置/后置摄像头*/
         //Lower frame-rates may be desirable in some cases, like WebRTC transmissions with bandwidth restrictions.
         frameRate: 15,//{ideal:10,max:15},
-    }
+    } 
     
-开始渲染
 
-    ar.init();//初始化AR
-    ar.play();
-    
-    //获取当前设备相机的一张图片并显示
+    获取当前设备相机的一张图片并显示
     ar.showPhoto()
-    //获取当前设备相机的视频并播放
+    
+    获取当前设备相机的视频并播放
     ar.showVideo()
