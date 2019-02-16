@@ -1,5 +1,9 @@
 [官方地址](https://www.mxreality.cn)
 
+支持项目、给作者加油！
+
+[赞赏](https://github.com/guoguicheng/mxreality.js/raw/master/docs/149867278858969619.jpg)
+
 #### MXREALITY 混合现实网页版【欢迎加入开发小组】
 
 ##### <font color="#dd0000">免费软件，但受软件版权保护，尊重作者的成果，严格遵守协议内容并且保留播放器版权信息</font>
