@@ -2,7 +2,7 @@
 
 支持项目、给作者加油！
 
-<img src="https://github.com/guoguicheng/mxreality.js/raw/master/docs/149867278858969619.jpg" height="200" width="200" title="donate"/>
+<img src="https://github.com/guoguicheng/mxreality.js/raw/master/docs/149867278858969619.jpg" height="400" width="400" title="donate"/>
 
 #### MXREALITY 混合现实网页版【欢迎加入开发小组】
 
