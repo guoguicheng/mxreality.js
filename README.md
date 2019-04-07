@@ -1,8 +1,11 @@
+##### <font color="#dd0000">免费软件，但受软件版权保护，尊重作者的成果，严格遵守协议内容并且保留播放器版权信息</font>
+
 [官方地址](https://www.mxreality.cn)
 
-#### MXREALITY 混合现实网页版【欢迎加入开发小组】
+[在线文档](https://github.com/guoguicheng/mxreality.js/tree/master/docs/index.md)  
 
-##### <font color="#dd0000">免费软件，但受软件版权保护，尊重作者的成果，严格遵守协议内容并且保留播放器版权信息</font>
+#### MXREALITY 混合现实网页版【QQ群：863363544】
+
 
 * [2018-10-20 重要更新]
 * 支持VR直播功能
@@ -11,11 +14,9 @@
 * 全景模式切换回默认主视角
 * 播放列表
 
-[在线文档](https://github.com/guoguicheng/mxreality.js/tree/master/docs/index.md)  
-
         优点：
         
-        1、全景图支持全景模式和VR模式
+        1、全景图、全景视频和播放自定义模型支持全景模式和VR模式
         
         2、支持网页端全景图补天功能，有效去除顶部和底部拼接留下的痕迹、做出真正完美的产品
         

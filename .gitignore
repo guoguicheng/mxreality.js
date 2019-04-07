@@ -3,3 +3,5 @@
 .vscode
 .Ds_Store
 /node_modules
+*.mkv
+*.mp4
