@@ -63,13 +63,24 @@
 
         });
 
-        vr.playPanorama('http://ov4hj29xx.bkt.clouddn.com/360.mp4',vr.resType.video);
+        vr.playPanorama('/1.mp4',vr.resType.video);
         vr.video.setAttribute("loop","loop");
-        vr.video.crossOrigin="Anonymous";
+        vr.video.crossOrigin="*";
 
 
         vr.video.onended=function () {
         }
+
+        window.addEventListener('resize', function () {
+            var isHuawei=navigator.userAgent.match(/;\sHUAWEI\s[a-zA-Z0-9\-]+\sBuild\//);
+            if (AVR.OS.isWeixin() && !AVR.OS.isiOS() && isHuawei) {
+                if (vr.video.getAttribute('x5-video-orientation') == "landscape") {
+                    vr.toolBar.toolbar.style.width = document.body.clientWidth + "px";
+                } else {
+                    vr.toolBar.toolbar.style.width = "100%";
+                }
+            }
+        })
 
     }
 

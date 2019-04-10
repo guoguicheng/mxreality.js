@@ -1,5 +1,7 @@
 /*
- *Copyright © 2017 mxreality.js authors
+ *Copyright © 2019 mxreality.js authors
+ *Website:www.mxreality.cn
+ *免费软件，请保留版权注释
  */
 
 
@@ -9,7 +11,14 @@ var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
     this.container = container;
     AVR.initDomStyle(container);
     AVR.setCameraPara(this, cameraPara, cameraPosition);
-    this.vrbox = { "radius": 2, "widthSegments": 180, "heightSegments": 180, "width": 2, "height": 2, "depth": 2 };
+    this.vrbox = {
+        "radius": 2,
+        "widthSegments": 180,
+        "heightSegments": 180,
+        "width": 2,
+        "height": 2,
+        "depth": 2
+    };
 
     this.video = null;
     this.audio = null;
@@ -22,18 +31,32 @@ var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
     this.sliceSegment = 0;
     this._controlTarget = new THREE.Vector3(0, 0, 0.0001);
     this._cubeCameraTimes = 0.96;
-    this.resType = { "video": "video", "box": "box", "slice": "slice", "sliceVideo": "sliceVideo" };
+    this.resType = {
+        "video": "video",
+        "box": "box",
+        "slice": "slice",
+        "sliceVideo": "sliceVideo"
+    };
     this.asteroidConfig = {
         enable: false,
-        asteroidFPS: 10, asteroidFov: 135, asteroidForwardTime: 2600, asteroidWaitTime: 2000,
-        asteroidDepressionRate: 0.5, asteroidTop: 1, cubeResolution: 2048,
+        asteroidFPS: 10,
+        asteroidFov: 135,
+        asteroidForwardTime: 2600,
+        asteroidWaitTime: 2000,
+        asteroidDepressionRate: 0.5,
+        asteroidTop: 1,
+        cubeResolution: 2048,
         rotationAngleOfZ: 0
     };
     this.VRhint = "请取消屏幕翻转锁定后装入VR盒子中";
     this.camera = new THREE.PerspectiveCamera(this.cameraPara.fov, this.cameraPara.aspect, this.cameraPara.near, this.cameraPara.far);
     this.camera.lookAt(this._controlTarget);
-    //this.camera=new THREE.OrthographicCamera(window.innerWidth / -16, window.innerWidth / 16, window.innerHeight / 16, window.innerHeight / -16, -200, 500);
-    this.cameraEvt = { 'controlGroup': function () { }, 'updatePosition': function () { }, 'hover': function () { }, 'leave': function () { } };
+    this.cameraEvt = {
+        'controlGroup': function () {},
+        'updatePosition': function () {},
+        'hover': function () {},
+        'leave': function () {}
+    };
     this._takeScreenShot = false;
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
     this.loadProgressManager = new THREE.LoadingManager(function (xhr) {
@@ -58,7 +81,8 @@ VR.prototype.init = function (extendsAnimationFrame) {
     var curPos = new THREE.Vector2();
     that.toolBar = AVR.toolBar(that.container);
     var toolBar = that.toolBar;
-    var spots = {}, touches, timer, _s = 0;
+    var spots = {},
+        touches, timer, _s = 0;
 
     toolBar.defaultHeight = toolBar.toolbar.clientHeight;
     toolBar.defaultMaxHeight = toolBar.defaultHeight * 5;
@@ -162,6 +186,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
 
         }
     }
+
     function ongyroreset() {
         that.controls && (that.controls.reset());
     }
@@ -207,12 +232,14 @@ VR.prototype.init = function (extendsAnimationFrame) {
 
         }
     }
+
     function onmouseup(e) {
         toolBar.isMouseDown = false;
     }
     that.touchMove = function (e) {
         touches = e.touches;
     }
+
     function onmousemove(e) {
         e.preventDefault();
         that.autoHideLeftTime = that.defaultAutoHideLeftTime;
@@ -230,13 +257,15 @@ VR.prototype.init = function (extendsAnimationFrame) {
             curPos.set(x, y);
         }
     }
+
     function renderTouches(touches) {
         void 0 === that.controls.defaultDampingFactor && (that.controls.defaultDampingFactor = that.controls.dampingFactor);
         void 0 === that.controls.object.defaultFov && (that.controls.object.defaultFov = that.controls.object.fov);
         if (!touches) {
             return;
         };
-        var num = 0, ids = [];
+        var num = 0,
+            ids = [];
         [].forEach.call(touches, function (touch) {
             var spot = spots[touch.identifier];
             if (spot) {
@@ -261,6 +290,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
             }
         })
     }
+
     function slideBar(h) {
         var animateTimer = setInterval(function () {
             var step = (toolBar.toolbar.clientHeight + h);
@@ -288,6 +318,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
         }, 1);
 
     }
+
     function slide(e) {
         that.autoHideLeftTime = that.defaultAutoHideLeftTime;
         toolBar.isActive = true;
@@ -298,6 +329,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
         }
         curPos.set(x, y);
     }
+
     function fovChange(delta) {
         that.camera.fov += delta * 0.05;
         that.camera.updateProjectionMatrix();
@@ -381,7 +413,10 @@ VR.prototype.init = function (extendsAnimationFrame) {
             var voice_slide_bar = voice_bar.firstChild;
             var voice_cur_slide_bar = voice_slide_bar.firstChild;
             var voice_btn = voice_cur_slide_bar.firstChild;
-            var mouseDown = false, touchStartY = 0, touchCurrentY = 0, tempY;
+            var mouseDown = false,
+                touchStartY = 0,
+                touchCurrentY = 0,
+                tempY;
             Audio.volume = that.defaultVolume;
             var voice_bar_height = toolBar.voice_bar.clientHeight;
             var offset_h = (that.container.clientHeight - voice_bar_height) / 2;
@@ -450,6 +485,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
         }
     }
     that.bindVolumeBar = bindVolumeEvent;
+
     function render() {
 
         var width = that.container.offsetWidth;
@@ -535,7 +571,9 @@ VR.prototype.playPanorama = function (recUrl, resType) {
                 context.drawImage(imageObj, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth);
                 textures[i].image = canvas;
                 textures[i].needsUpdate = true;
-                materials.push(new THREE.MeshBasicMaterial({ map: textures[i] }));
+                materials.push(new THREE.MeshBasicMaterial({
+                    map: textures[i]
+                }));
             }
             var Box = that.VRObject.getObjectByName("__mxrealitySkybox");
             if (!Box) {
@@ -564,7 +602,9 @@ VR.prototype.playPanorama = function (recUrl, resType) {
         var materials = [];
         for (var i = 0; i < recUrl.length; i++) {
             var texture = textureLoader.load(recUrl[i]);
-            materials.push(new THREE.MeshBasicMaterial({ map: texture }));
+            materials.push(new THREE.MeshBasicMaterial({
+                map: texture
+            }));
         }
 
         var cubeGeometry = new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth, that.sliceSegment, that.sliceSegment, that.sliceSegment);
@@ -598,7 +638,8 @@ VR.prototype.playPanorama = function (recUrl, resType) {
 
             that.VRObject.add(that.cubeCamera);
             material = new THREE.MeshBasicMaterial({
-                envMap: that.cubeCamera.renderTarget.texture, side: THREE.BackSide
+                envMap: that.cubeCamera.renderTarget.texture,
+                side: THREE.BackSide
             });
             that.cubeCameraSphere = new THREE.Mesh(new THREE.SphereGeometry(that._containerRadius * that._cubeCameraTimes, 180, 180), material);
             that.cubeCameraSphere.position.set(0, 0, 0);
@@ -634,14 +675,12 @@ VR.prototype.playPanorama = function (recUrl, resType) {
                     'x5-video-player-type': 'h5',
                     'x5-video-player-fullscreen': true,
                     'x5-video-orientation': 'portrait',
-                    'width': AVR.Broswer.isIE() ? 1920 : "auto",
-                    'height': AVR.Broswer.isIE() ? 960 : "auto",
                     'style': 'object-fit: fill',
                     'loop': "loop"
                 }, {
-                        'allowsInlineMediaPlayback': true,
-                        'crossOrigin': "Anonymous"
-                    });
+                    'allowsInlineMediaPlayback': true,
+                    'crossOrigin': "Anonymous"
+                });
 
             } else {
                 var video = that.video;
@@ -650,7 +689,14 @@ VR.prototype.playPanorama = function (recUrl, resType) {
                 }
             }
             if (that.resType.sliceVideo == resType) {
-                if (Hls.isSupported()) {
+                if (AVR.OS.isAndroid() && AVR.OS.isWeixin()) {
+                    var source = AVR.createTag("source", {
+                        src: recUrl,
+                        type: 'application/x-mpegURL'
+                    }, null);
+
+                    video.appendChild(source);
+                } else if (Hls.isSupported()) {
                     that.hls = new Hls();
                     that.hls.attachMedia(video);
                     that.hls.loadSource(recUrl);
@@ -677,9 +723,7 @@ VR.prototype.playPanorama = function (recUrl, resType) {
             toolBar.progressBar.addEventListener("click", changeProgress, false);
             toolBar.btn.addEventListener("click", btnPlay, false);
             video.load();
-            try {
-                video.play();
-            } catch (e) { }
+            video.play();
 
             function btnPlay(e) {
                 if (video.paused) {
@@ -690,11 +734,13 @@ VR.prototype.playPanorama = function (recUrl, resType) {
                     video.pause();
                 }
             }
+
             function changeProgress(e) {
                 var x = (e.clientX || e.changedTouches[0].clientX) - that.container.offsetLeft;
                 video.currentTime = video.duration * (x / this.clientWidth);
             }
             that.video.buffTimer = null;
+
             function canplayThrough(e) {
                 if (!that.video.buffTimer) {
                     that.video.buffTimer = setInterval(function (e) {
@@ -738,7 +784,10 @@ VR.prototype.playPanorama = function (recUrl, resType) {
 
         function buildTexture(texture, isImg) {
             isImg = isImg || false;
-            material = new THREE.MeshBasicMaterial({ overdraw: true, map: texture });
+            material = new THREE.MeshBasicMaterial({
+                overdraw: true,
+                map: texture
+            });
             var obj = that.VRObject.getObjectByName("__mxrealityDefault");
             if (obj) {
                 obj.material = material;
@@ -764,6 +813,7 @@ VR.prototype.playPanorama = function (recUrl, resType) {
             }
         }
     }
+
     function asteroidForward(callback) {
         that.controls && (that.controls.reset(), that.controls.enable = false);
         var config = that.asteroidConfig;
@@ -779,18 +829,16 @@ VR.prototype.playPanorama = function (recUrl, resType) {
         var sFov = that.camera.fov - defaultFov;
         var vFov = sFov / t;
         var vRo = Math.PI / 2 / t;
-        var yDown = false, fovDone = false;
+        var yDown = false,
+            fovDone = false;
         var tmpTarget = new THREE.Vector3(that._controlTarget.x, that._controlTarget.y, that._controlTarget.z);
 
         setTimeout(function () {
             var asteroidForwardTimer = setInterval(function () {
                 if (config.asteroidTop * that.camera.position.y - v >= 0) {
                     that.camera.position.y -= (v * config.asteroidTop);
-                    //tmpTarget.z +=0.1;
                     that.camera.lookAt(tmpTarget);
                     tmpTarget.z *= 1.25;
-                    //that.camera.rotateOnAxis(new THREE.Vector3(1, 0, 0), vRo * config.asteroidTop);
-                    //that.camera.rotation.x += vRo * config.asteroidTop;
                 } else {
                     yDown = true;
                 }
@@ -802,11 +850,8 @@ VR.prototype.playPanorama = function (recUrl, resType) {
                 if (yDown && fovDone) {
                     clearInterval(asteroidForwardTimer);
                     that.controls.enable = true;
-                    //that.controls.reset();
                     that.camera.position.y = 0;
-                    //that.camera.rotation.x=THREE.Math.degToRad(-90);
                     that.camera.fov = defaultFov;
-                    //that.controls.rotationUp(THREE.Math.degToRad(-90))
 
                     if (void 0 !== callback) {
                         callback();
@@ -820,8 +865,16 @@ VR.prototype.playPanorama = function (recUrl, resType) {
 
 VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
     var that = this;
-    var fases = { 'x': 'x', 'nx': 'nx', 'ny': 'ny', 'y': 'y', 'z': 'z', 'nz': 'nz' };
-    var canvasArr = [], finishNum = 0;
+    var fases = {
+        'x': 'x',
+        'nx': 'nx',
+        'ny': 'ny',
+        'y': 'y',
+        'z': 'z',
+        'nz': 'nz'
+    };
+    var canvasArr = [],
+        finishNum = 0;
     var i = 0;
     var image = new Image();
     image.crossOrigin = "Anonymous";
@@ -833,8 +886,10 @@ VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
             canvas.height = h;
             canvas.id = "face_" + id;
             canvasArr[i] = canvas;
-            var gl = canvas.getContext('webgl', { preserveDrawingBuffer: true });//获取canvas上下文
-            var shaderPorgram = initShaders(gl, id);//初始化着色器程序
+            var gl = canvas.getContext('webgl', {
+                preserveDrawingBuffer: true
+            }); //获取canvas上下文
+            var shaderPorgram = initShaders(gl, id); //初始化着色器程序
 
             var num = initVertexBuffers(gl, shaderPorgram);
             var PI = gl.getUniformLocation(shaderPorgram, 'PI');
@@ -853,7 +908,7 @@ VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
 
     //初始化纹理
     function initTextures(gl, shaderPorgram, n, image) {
-        var texture = gl.createTexture();//创建纹理对象
+        var texture = gl.createTexture(); //创建纹理对象
 
         if (!texture) {
             console.log('Failed to create the texture object!');
@@ -869,12 +924,12 @@ VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
     //加载纹理图片
     function loadTextures(gl, n, texture, u_Sampler, image) {
         if (that.asteroidConfig.enable) {
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, -1);//对纹理图像进行y轴反转
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, -1); //对纹理图像进行y轴反转
         }
-        gl.activeTexture(gl.TEXTURE0);//激活纹理单元
-        gl.bindTexture(gl.TEXTURE_2D, texture);//绑定纹理对象
+        gl.activeTexture(gl.TEXTURE0); //激活纹理单元
+        gl.bindTexture(gl.TEXTURE_2D, texture); //绑定纹理对象
 
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);//配置纹理对象的参数
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); //配置纹理对象的参数
 
         /**
          * RENDER WARNING: texture bound to texture unit 0 is not renderable. It maybe non-power-of-2 and have incompatible texture filtering.
@@ -884,11 +939,11 @@ VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);//将纹理图像分配给纹理对象
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image); //将纹理图像分配给纹理对象
 
-        gl.uniform1i(u_Sampler, 0);//将0号纹理传给着色器中的取样器变量
+        gl.uniform1i(u_Sampler, 0); //将0号纹理传给着色器中的取样器变量
 
-        gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
+        gl.clear(gl.COLOR_BUFFER_BIT); // Clear <canvas>
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
         if (finishNum < 5) {
             finishNum++;
@@ -909,8 +964,8 @@ VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
             1.0, -1.0, 1.0, 0.0,
         ]);
 
-        var num = 4;//顶点数目
-        var vertexBuffer = gl.createBuffer();//创建缓冲区对象
+        var num = 4; //顶点数目
+        var vertexBuffer = gl.createBuffer(); //创建缓冲区对象
 
         if (!vertexBuffer) {
             console.log('Failed to create the buffer object!');
@@ -921,7 +976,7 @@ VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, datas, gl.STATIC_DRAW);
 
-        var size = datas.BYTES_PER_ELEMENT;//数组中的每个元素的大小（以字节为单位）
+        var size = datas.BYTES_PER_ELEMENT; //数组中的每个元素的大小（以字节为单位）
 
         //顶点着色器接受顶点坐标和纹理坐标映射关系
         var a_Position = gl.getAttribLocation(shaderPorgram, 'a_Position');
@@ -982,7 +1037,7 @@ VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
         gl.compileShader(shader);
         //检查是否编译成功
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            console.log(gl.getShaderInfoLog(shader));//打印编译失败信息
+            console.log(gl.getShaderInfoLog(shader)); //打印编译失败信息
             return null;
         }
         //成功编译返回编译好的着色器
@@ -1093,11 +1148,13 @@ VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
     }
 
     function getNewPano() {
-        var c = document.createElement('canvas'), ctx = c.getContext('2d');
+        var c = document.createElement('canvas'),
+            ctx = c.getContext('2d');
         c.width = w * 6;
         c.height = h;
 
-        var tmp = document.createElement('canvas'), tmpctx = tmp.getContext('2d');
+        var tmp = document.createElement('canvas'),
+            tmpctx = tmp.getContext('2d');
         tmp.width = w;
         tmp.height = h;
         var degree = 180 * Math.PI / 180;
@@ -1139,7 +1196,7 @@ var AR = function (scene, renderer, container, cameraPara, cameraPosition) {
     this.video = null;
     this.openAudio = false;
 
-    this.cameraIndex = 1;//0为前置摄像头，否则为后置
+    this.cameraIndex = 1; //0为前置摄像头，否则为后置
 
     this._controlTarget = new THREE.Vector3(0.0001, 0, 0);
     this.camera = new THREE.PerspectiveCamera(this.cameraPara.fov, this.cameraPara.aspect, this.cameraPara.near, this.cameraPara.far);
@@ -1167,8 +1224,8 @@ AR.prototype.init = function () {
         'style': 'object-fit: fill',
         'autoplay': "autoplay"
     }, {
-            'allowsInlineMediaPlayback': true
-        });
+        'allowsInlineMediaPlayback': true
+    });
 
     //this.video.style.display = "none";
     this.video.style.zIndex = "-99999";
@@ -1186,7 +1243,7 @@ AR.prototype.init = function () {
             self.cameraTexture.format = THREE.RGBAFormat;
             self.cameraTexture.maxFilter = THREE.NearestFilter;
             self.cameraTexture.minFilter = THREE.NearestFilter;
-            self.scene.background = self.cameraTexture;                   // 背景视频纹理
+            self.scene.background = self.cameraTexture; // 背景视频纹理
             self.cameraTexture.needsUpdate = true;
         }
     }
@@ -1228,6 +1285,7 @@ AR.prototype.takeScreenShot = function (callback) {
 }
 AR.prototype.play = function () {
     var that = this;
+
     function render() {
         if (that._takeScreenShot) {
             that._takeScreenShot = false;
@@ -1271,6 +1329,7 @@ var AVR = {
     debug: false,
     startGyro: function (callback) {
         window.addEventListener("deviceorientation", orientationHandler, false);
+
         function orientationHandler(event) {
             callback(event);
         }
@@ -1429,9 +1488,15 @@ var AVR = {
             scope._defaultTargetY = scope.target.y;
             scope._defaultCameraFov = scope.object.fov;
             scope._defaultCameraY = scope.object.position.y;
-            var changeEvent = { type: 'change' };
-            var startEvent = { type: 'start' };
-            var endEvent = { type: 'end' };
+            var changeEvent = {
+                type: 'change'
+            };
+            var startEvent = {
+                type: 'start'
+            };
+            var endEvent = {
+                type: 'end'
+            };
 
             var EPS = 0.000001;
 
@@ -1445,9 +1510,12 @@ var AVR = {
             var rotateDelta = new THREE.Vector2();
             var rotateOffsetDelta = new THREE.Vector3(0, 0, 0);
 
-            var lastGamma = 0, lastBeta = 0;
+            var lastGamma = 0,
+                lastBeta = 0;
 
-            var tempAlpha = 0, tempBeta = 0, tempGamma = 0;
+            var tempAlpha = 0,
+                tempBeta = 0,
+                tempGamma = 0;
 
             this.target0 = this.target.clone();
             this.position0 = this.object.position.clone();
@@ -1483,9 +1551,9 @@ var AVR = {
 
                 this.resetVar();
                 scope.dispatchEvent(changeEvent);
-                (config && config.target0) ? scope.target.copy(config.target0) : scope.target.copy(scope.target0);
-                (config && config.position0) ? scope.object.position.copy(config.position0) : scope.object.position.copy(scope.position0);
-                (config && config.rotation0) ? scope.object.rotation.copy(config.rotation0) : scope.object.rotation.copy(scope.rotation0);
+                (config && config.target0) ? scope.target.copy(config.target0): scope.target.copy(scope.target0);
+                (config && config.position0) ? scope.object.position.copy(config.position0): scope.object.position.copy(scope.position0);
+                (config && config.rotation0) ? scope.object.rotation.copy(config.rotation0): scope.object.rotation.copy(scope.rotation0);
                 (config && config.zoom0) ? (scope.zoom = zoom0) : scope.zoom0;
 
             };
@@ -1678,13 +1746,14 @@ var AVR = {
                 yaw = Math.atan2(2 * y * w - 2 * x * z, 1 - 2 * sqy - 2 * sqz);
                 pitch = Math.asin(2 * test);
                 roll = Math.atan2(2 * x * w - 2 * y * z, 1 - 2 * sqx - 2 * sqz);
-                //AVR.msgBox("yaw="+yaw.toFixed(2)+",pitch="+pitch.toFixed(2)+",roll="+roll.toFixed(2) ,0.5,document.body);
                 var euler = new THREE.Vector3(pitch, roll, yaw);
                 return euler;
             }
+
             function calcDeltaLeft(x, clientWidth) {
                 return 2 * Math.PI * x / clientWidth * scope.rotateSpeed
             }
+
             function calcDeltaUp(y, clientHeight) {
                 return 2 * Math.PI * y / clientHeight * scope.rotateSpeed
             }
@@ -1793,7 +1862,9 @@ var AVR = {
             //rotateLeft(THREE.Math.degToRad(-180));
             setTimeout(function () {
                 //scope.enable = true;
-                scope.update({ init: true });
+                scope.update({
+                    init: true
+                });
                 scope.saveState();
             }, 10);
             return this;
@@ -1803,8 +1874,17 @@ var AVR = {
         return new controls(object, domElement);
     },
     setCameraPara: function (that, cameraPara, cameraPosition) {
-        that.cameraPara = { "fov": 90, "aspect": that.container.innerWidth / that.container.innerHeight, "near": 0.001, "far": 1000 };
-        that.cameraPosition = { "x": 0, "y": 0, "z": 0 };
+        that.cameraPara = {
+            "fov": 90,
+            "aspect": that.container.innerWidth / that.container.innerHeight,
+            "near": 0.001,
+            "far": 1000
+        };
+        that.cameraPosition = {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        };
         if (cameraPara) {
             for (var property in cameraPara) {
                 that.cameraPara[property] = cameraPara[property];
@@ -1817,9 +1897,9 @@ var AVR = {
         }
     },
     formatSeconds: function (value) {
-        var theTime = parseInt(value);// 秒
-        var theTime1 = 0;// 分
-        var theTime2 = 0;// 小时
+        var theTime = parseInt(value); // 秒
+        var theTime1 = 0; // 分
+        var theTime2 = 0; // 小时
         if (theTime > 60) {
             theTime1 = parseInt(theTime / 60);
             theTime = parseInt(theTime % 60);
@@ -1857,7 +1937,10 @@ var AVR = {
             timesVector.y = lookAt.y * times;
             timesVector.z = lookAt.z * times;
         }
-        return { 'vector': lookAtVector, 'timesVector': timesVector };
+        return {
+            'vector': lookAtVector,
+            'timesVector': timesVector
+        };
     },
     bindRaycaster: function (event, vr, callback) {
 
@@ -1875,7 +1958,11 @@ var AVR = {
         }
     },
     bindCameraEvent: function (vr, options) {
-        options = options || { trigger: function (e) { }, empty: function (e) { }, move: function (e) { } };
+        options = options || {
+            trigger: function (e) {},
+            empty: function (e) {},
+            move: function (e) {}
+        };
         var that = this;
         var scale = options.scale || 0.022;
         var vectorRadius = options.vectorRadius;
@@ -1888,11 +1975,13 @@ var AVR = {
         var ControlGroup = new THREE.Group();
         ControlGroup.name = "__controlHandle";
 
-        //AVR.msgBox(radius,10,document.body)
         var waitGeometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments, 2 * Math.PI);
         var waitMaterial = [];
         for (var i = 0; i < waitGeometry.faces.length / 2; i++) {
-            waitMaterial[i] = new THREE.MeshBasicMaterial({ color: 0xe7dada, depthTest: false });
+            waitMaterial[i] = new THREE.MeshBasicMaterial({
+                color: 0xe7dada,
+                depthTest: false
+            });
         }
         var faceId = 0;
         var uv = [new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1), new THREE.Vector2(0, 1)];
@@ -1910,7 +1999,9 @@ var AVR = {
         ControlGroup.add(wait);
 
         var cameraPointer = new THREE.Mesh(new THREE.CircleGeometry(tube, 4), new THREE.MeshBasicMaterial({
-            color: 0xe7dada, wireframe: true, depthTest: false
+            color: 0xe7dada,
+            wireframe: true,
+            depthTest: false
         }));
         cameraPointer.lookAt(vr.camera.position);
         cameraPointer.name = "__focus";
@@ -1944,7 +2035,6 @@ var AVR = {
             wait.visible = true;
             var offset = 0;
             var mIndex = 0;
-            //AVR.msgBox("hover"+wait.name,0.1,document.body)
             if (!Ctimer) {
                 Ctimer = setInterval(function () {
                     if (mIndex < waitGeometry.faces.length / 4) {
@@ -1966,7 +2056,6 @@ var AVR = {
         }
         var leave = function (e) {
             clearInterval(Ctimer);
-            //AVR.msgBox("leave",0.1,document.body)
             Ctimer = null;
             faceId = 0;
             for (var i = 0, l = waitGeometry.faces.length; i < l; i += 2) {
@@ -2011,7 +2100,8 @@ var AVR = {
     objectPosToScreenPos: function (object, container, camera) {
         var vector = new THREE.Vector3();
         vector.setFromMatrixPosition(object.matrixWorld).project(camera);
-        var x2hat = vector.x, y2hat = vector.y;
+        var x2hat = vector.x,
+            y2hat = vector.y;
         var W = container.clientWidth;
         var H = container.clientHeight;
         var pos = new THREE.Vector2();
@@ -2022,15 +2112,15 @@ var AVR = {
     fullscreen: function (el) {
         var isFullscreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen || false;
 
-        if (!isFullscreen) {//进入全屏,多重短路表达式
+        if (!isFullscreen) { //进入全屏,多重短路表达式
             (el.requestFullscreen && el.requestFullscreen()) ||
-                (el.mozRequestFullScreen && el.mozRequestFullScreen()) ||
-                (el.webkitRequestFullscreen && el.webkitRequestFullscreen()) || (el.msRequestFullscreen && el.msRequestFullscreen());
+            (el.mozRequestFullScreen && el.mozRequestFullScreen()) ||
+            (el.webkitRequestFullscreen && el.webkitRequestFullscreen()) || (el.msRequestFullscreen && el.msRequestFullscreen());
 
-        } else {	//退出全屏,三目运算符
+        } else { //退出全屏,三目运算符
             document.exitFullscreen ? document.exitFullscreen() :
                 document.mozCancelFullScreen ? document.mozCancelFullScreen() :
-                    document.webkitExitFullscreen ? document.webkitExitFullscreen() : '';
+                document.webkitExitFullscreen ? document.webkitExitFullscreen() : '';
         }
     },
     isFullscreen: function () {
@@ -2070,18 +2160,18 @@ var AVR = {
         timeInfo.appendChild(totalTime);
         toolbar.appendChild(timeInfo);
         var tt = document.styleSheets[0];
-        tt.insertRule("@keyframes moreTip{from {top:0.75rem;} to{top:1rem}}", 0);//写入样式
+        tt.insertRule("@keyframes moreTip{from {top:0.75rem;} to{top:1rem}}", 0); //写入样式
         if (!AVR.Broswer.isIE()) {
-            tt.insertRule("@-webkit-keyframes moreTip{from {top:0.75rem;} to{top:1rem}}", 0);//写入样式
+            tt.insertRule("@-webkit-keyframes moreTip{from {top:0.75rem;} to{top:1rem}}", 0); //写入样式
         }
 
 
         var moreBtn = this.createTag('span', {
             'style': 'width:2.2rem;height:2.2rem;position:inherit;left:50%;margin-left:-1.1rem;margin-top:-0.75rem;color:#fff;font-size:1.5rem;' +
-                'cursor:pointer;animation:moreTip 1s infinite;-moz-animation:moreTip 1s infinite;-webkit-animation:moreTip 1s infinite;'
+                'cursor:pointer;margin-top:1rem;border:0.0625rem dotted #ccc;height:0.0625rem;'
         }, {
-                'innerText': ''
-            });
+            'innerHTML': ''
+        });
         var moreList = this.createTag("div", {
             'style': "width:100%;height:auto;position:inherit;background:rgba(0,0,0,0);top:2.4rem;bottom:1.8rem;overflow: hidden;"
         }, null);
@@ -2098,8 +2188,9 @@ var AVR = {
             "copy": "&#67;&#111;&#112;&#121;&#114;&#105;&#103;&#104;&#116;&#32;&#169;&#32;&#50;&#48;&#49;&#56;&#32;&#87;&#87;&#87;&#46;&#77;&#88;&#82;&#69;&#65;&#76;&#73;&#84;&#89;&#46;&#67;&#78;&#46;&#32;&#65;&#108;&#108;&#32;&#114;&#105;&#103;&#104;&#116;&#115;&#32;&#114;&#101;&#115;&#101;&#114;&#118;&#101;&#100;&#46;",
 
         }, {
-                'innerText': '？',
-            });
+            'innerText': '？',
+        });
+
         function unicode2ascii(str) {
             var code = str.match(/&#(\d+);/g);
             var s = "";
@@ -2140,8 +2231,8 @@ var AVR = {
         var vrBtn = this.createTag('div', {
             'style': "position:inherit;right:1rem;width:1.4rem;height:1rem;line-height:1rem;border:0.125rem solid white;border-radius:0.125rem;bottom:0.25rem;text-align:center;font-weight:800;color:#fff;font-size:0.75rem;cursor:pointer"
         }, {
-                'innerText': "VR"
-            });
+            'innerText': "VR"
+        });
 
         toolbar.appendChild(vrBtn);
 
@@ -2205,8 +2296,8 @@ var AVR = {
         var msgbox = this.createTag('div', {
             'style': 'position:absolute;bottom:50%;width:100%;padding:0.25rem;background:rgba(0,0,0,.6);color:#fff;text-align:center;'
         }, {
-                'innerHTML': msg
-            });
+            'innerHTML': msg
+        });
         container.appendChild(msgbox);
         setTimeout(function () {
             msgbox.remove();
@@ -2271,6 +2362,7 @@ var AVR = {
         document.oncontextmenu = function () {
             return false;
         };
+
         function bodyPreventDefault(e) {
             e.preventDefault();
         }
@@ -2419,8 +2511,7 @@ var AVR = {
                 var canvas = document.createElement('canvas');
                 return !!(window.WebGLRenderingContext && (
                     canvas.getContext('webgl') ||
-                    canvas.getContext('experimental-webgl'))
-                );
+                    canvas.getContext('experimental-webgl')));
             } catch (e) {
                 return false;
             }
@@ -2429,9 +2520,18 @@ var AVR = {
 };
 
 var head = document.getElementsByTagName('head')[0];
-head.appendChild(AVR.createTag('meta', { 'name': 'viewport', 'content': "width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0,minimal-ui,user-scalable=no" }));
-head.appendChild(AVR.createTag('meta', { 'name': 'google', 'content': "notranslate" }));
-head.appendChild(AVR.createTag('meta', { 'name': 'full-screen', 'content': "yes" }));
+head.appendChild(AVR.createTag('meta', {
+    'name': 'viewport',
+    'content': "width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0,minimal-ui,user-scalable=no"
+}));
+head.appendChild(AVR.createTag('meta', {
+    'name': 'google',
+    'content': "notranslate"
+}));
+head.appendChild(AVR.createTag('meta', {
+    'name': 'full-screen',
+    'content': "yes"
+}));
 
 if (AVR.debug) {
     window.onerror = function (msg, url, l) {
