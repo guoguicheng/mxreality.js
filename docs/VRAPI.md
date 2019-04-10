@@ -82,7 +82,7 @@
     vr.controls.gyroFreeze()
 
     开启陀螺仪
-    vr.controls.gyroUnFreeze()
+    vr.controls.gyroUnfreeze()
 
 #### 截屏
 
