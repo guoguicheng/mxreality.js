@@ -170,20 +170,18 @@ VR.prototype.init = function (extendsAnimationFrame) {
     };
     that.gyroBtnClick = function (e) {
         var gyroBtn = that.toolBar.gyroBtn;
-        if (!gyroBtn.getAttribute("active")) {
+        if (gyroBtn.getAttribute("active") == 'active') {
             that.controls.gyroFreeze();
-            btnActive(gyroBtn);
-            btnActive(toolBar.circle1);
-            btnActive(toolBar.circle2);
-            gyroBtn.setAttribute("active", "active");
-
-        } else {
-            that.controls.gyroUnfreeze();
-            gyroBtn.removeAttribute("active");
             btnInactive(gyroBtn);
             btnInactive(toolBar.circle1);
             btnInactive(toolBar.circle2);
-
+            gyroBtn.removeAttribute("active");
+        } else {
+            that.controls.gyroUnfreeze();
+            gyroBtn.setAttribute("active", "active");
+            btnActive(gyroBtn);
+            btnActive(toolBar.circle1);
+            btnActive(toolBar.circle2);
         }
     }
 
