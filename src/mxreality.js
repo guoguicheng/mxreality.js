@@ -2290,7 +2290,9 @@ var AVR = {
         };
     },
     msgBox: function (msg, timeout, container) {
-
+	if(!msg){
+	    return;	
+	}
         var msgbox = this.createTag('div', {
             'style': 'position:absolute;bottom:50%;width:100%;padding:0.25rem;background:rgba(0,0,0,.6);color:#fff;text-align:center;'
         }, {
