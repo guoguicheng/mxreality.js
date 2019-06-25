@@ -64,9 +64,13 @@
     
     获取摄像头视频对象
     vr.video;
+    vr.video.pause()/暂停视频
+    vr.video.play()/播放视频
     
     获取音频对象
     vr.audio;
+    vr.audio.paush()/暂停音频
+    vr.audio.play()/播放音频
     
 #### 自动旋转
 
