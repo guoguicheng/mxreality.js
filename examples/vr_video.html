@@ -47,15 +47,17 @@
 
         scene = new THREE.Scene();
 
+        // fov 选项可调整初始视频远近
         var vr=new VR(scene,renderer,container,{"fov":50});
 
         //vr.playText="<img src='img/play90.png' width='40' height='40'/>";
         vr.vrbox.radius=600;
         if(AVR.isCrossScreen()) {
+            // 调整vr视窗偏移量
             vr.effect.separation=1.2;
         }
         vr.loadProgressManager.onLoad=function () {
-            console.log('ssssssssssss')
+            // 视频静音
             vr.video.muted=true;
             vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
         }
