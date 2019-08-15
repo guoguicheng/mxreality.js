@@ -21,6 +21,7 @@
         "hoek": ">=4.2.1",
         "jshint": "^2.9.1",
         "lodash": "^4.17.15",
+        "lodash.template": "^4.5.0",
         "minimatch": ">=3.0.2",
         "rev-del": "^2.0.0"
     }
