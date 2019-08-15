@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>vr sphere example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <script src="../build/three.js"></script>
+    <script src="../build/mxreality.js"></script>
+    <script src="./js/avr.utils.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script>
+        window.onload = function () {
+            init();
+        }
+        function init() {
+            var scene, renderer;
+            var container;
+            renderer = new THREE.WebGLRenderer();
+            container = document.getElementById('example');
+            container.appendChild(renderer.domElement);
+            var switchContainer = null;
+
+            scene = new THREE.Scene();
+
+            var vr = new VR(scene, renderer, container, { 'fov': 60 });
+            vr.vrbox.radius = 50;
+
+            if (!AVR.isCrossScreen()) {
+                vr.useGyroscope = false;
+            }
+            vr.loadProgressManager.onLoad = function () {
+                vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
+                //vr.controls.enable=false;
+            }
+            vr.loadProgressManager.onProgress = function () {
+                console.log("onProgress")
+            }
+            vr.loadProgressManager.onError = function () {
+                console.log("onError")
+            }
+            vr.init(function () {
+
+            });
+            vr.playPanorama('textures/puydesancy.jpg');
+
+
+            var util = new VRUtils(vr);
+
+            vr.container.addEventListener("mousemove", function (e) {
+                util.bindRaycaster(e, {
+                    success: function (obj) {
+                        if (obj[0].object.name == "btn1") {
+                            document.body.style.cursor = "pointer";
+                            switchContainer = { 'type': 'fromBtn1', 'url': 'textures/538749b6aac79.jpg' }
+                        } else if (obj[0].object.name == "btn2") {
+                            switchContainer = { 'type': 'fromBtn2', 'url': 'textures/538749b6aac79.jpg' }
+                            document.body.style.cursor = "move";
+                        } else {
+                            switchContainer = null;
+                            document.body.style.cursor = "auto";
+                        }
+                    },
+                    empty: function () {
+                        document.body.style.cursor = "auto";
+                        switchContainer = null;
+                    }
+                })
+            }, false)
+
+            // VR模式触发切换
+            AVR.bindCameraEvent(vr, {
+                vectorRadius: vr.vrbox.width / 2.2,
+                trigger: function (e) {
+                    console.log("on", e.jsonInfo)
+                    if (e) {
+                        switchContainer = e.jsonInfo;
+                        hotIconEvt();
+                    }
+                },
+                move: function (e) {
+                    intersectObj = e[0].object;
+                    console.log('intersectObj', intersectObj)
+                    if (intersectObj.name == "btn1") {
+                        intersectObj.jsonInfo = { 'type': 'fromBtn1', 'url': 'textures/538749b6aac79.jpg' }
+                    } else if (intersectObj.name == "btn2") {
+                        intersectObj.jsonInfo = { 'type': 'fromBtn2', 'url': 'textures/538749b6aac79.jpg' }
+                    } else {
+                        intersectObj.jsonInfo = null;
+                        switchContainer = null;
+                    }
+                },
+                empty: function () {
+                    vr.cameraEvt.leave();
+                    intersectObj.jsonInfo = null;
+                    switchContainer = null;
+                }
+            });
+
+            container.addEventListener('click', function (e) {
+                hotIconEvt();
+            });
+            function hotIconEvt() {
+                console.log(switchContainer)
+                if (switchContainer && switchContainer.type == 'fromBtn1') {
+                    vr.playPanorama(switchContainer.url);
+                }
+                if (switchContainer && switchContainer.type == 'fromBtn2') {
+                    vr.playPanorama(switchContainer.url);
+                }
+            }
+
+            util.markIcon("textures/forward.png", new THREE.Vector3(0, 0, 10), 'btn1', 'title1', 1, 1);
+            util.markIcon("textures/left.png", new THREE.Vector3(10, 0, 10), 'btn2', 'title2', 1, 1);
+            animate();
+            function animate() {
+                requestAnimationFrame(animate);
+                if (AVR.isCrossScreen()) {
+                    cameraEvent.updatePosition();
+                } else {
+                    util.markIconInViews();
+                    if (vr.markIconGroup) {
+                        for (var i = 0; i < vr.markIconGroup.children.length; i++) {
+                            vr.markIconGroup.children[i].lookAt(vr.vr.camera.position);
+                        }
+                    }
+                }
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
