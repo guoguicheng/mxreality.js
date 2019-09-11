@@ -20,6 +20,7 @@ var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
         "depth": 2
     };
 
+    this.destoryed = false;
     this.video = null;
     this.audio = null;
     this.toolBar = null;
@@ -58,6 +59,7 @@ var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
         'leave': function () {}
     };
     this._takeScreenShot = false;
+    this.timerList = {};
     this.camera.position.set(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
     this.loadProgressManager = new THREE.LoadingManager(function (xhr) {
         console.log("loaded");
@@ -75,6 +77,20 @@ var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
 
 
 };
+VR.prototype.destory = function () {
+    if (that.video) {
+        that.video.pause();
+        that.video = null;
+    }
+    if (that.audio) {
+        that.audio.pause();
+        that.audio = null;
+    }
+    for (var timer in that.timerList) {
+        clearInterval(that.timerList[timer]);
+    }
+    that.destoryed = true;
+}
 VR.prototype.init = function (extendsAnimationFrame) {
     var that = this;
     var startPos = new THREE.Vector2();
@@ -198,7 +214,8 @@ VR.prototype.init = function (extendsAnimationFrame) {
                 spots[touch.identifier] = new THREE.Vector2(0, 0);
 
             })
-            timer = setInterval(function () {
+            clearInterval(that.timerList.renderTouchersRimer);
+            that.timerList.renderTouchersRimer = setInterval(function () {
                 renderTouches(touches);
             }, 1);
         }
@@ -290,7 +307,8 @@ VR.prototype.init = function (extendsAnimationFrame) {
     }
 
     function slideBar(h) {
-        var animateTimer = setInterval(function () {
+        clearInterval(that.timerList.slideBarAniateTimer);
+        that.timerList.slideBarAniateTimer = manimateTimer = setInterval(function () {
             var step = (toolBar.toolbar.clientHeight + h);
             if (step >= toolBar.defaultHeight && step <= toolBar.defaultMaxHeight) {
                 toolBar.toolbar.style.height = step + "px";
@@ -406,6 +424,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
     function bindVolumeEvent() {
         var Audio = that.video || that.audio;
         if (Audio) {
+            var ract = AVR.getBoundingClientRect(that.container);
             toolBar.voice_bar.style.display = "block";
             var voice_bar = toolBar.voice_bar;
             var voice_slide_bar = voice_bar.firstChild;
@@ -424,7 +443,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
                 voice_bar.style.opacity = 1;
             }, false);
             voice_slide_bar.addEventListener("click", function (e) {
-                var y = (e.clientY || e.changedTouches[0].clientY) - that.container.offsetTop;
+                var y = (e.clientY || e.changedTouches[0].clientY) - ract.top;
                 that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
                 var cur_h = h_top - y;
                 if (cur_h / voice_bar_height <= 1) {
@@ -443,7 +462,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
                 mouseDown = false;
             }, false);
             voice_bar.addEventListener("mousemove", function (e) {
-                var y = (e.clientY || e.changedTouches[0].clientY) - that.container.offsetTop;
+                var y = (e.clientY || e.changedTouches[0].clientY) - ract.top;
                 that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
                 if (mouseDown) {
                     var cur_h = h_top - y;
@@ -472,7 +491,8 @@ VR.prototype.init = function (extendsAnimationFrame) {
             voice_bar.addEventListener("touchend", function (e) {
                 tempY = 0;
             }, false);
-            setInterval(function () {
+            clearInterval(that.timerList.voiceBarActiveTimer);
+            that.timerList.voiceBarActiveTimer = setInterval(function () {
                 if (that.voiceHideLeftTime <= 0) {
                     voice_bar.style.opacity = 0;
                 } else {
@@ -486,6 +506,9 @@ VR.prototype.init = function (extendsAnimationFrame) {
 
     function render() {
 
+        if (that.destoryed) {
+            return;
+        }
         var width = that.container.offsetWidth;
         var height = that.container.offsetHeight;
         that.camera.aspect = width / height;
@@ -516,7 +539,8 @@ VR.prototype.init = function (extendsAnimationFrame) {
     }
     animate();
     //if you don't use an asteroid view,you need to initialize the controller after the asteroid view.
-    setInterval(function () {
+    clearInterval(that.timerList.toolBarAutoHideTimer);
+    that.timerList.toolBarAutoHideTimer = setInterval(function () {
         if (!toolBar.isActive) {
             if (that.autoHideLeftTime < 0) {
                 toolBar.toolbar.style.display = "none";
@@ -734,14 +758,16 @@ VR.prototype.playPanorama = function (recUrl, resType) {
             }
 
             function changeProgress(e) {
-                var x = (e.clientX || e.changedTouches[0].clientX) - that.container.offsetLeft;
+                rect = AVR.getBoundingClientRect(that.container)
+                var x = (e.clientX || e.changedTouches[0].clientX) - rect.left;
                 video.currentTime = video.duration * (x / this.clientWidth);
             }
             that.video.buffTimer = null;
 
             function canplayThrough(e) {
                 if (!that.video.buffTimer) {
-                    that.video.buffTimer = setInterval(function (e) {
+                    clearInterval(that.timerList.videoBuffTimer);
+                    that.timerList.videoBuffTimer = that.video.buffTimer = setInterval(function (e) {
                         var allBuffered = 0;
                         if (video.buffered.length != 0) {
                             allBuffered += video.buffered.end(0);
@@ -762,7 +788,8 @@ VR.prototype.playPanorama = function (recUrl, resType) {
             texture.format = THREE.RGBAFormat;
             buildTexture(texture);
 
-            that.video.progressTimer = setInterval(function (e) {
+            clearInterval(that.timerList.videoProgressTimer);
+            that.timerList.videoProgressTimer = that.video.progressTimer = setInterval(function (e) {
                 toolBar.playProgress.style.width = (video.currentTime / video.duration) * 100 + "%";
                 toolBar.curTime.innerText = AVR.formatSeconds(video.currentTime);
                 toolBar.totalTime.innerText = AVR.formatSeconds(video.duration);
@@ -832,7 +859,7 @@ VR.prototype.playPanorama = function (recUrl, resType) {
         var tmpTarget = new THREE.Vector3(that._controlTarget.x, that._controlTarget.y, that._controlTarget.z);
 
         setTimeout(function () {
-            var asteroidForwardTimer = setInterval(function () {
+            that.timerList.asteroidForwardTimer = asteroidForwardTimer = setInterval(function () {
                 if (config.asteroidTop * that.camera.position.y - v >= 0) {
                     that.camera.position.y -= (v * config.asteroidTop);
                     that.camera.lookAt(tmpTarget);
@@ -1896,6 +1923,9 @@ var AVR = {
     },
     formatSeconds: function (value) {
         var theTime = parseInt(value); // 秒
+        if (!theTime) {
+            return '00:00';
+        }
         var theTime1 = 0; // 分
         var theTime2 = 0; // 小时
         if (theTime > 60) {
@@ -2077,15 +2107,10 @@ var AVR = {
     screenPosTo3DCoordinate: function (e, container, camera) {
         var clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
         var clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-        var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-        var scrollLeft = document.body.scrollLeft || document.documentElement.scrollLeft;
-        var offsetTop = container.offsetTop;
-        var offsetLeft = container.offsetLeft;
-        var x = clientX - (offsetLeft - scrollLeft);
-        var y = clientY - (offsetTop - scrollTop);
-        x = (x >= 0 ? x : 0);
-        y = (y >= 0 ? y : 0);
-        //console.log(x,y);
+        rect = AVR.getBoundingClientRect(container);
+        x = clientX - rect.left;
+        y = clientY - rect.top;
+        //console.log(x, y);
         var W = container.clientWidth;
         var H = container.clientHeight;
         var mouse = new THREE.Vector2();
@@ -2290,9 +2315,9 @@ var AVR = {
         };
     },
     msgBox: function (msg, timeout, container) {
-	if(!msg){
-	    return;	
-	}
+        if (!msg) {
+            return;
+        }
         var msgbox = this.createTag('div', {
             'style': 'position:absolute;bottom:50%;width:100%;padding:0.25rem;background:rgba(0,0,0,.6);color:#fff;text-align:center;'
         }, {
@@ -2517,6 +2542,24 @@ var AVR = {
             }
         }
     },
+    getBoundingClientRect: function (obj) {
+        var xy = obj.getBoundingClientRect();
+        var top = xy.top - document.documentElement.clientTop + document.documentElement.scrollTop, //document.documentElement.clientTop 在IE67中始终为2，其他高级点的浏览器为0
+            bottom = xy.bottom,
+            left = xy.left - document.documentElement.clientLeft + document.documentElement.scrollLeft, //document.documentElement.clientLeft 在IE67中始终为2，其他高级点的浏览器为0
+            right = xy.right,
+            width = xy.width || right - left, //IE67不存在width 使用right - left获得
+            height = xy.height || bottom - top;
+
+        return {
+            top: top,
+            right: right,
+            bottom: bottom,
+            left: left,
+            width: width,
+            height: height
+        }
+    }
 };
 
 var head = document.getElementsByTagName('head')[0];

@@ -1,6 +1,16 @@
 ##### <font color="#dd0000">免费软件，但受软件版权保护，尊重作者的成果，严格遵守协议内容并且保留播放器版权信息</font>
 
-[官方地址](https://www.mxreality.cn)
+&nbsp;🐡&nbsp;本站提供全面的VR全景视频、普通2D和3D视频是在线免费上传分享功能，支持免费在线直播。
+
+&nbsp;🎈&nbsp;提供VR视频和普通视频直播技术支持
+
+&nbsp;💓&nbsp;关注官方微信公众号“迷视VR资讯”，获取最新的VR咨询内容
+
+&nbsp;🌼&nbsp;加入QQ群863363544与各路同行大佬交流行业技术心得
+
+#### 查看官方在线例子，关注VR动态
+
+![公众号](https://github.com/guoguicheng/mxreality.js/raw/master/qrcode.jpg)
 
 [在线文档](https://github.com/guoguicheng/mxreality.js/tree/master/docs/index.md)  
 

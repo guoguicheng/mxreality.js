@@ -52,7 +52,7 @@
             vr.useGyroscope = false;
         }
         vr.loadProgressManager.onLoad=function () {
-            vr.VRObject.getObjectByName("__mxrealitySkybox").visible = true;
+            vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
 
             vr.asteroidForward(function () {
                 //vr.controls.autoRotate=true;
@@ -66,7 +66,7 @@
             vr.controls.object.position.z=0.0001;
         },36)*/
 
-        vr.playPanorama('textures/puydesancy.jpg');
+        vr.playPanorama('./textures/puydesancy.jpg');
     }
 
 
