@@ -8,8 +8,9 @@
 
 &nbsp;🌼&nbsp;加入QQ群863363544与各路同行大佬交流行业技术心得
 
-#### 查看官方在线例子，关注VR动态
+#### 查看官方[在线地址](https://www.mxreality.cn)，关注VR动态
 
+[https://www.mxreality.cn](https://www.mxreality.cn)
 ![公众号](https://github.com/guoguicheng/mxreality.js/raw/master/qrcode.jpg)
 
 [在线文档](https://github.com/guoguicheng/mxreality.js/tree/master/docs/index.md)  
