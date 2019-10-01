@@ -36,8 +36,15 @@ var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
         "video": "video",
         "box": "box",
         "slice": "slice",
-        "sliceVideo": "sliceVideo"
+        "sliceVideo": "sliceVideo",
+        'flvVideo': 'flvVIdeo'
     };
+    this.videoPlayHook = function () {
+        console.log('video play')
+    }
+    this.videoPauseHook = function () {
+        console.log('video pause')
+    }
     this.asteroidConfig = {
         enable: false,
         asteroidFPS: 10,
@@ -308,7 +315,7 @@ VR.prototype.init = function (extendsAnimationFrame) {
 
     function slideBar(h) {
         clearInterval(that.timerList.slideBarAniateTimer);
-        that.timerList.slideBarAniateTimer = manimateTimer = setInterval(function () {
+        that.timerList.slideBarAniateTimer = animateTimer = setInterval(function () {
             var step = (toolBar.toolbar.clientHeight + h);
             if (step >= toolBar.defaultHeight && step <= toolBar.defaultMaxHeight) {
                 toolBar.toolbar.style.height = step + "px";
@@ -686,7 +693,8 @@ VR.prototype.playPanorama = function (recUrl, resType) {
             that.cubeCameraSphere.visible = false;
         }
     } else {
-        if (that.resType.video == resType || that.resType.sliceVideo == resType) {
+        var videoType = [that.resType.video, that.resType.sliceVideo, that.resType.flvVideo];
+        if (videoType.indexOf(resType) >= 0) {
             if (!that.video) {
                 var video = that.video = AVR.createTag('video', {
                     'webkit-playsinline': true,
@@ -733,6 +741,18 @@ VR.prototype.playPanorama = function (recUrl, resType) {
 
                     video.appendChild(source);
                 }
+            } else if (that.resType.flvVideo == resType) {
+                if (!flvjs.isSupported()) {
+                    console.error('Your browser does not support flvjs')
+                    return;
+                }
+                var flvPlayer = flvjs.createPlayer({
+                    type: 'flv',
+                    url: recUrl
+                });
+                flvPlayer.attachMediaElement(video);
+                flvPlayer.load();
+                flvPlayer.play();
             } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
                 video.src = recUrl;
             } else {
@@ -751,9 +771,11 @@ VR.prototype.playPanorama = function (recUrl, resType) {
                 if (video.paused) {
                     that._play();
                     video.play();
+                    that.videoPlayHook();
                 } else {
                     that._pause();
                     video.pause();
+                    that.videoPauseHook();
                 }
             }
 
@@ -836,6 +858,7 @@ VR.prototype.playPanorama = function (recUrl, resType) {
                     asteroidForward(callback);
                 }
             }
+            
         }
     }
 
