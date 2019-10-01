@@ -1,0 +1,6 @@
+[submodule "libs/flv.js"]
+	path = libs/flv.js
+	url = https://github.com/bilibili/flv.js.git
+[submodule "libs/hls.js"]
+	path = libs/hls.js
+	url = https://github.com/video-dev/hls.js.git
