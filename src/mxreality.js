@@ -37,7 +37,7 @@ var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
         "box": "box",
         "slice": "slice",
         "sliceVideo": "sliceVideo",
-        'flvVideo': 'flvVIdeo'
+        'flvVideo': 'flvVideo'
     };
     this.videoPlayHook = function () {
         console.log('video play')
