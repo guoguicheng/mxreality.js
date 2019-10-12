@@ -30,8 +30,8 @@
 * [重要更新]
 * 支持VR HLS和VR FLV直播，普通全景VR视频和普通全景图片
 
-### 播放器功能结构图
-![结构图](https://github.com/guoguicheng/mxreality.js/raw/master/docs/mxreality.js.png)
+### 支持开源项目
+![支持开源项目](https://github.com/guoguicheng/mxreality.js/raw/master/docs/149867278858969619.jpg)
 
 #### 全景图小行星视角
 ![小行星视角](https://github.com/guoguicheng/mxreality.js/raw/master/docs/1.png)
