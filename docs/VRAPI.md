@@ -34,6 +34,7 @@
     vr.resType.box 天空盒子模式
     vr.resType.slice 全景图片切片模式
     vr.resType.sliceVideo 全景视频分片模式或者是HLS直播模式
+    vr.resType.flvVideo FLV直播模式
 
 #### 资源加载精度回调
 
