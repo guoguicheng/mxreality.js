@@ -15,6 +15,7 @@
 [https://www.mxreality.cn](https://www.mxreality.cn)
 ![公众号](https://github.com/guoguicheng/mxreality.js/raw/master/qrcode.jpg)
 
+##### 查看例子前先搭建站点、查看例子前先搭建站点、查看例子前先搭建站点
 
 [在线文档](https://github.com/guoguicheng/mxreality.js/tree/master/docs/index.md)  
 
