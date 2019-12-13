@@ -1879,8 +1879,32 @@ var AVR = {
                 scope.screenOrientation = window.orientation || 0;
             }
 
+            var devices = null;
+            if (typeof DeviceMotionEvent !== 'undefined') {
+                devices = DeviceMotionEvent;
+            }
+            if (typeof DeviceOrientationEvent !== 'undefined') {
+                devices = DeviceOrientationEvent;
+            }
             window.addEventListener('orientationchange', orientationchange, false);
             window.addEventListener('deviceorientation', deviceorientation, false);
+            if (devices && typeof devices.requestPermission === 'function') {
+                window.addEventListener('click', function () {
+                    devices.requestPermission()
+                        .then(function (permissionState) {
+                            if (permissionState === 'granted') {
+                                window.addEventListener('devicemotion', orientationchange, false);
+                                window.addEventListener('deviceorientation', deviceorientation, false);
+                            }
+                        })
+                        .catch(function (err) {
+                            AVR.msgBox(err, 3, document.body);
+                        })
+                })
+
+            } else {
+                // handle regular non iOS 13+ devices
+            }
             this.gyroFreeze = function () {
                 scope.gyroEnable = false;
             };
