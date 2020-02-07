@@ -79,7 +79,7 @@ var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
     this.scene.add(this.VRObject);
     //this.renderer.setPixelRatio( window.devicePixelRatio );
     this.effect = AVR.stereoEffect(this.renderer);
-    AVR.bindOrientationEnevt(this, this._controlTarget);
+    AVR.bindOrientationEvent(this, this._controlTarget);
 
 
 
@@ -1259,7 +1259,7 @@ var AR = function (scene, renderer, container, cameraPara, cameraPosition) {
 }
 AR.prototype.init = function () {
     var self = this;
-    AVR.bindOrientationEnevt(self, self._controlTarget);
+    AVR.bindOrientationEvent(self, self._controlTarget);
     this.video = AVR.createTag('video', {
         'webkit-playsinline': true,
         'playsinline': true,
@@ -2375,7 +2375,7 @@ var AVR = {
             return false;
         }
     },
-    bindOrientationEnevt: function (that) {
+    bindOrientationEvent: function (that) {
         if (void 0 === that.controls) {
             that.controls = AVR.orbitControls(that.camera, that.renderer.domElement);
             that.controls.target = that._controlTarget.clone();
