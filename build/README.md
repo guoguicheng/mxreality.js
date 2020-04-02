@@ -8,22 +8,39 @@
 
 ###     例如
 
-        import React from "react";
-        import ReactDOM from "react-dom";
-        import { Button, DatePicker, version } from "antd";
-        import "antd/dist/antd.css";
-        import "./index.css";
-        import THREE from 'three';
-        import {VR,AVR} from 'mxreality.js';
+        create-react-app hello-world
+        cd hello-world
 
-        ReactDOM.render(
-        <div className="App">
-        <h1>antd version: {version}</h1>
-        <DatePicker />
-        <Button type="primary" style={{ marginLeft: 8 }}>
-        Primary Button
-        </Button>
-        </div>,
-        document.getElementById("root")
+        # 修改src/App.js
+        import React from 'react';
+        import logo from './logo.svg';
+        import './App.css';
+        import * as THREE from 'mxreality.js/three.js';
+        import {VR,AVR} from 'mxreality.js';
+        import * as Hls from 'mxreality.js/hls.js';
+
+
+        function App() {
+        return (
+        <div className="App" id="example">
+        <header className="App-header">
+                <img src={logo} className="App-logo" alt="logo" />
+                <p>
+                Edit <code>src/App.js</code> and save to reload.
+                </p>
+                <a
+                className="App-link"
+                href="https://reactjs.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                >
+                Learn React
+                </a>
+        </header>
+        </div>
         );
-        console.log(VR,AVR,THREE)
+        }
+
+        export default App;
+        console.log(THREE,VR,Hls.isSupported())
+
