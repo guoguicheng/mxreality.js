@@ -26,6 +26,7 @@
         "rev-del": "^2.0.0"
     },
     "dependencies": {
+        "antd": "^4.1.0",
         "mxreality.js": "^1.1.3"
     }
 }
