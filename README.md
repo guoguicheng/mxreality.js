@@ -56,6 +56,7 @@
         vr.resType.flvVideo FLV直播模式
 
 ### 初始化例子
+        
         <div id='example'></div>
         <script>
         container=document.getElementById('example')
