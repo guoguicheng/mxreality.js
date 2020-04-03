@@ -19,11 +19,53 @@
 
 [在线文档](https://github.com/guoguicheng/mxreality.js/tree/master/docs/index.md)  
 
+### web引用
         git clone https://github.com/guoguicheng/mxreality.js.git --recursive
         cd mxreality.js
         npm install
-        npm install -g gulp
         gulp build
+
+        <script src="./build/three.js"></script>
+        <script src="./build/mxreality.js"></script>
+
+        <!-- hls 直播 -->
+        <script src="./build/mxreality.js"></script>
+        <!-- flv 直播 -->
+        <script src="./build/mxreality.js"></script>
+
+### npm引用
+
+        npm i mxreality.js
+
+        import * as THREE from 'mxreality.js/build/three.js';
+        import {VR,AVR} from 'mxreality.js/build/mxreality.js';
+
+        // hls 直播
+        import * as Hls from hls
+
+        // flv 直播
+        import * as Flv from flv
+
+### 可播放的资源类型
+
+        VR播放类别：
+        vr.resType.video 播放VR视频
+        vr.resType.box 天空盒子模式
+        vr.resType.slice 全景图片切片模式
+        vr.resType.sliceVideo 全景视频分片模式或者是HLS直播模式
+        vr.resType.flvVideo FLV直播模式
+
+### 初始化例子
+        <div id='example'></div>
+        <script>
+        container=document.getElementById('example')
+        renderer = new THREE.WebGLRenderer();
+        container.appendChild(renderer.domElement);
+        scene = new THREE.Scene();
+        var vr=new VR(scene,renderer,container);
+        vr.init()
+        vr.playPanorama('360.mp4',vr.resType.video);
+        </script>
 
 #### MXREALITY 混合现实网页版【QQ群：863363544】
 
