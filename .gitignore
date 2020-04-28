@@ -6,3 +6,4 @@
 *.mkv
 *.mp4
 test.html
+package-lock.json
