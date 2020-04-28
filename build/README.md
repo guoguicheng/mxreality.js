@@ -1,46 +1,67 @@
-###     安装步骤
+
+### 安装
 
         npm i mxreality.js
 
-###     引用
+### 引用
 
-        import {VR,AVR} from 'mxreality.js'
+        import * as THREE from 'mxreality.js/build/three';
+        import {VR,AVR} from 'mxreality.js/build/mxreality';
+        import * as Hls from 'mxreality.js/build/hls';
 
-###     例如
+### 例子
 
         create-react-app hello-world
         cd hello-world
 
         # 修改src/App.js
-        import React from 'react';
-        import logo from './logo.svg';
-        import './App.css';
-        import * as THREE from 'mxreality.js/three.js';
-        import {VR,AVR} from 'mxreality.js';
-        import * as Hls from 'mxreality.js/hls.js';
 
+        window.THREE = THREE; // 重要，不设置则会报THREE未定义错误！！！！！！
+        class MyComponent extends React.Component {
+                constructor(props) {
+                        super(props);
+                        this.state = { 
+                                container:createRef()
+                        }
+                }
+                componentDidMount(){
+                        console.log(THREE)
+                        console.log('isMobile',AVR.OS.isMobile())
+                        let scene=new THREE.Scene()
+                        let renderer=new THREE.WebGLRenderer()
+                        this.state.container.current.appendChild(renderer.domElement);
+                        let vr=new VR(scene,renderer,this.state.container.current);
+                        vr.loadProgressManager.onLoad=function () {
+                        vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
+                                console.log('loaded',vr.VRObject.getObjectByName("__mxrealityDefault").visible)
+                                //vr.controls.enable=false;
+                        }
+                        vr.loadProgressManager.onProgress=function () {
+                                console.log("onProgress")
+                        }
+                        vr.loadProgressManager.onError=function () {
+                                console.log("onError")
+                        }
+                        vr.init(function(){
 
-        function App() {
-        return (
-        <div className="App" id="example">
-        <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                Learn React
-                </a>
-        </header>
-        </div>
-        );
+                        })
+                        vr.playPanorama('http://localhost:3000/123.jpg');
+                }
+                onLoad(){
+                
+                }
+                render() {
+                        //  当组件插入到 DOM 后，ref 属性添加一个组件的引用于到 this.refs
+                        return (
+                                <div ref={this.state.container}></div>
+                        );
+                }
+        }
+
+        function App() {  
+                return (
+                        <MyComponent />
+                );
         }
 
         export default App;
-        console.log(THREE,VR,Hls.isSupported())
-

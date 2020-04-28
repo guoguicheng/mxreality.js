@@ -25,6 +25,8 @@
         npm install -g gulp
         gulp build
 
+[npm方式(react接入例子)](https://github.com/guoguicheng/mxreality.js/tree/master/build/README.md) 
+
 #### MXREALITY 混合现实网页版【QQ群：863363544】
 
 
