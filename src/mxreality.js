@@ -23,7 +23,13 @@
             "height": 2,
             "depth": 2
         };
-
+        this.hlsConfig = {
+            autoStartLoad: true,
+        };
+        this.flvConfig = {
+            type: 'flv',
+            isLive: true,
+        };
         this.destoryed = false;
         this.video = null;
         this.audio = null;
@@ -731,7 +737,7 @@
 
                         video.appendChild(source);
                     } else if (Hls.isSupported()) {
-                        that.hls = new Hls();
+                        that.hls = new Hls(that.hlsConfig);
                         that.hls.attachMedia(video);
                         that.hls.loadSource(recUrl);
                         that.hls.on(Hls.Events.MANIFEST_PARSED, function () {
@@ -750,10 +756,8 @@
                         console.error('Your browser does not support flvjs')
                         return;
                     }
-                    var flvPlayer = flvjs.createPlayer({
-                        type: 'flv',
-                        url: recUrl
-                    });
+                    that.flvConfig.url = recUrl;
+                    var flvPlayer = flvjs.createPlayer(that.flvConfig);
                     flvPlayer.attachMediaElement(video);
                     flvPlayer.load();
                     flvPlayer.play();
