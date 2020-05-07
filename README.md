@@ -30,9 +30,9 @@
         <script src="./build/mxreality.js"></script>
 
         <!-- hls 直播 -->
-        <script src="./build/mxreality.js"></script>
+        <script src="./libs/hls.js"></script>
         <!-- flv 直播 -->
-        <script src="./build/mxreality.js"></script>
+        <script src="./libs/flv.js"></script>
 
 ### 可播放的资源类型
 
