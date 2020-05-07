@@ -16,7 +16,9 @@
 
         # 修改src/App.js
 
-        window.THREE = THREE; // 重要，不设置则会报THREE未定义错误！！！！！！
+        window.THREE = THREE; // 重要，不设置则会报未定义错误！！！！！！
+        window.Hls = Hls;
+        
         class MyComponent extends React.Component {
                 constructor(props) {
                         super(props);
