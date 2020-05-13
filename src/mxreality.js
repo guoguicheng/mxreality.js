@@ -50,10 +50,14 @@
             'flvVideo': 'flvVideo'
         };
         this.videoPlayHook = function () {
+            this._play();
+            this.video.play();
             console.log('video play')
         }
         this.videoPauseHook = function () {
             console.log('video pause')
+            this._pause();
+            this.video.pause();
         }
         this.asteroidConfig = {
             enable: false,
@@ -729,19 +733,13 @@
                     }
                 }
                 if (that.resType.sliceVideo == resType) {
-                    if (AVR.OS.isAndroid() && AVR.OS.isWeixin()) {
-                        var source = AVR.createTag("source", {
-                            src: recUrl,
-                            type: 'application/x-mpegURL'
-                        }, null);
-
-                        video.appendChild(source);
-                    } else if (Hls.isSupported()) {
+                    if (Hls.isSupported()) {
                         that.hls = new Hls(that.hlsConfig);
                         that.hls.attachMedia(video);
                         that.hls.loadSource(recUrl);
                         that.hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                            video.play();
+                            // video.play();
+                            that.videoPlayHook()
                         })
                     } else {
                         var source = AVR.createTag("source", {
@@ -773,16 +771,15 @@
                 toolBar.progressBar.addEventListener("click", changeProgress, false);
                 toolBar.btn.addEventListener("click", btnPlay, false);
                 video.load();
-                video.play();
+                // video.play();
+                that.videoPlayHook();
 
                 function btnPlay(e) {
                     if (video.paused) {
-                        that._play();
-                        video.play();
+                     
                         that.videoPlayHook();
                     } else {
-                        that._pause();
-                        video.pause();
+                       
                         that.videoPauseHook();
                     }
                 }
