@@ -19,8 +19,6 @@
 <body>
 <div id="example"></div>
 <script src="../build/three.js"></script>
-<script src="./js/renderers/CanvasRenderer.js"></script>
-<script src="./js/renderers/Projector.js"></script>
 <script src="../build/mxreality.js"></script>
 <script>
 
@@ -71,7 +69,7 @@
             
         });
 
-        vr.playPanorama('https://645-20.vod.tv.itc.cn/sohu/v1/TmwGq6IsWDWHyBbIlYSqWX3kmFNx9BEx93ftCw7Xw7ytHrChWoIyYv7r.mp4?k=4rI81Y&p=j9lvzSw3qL1AopvmomrmqLsU0SvioSomhRYAtUxIgYeiwm12ZD6SotxcgMAS0p0cWK&r=TUldziJCtpCmhWB3tSCGhWlvsmCUqpkWtWaizY&q=OpC3hW7IRYodRDvOwmfCyY2sRYWHfJv4lGv4lGvOWBo2ZDvtfhWtZYd4wm4cWhdtY',vr.resType.video);
+        vr.playPanorama('/examples/frag_bunny.mp4',vr.resType.video);
         vr.video.setAttribute("loop","loop");
         vr.video.crossOrigin="Anonymous";
         vr.video.autoplay=true;

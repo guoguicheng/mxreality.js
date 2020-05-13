@@ -19,8 +19,6 @@
 <body>
 <div id="example"></div>
 <script src="../build/three.js"></script>
-<script src="./js/renderers/CanvasRenderer.js"></script>
-<script src="./js/renderers/Projector.js"></script>
 <script src="../build/mxreality.js"></script>
 <script src="../build/hls.js"></script>
 <script>
@@ -59,7 +57,7 @@
         }
         vr.loadProgressManager.onLoad=function () {
             // 视频静音
-            vr.video.muted=true;
+            // vr.video.muted=true;
             vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
         }
         //AVR.useGyroscope=false;
@@ -67,7 +65,7 @@
             
         });
 
-        vr.playPanorama('http://jingcai.cdn-vipkkyun.com/20190827/1295_6bddbad0/index.m3u8?sign=1a71f26fca4c9680c93d10010a165d1a',vr.resType.sliceVideo);
+        vr.playPanorama('http://ivi.bupt.edu.cn/hls/cctv5phd.m3u8',vr.resType.sliceVideo);
         vr.video.setAttribute("loop","loop");
         vr.video.crossOrigin="Anonymous";
 
