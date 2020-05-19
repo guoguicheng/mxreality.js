@@ -39,7 +39,6 @@
                 vr.useGyroscope = false;
             }
             vr.loadProgressManager.onLoad = function () {
-                vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
                 //vr.controls.enable=false;
             }
             vr.loadProgressManager.onProgress = function () {
@@ -61,9 +60,9 @@
                     success: function (obj) {
                         if (obj[0].object.name == "btn1") {
                             document.body.style.cursor = "pointer";
-                            switchContainer = { 'type': 'fromBtn1', 'url': 'textures/538749b6aac79.jpg' }
+                            switchContainer = { 'type': 'fromBtn1', 'url': '/examples/textures/538749b6aac79.jpg' }
                         } else if (obj[0].object.name == "btn2") {
-                            switchContainer = { 'type': 'fromBtn2', 'url': 'textures/538749b6aac79.jpg' }
+                            switchContainer = { 'type': 'fromBtn2', 'url': '/examples/textures/538749b6aac79.jpg' }
                             document.body.style.cursor = "move";
                         } else {
                             switchContainer = null;
@@ -91,9 +90,9 @@
                     intersectObj = e[0].object;
                     console.log('intersectObj', intersectObj)
                     if (intersectObj.name == "btn1") {
-                        intersectObj.jsonInfo = { 'type': 'fromBtn1', 'url': 'textures/538749b6aac79.jpg' }
+                        intersectObj.jsonInfo = { 'type': 'fromBtn1', 'url': '/examples/textures/538749b6aac79.jpg' }
                     } else if (intersectObj.name == "btn2") {
-                        intersectObj.jsonInfo = { 'type': 'fromBtn2', 'url': 'textures/538749b6aac79.jpg' }
+                        intersectObj.jsonInfo = { 'type': 'fromBtn2', 'url': '/examples/textures/538749b6aac79.jpg' }
                     } else {
                         intersectObj.jsonInfo = null;
                         switchContainer = null;

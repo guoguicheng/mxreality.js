@@ -618,7 +618,7 @@
                 if (!Box) {
                     var Box = new THREE.Mesh(new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth), new THREE.MultiMaterial(materials));
                     Box.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
-                    Box.visible = false;
+                    Box.visible = true;
                     Box.name = "__mxrealitySkybox";
                     Box.matrixAutoUpdate = false;
                     Box.updateMatrix();
@@ -667,7 +667,7 @@
                 var cube = new THREE.Mesh(cubeGeometry, materials);
                 cube.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
                 cube.name = "__mxrealitySlice";
-                cube.visible = false;
+                cube.visible = true;
                 cube.matrixAutoUpdate = false;
                 cube.updateMatrix();
                 that.VRObject.add(cube);
@@ -683,7 +683,7 @@
                 that.cubeCameraSphere = new THREE.Mesh(new THREE.SphereGeometry(that._containerRadius * that._cubeCameraTimes, 180, 180), material);
                 that.cubeCameraSphere.position.set(0, 0, 0);
                 that.cubeCameraSphere.name = "__mxrealitySlice";
-                that.cubeCameraSphere.visible = false;
+                that.cubeCameraSphere.visible = true;
                 that.cubeCameraSphere.matrixAutoUpdate = false;
                 that.cubeCameraSphere.updateMatrix();
                 that.VRObject.add(that.cubeCameraSphere);
@@ -840,13 +840,14 @@
                 var obj = that.VRObject.getObjectByName("__mxrealityDefault");
                 if (obj) {
                     obj.material = material;
+                    obj.visible = true;
                 } else {
 
                     var phiStart = -Math.PI / 2;
                     var geometry = new THREE.SphereBufferGeometry(that.vrbox.radius, that.vrbox.widthSegments, that.vrbox.heightSegments, phiStart);
                     geometry.scale(-1, 1, 1); //x取反（面朝里）
                     mesh = new THREE.Mesh(geometry, material);
-                    mesh.visible = false;
+                    mesh.visible = true;
                     mesh.name = "__mxrealityDefault";
                     if (isImg) {
                         mesh.matrixAutoUpdate = false;
