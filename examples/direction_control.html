@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>direction control</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <script src="../build/three.js"></script>
+    <script src="../build/mxreality.js"></script>
+    <style type="text/css">
+        /*#example {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left:0px;
+            top:0px;
+            overflow: hidden;
+        }*/
+    </style>
+</head>
+
+<body>
+    <div id="example"></div>
+    <script>
+        window.onload = function () {
+            init();
+        }
+
+        function init() {
+            var scene, renderer;
+            var container;
+            renderer = new THREE.WebGLRenderer();
+            container = document.getElementById('example');
+            container.appendChild(renderer.domElement);
+
+            scene = new THREE.Scene();
+            var vr = new VR(scene, renderer, container, {
+                'fov': 60
+            });
+
+            document.addEventListener('keydown', function (event) {
+                var e = event || window.event || arguments.callee.caller.arguments[0];
+                if (!e) {
+                    return;
+                }
+                console.log('keyCode:', e.keyCode);
+            })
+            // 自定义方向控制键，默认方向键
+            vr.controls.arrowLeft = 65; //a
+            vr.controls.arrowRight = 68; //d
+            vr.controls.arrowUp = 87; //w
+            vr.controls.arrowDown = 83; //s 
+
+
+            vr.vrbox.radius = 50;
+
+            if (!AVR.isCrossScreen()) {
+                vr.useGyroscope = false;
+            }
+            vr.loadProgressManager.onLoad = function () {
+                //vr.controls.enable=false;
+            }
+            vr.loadProgressManager.onProgress = function () {
+                console.log("onProgress")
+            }
+            vr.loadProgressManager.onError = function () {
+                console.log("onError")
+            }
+            vr.init(function () {
+
+            });
+            vr.playPanorama('textures/puydesancy.jpg');
+
+
+
+        }
+    </script>
+</body>
+
+</html>

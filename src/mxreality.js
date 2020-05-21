@@ -1575,6 +1575,11 @@
                 //
                 // public methods
                 //
+                this.arrowLeft = 37;
+                this.arrowUp = 38;
+                this.arrowRight = 39;
+                this.arrowDown = 40;
+                this.arrowSpeed = 0.05;
 
 
                 this.getPolarAngle = function () {
@@ -1916,6 +1921,47 @@
                 };
                 this.rotationLeft = rotateLeft;
                 this.rotationUp = rotateUp;
+
+                var _up = 0;
+                var _left = 0;
+                document.addEventListener('keydown', function (event) {
+                    var e = event || window.event || arguments.callee.caller.arguments[0];
+                    if (!e) {
+                        return;
+                    }
+                    if (e.keyCode == scope.arrowLeft) { // 按左箭头 
+                        _left = 1
+                    }
+                    if (e.keyCode == scope.arrowRight) {
+                        _left = -1;
+                    }
+                    if (e.keyCode == scope.arrowUp) {
+                        _up = 1;
+                    }
+                    if (e.keyCode == scope.arrowDown) {
+                        _up = -1;
+                    }
+                    rotateLeft(_left * scope.arrowSpeed);
+                    rotateUp(_up * scope.arrowSpeed);
+                })
+                document.addEventListener('keyup', function (event) {
+                    var e = event || window.event || arguments.callee.caller.arguments[0];
+                    if (!e) {
+                        return;
+                    }
+                    if (e.keyCode == scope.arrowLeft) { // 按左箭头 
+                        _left = 0
+                    }
+                    if (e.keyCode == scope.arrowRight) {
+                        _left = 0;
+                    }
+                    if (e.keyCode == scope.arrowUp) {
+                        _up = 0;
+                    }
+                    if (e.keyCode == scope.arrowDown) {
+                        _up = 0;
+                    }
+                })
 
                 this.domElement.addEventListener("mousedown", mousedown, false);
                 this.domElement.addEventListener('mousemove', function (e) {
