@@ -10,6 +10,8 @@
 
 &nbsp;🌼&nbsp;加入QQ群863363544与各路同行大佬交流行业技术心得
 
+### 有问题可[进入社区](http://discuss.mxreality.cn)提问
+
 ### 查看官方[在线地址](https://www.mxreality.cn)，关注VR动态
 
 [https://www.mxreality.cn](https://www.mxreality.cn)
