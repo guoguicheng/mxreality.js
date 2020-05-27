@@ -23,6 +23,15 @@
             "height": 2,
             "depth": 2
         };
+        this.liveSettings = {
+            "forceUseHls": false,
+            "forceUseVndAppleMpegUrl": false,
+            "forceUseXmpegUrl": false,
+            "usePlugin": false,
+            "loadPlugin": function (video) {
+                console.log('load video', video);
+            }
+        }
         this.hlsConfig = {
             autoStartLoad: true,
         };
@@ -729,22 +738,48 @@
                     }
                 }
                 if (that.resType.sliceVideo == resType) {
-                    if (Hls.isSupported()) {
-                        that.hls = new Hls(that.hlsConfig);
-                        that.hls.attachMedia(video);
-                        that.hls.loadSource(recUrl);
-                        that.hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                            that._play();
+                    function useHls() {
+                        that.hlsPlayer = new Hls(that.hlsConfig);
+                        that.hlsPlayer.loadSource(recUrl);
+                        that.hlsPlayer.attachMedia(video);
+                        that.hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function () {
                             video.play();
-                            that.videoPlayHook()
-                        })
-                    } else {
+                        });
+                    }
+
+                    function useXMpegUrl() {
                         var source = AVR.createTag("source", {
                             src: recUrl,
                             type: 'application/x-mpegURL'
                         }, null);
-
                         video.appendChild(source);
+                    }
+
+                    function useVndAppleMpegUrl() {
+                        video.src = recUrl;
+                        video.addEventListener('loadedmetadata', function () {
+                            video.play();
+                        });
+                    }
+                    if (that.liveSettings.usePlugin) {
+                        that.liveSettings.loadPlugin(video);
+                    } else if (that.liveSettings.forceUseHls) {
+                        useHls();
+                        console.info('force use hls')
+                    } else if (that.liveSettings.forceUseVndAppleMpegUrl) {
+                        useVndAppleMpegUrl();
+                        console.info('force use application/vnd.apple.mpegurl')
+                    } else if (that.liveSettings.forceUseXmpegUrl) {
+                        useXMpegUrl();
+                        console.info('force use application/x-mpegURL')
+                    } else if (Hls.isSupported()) {
+                        useHls();
+                    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                        useVndAppleMpegUrl();
+                    } else if (video.canPlayType('application/x-mpegURL')) {
+                        useXMpegUrl();
+                    } else {
+                        console.error('The browser does not support the current live stream,' + recUrl)
                     }
                 } else if (that.resType.flvVideo == resType) {
                     if (!flvjs.isSupported()) {
