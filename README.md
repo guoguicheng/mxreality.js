@@ -20,7 +20,7 @@
 
 * [https://www.mxreality.cn](https://www.mxreality.cn)
 
-* ![公众号](https://github.com/guoguicheng/mxreality.js/raw/master/qrcode.jpg)
+* ![扫码或搜索微信号mxreality关注迷视资讯微信公众号](https://github.com/guoguicheng/mxreality.js/raw/master/qrcode.jpg)
 
 ## 如果你不太了解web服务器或是初学者，查看例子前先[搭建nginx服务器](https://www.nginx.cn/doc/)、windows用户找到 安装->nginx在windows安装，根据教程安装然后修改nginx.conf配置文件，指定当前项目目录为根目录，然后在浏览器地址栏输入localhost[打开](http://localhost)即可查看例子
 
