@@ -720,7 +720,7 @@
                         'playsinline': true,
                         'preload': 'auto',
                         'x-webkit-airplay': 'allow',
-                        'x5-playsinline': true,
+                        //'x5-playsinline': true,
                         'x5-video-player-type': 'h5',
                         'x5-video-player-fullscreen': true,
                         'x5-video-orientation': 'portrait',
