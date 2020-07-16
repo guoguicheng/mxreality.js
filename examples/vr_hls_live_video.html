@@ -58,6 +58,9 @@
         vr.loadProgressManager.onLoad=function () {
             // 视频静音
             // vr.video.muted=true;
+            setInterval(function () {
+                alert("mov:"+vr.video.duration);
+            },3000)
         }
         //AVR.useGyroscope=false;
         vr.init(function () {
