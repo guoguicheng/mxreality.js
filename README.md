@@ -11,9 +11,8 @@
 * 查看官方例子[在线地址](https://www.mxreality.cn/test/vrlive.html)
 
 ## ♨️商务合作请咨询
-
 <img src="https://www.mxreality.cn/wechat.jpeg" width="200" height="300"/>
-<img src="https://www.mxreality.cn/qq.jpeg" width="200" height="300"/>
+<img src="https://www.mxreality.cn/qq.jpeg" width="200" height="300" style="float:left"/>
 
 * 🐡本站提供全面的VR全景视频、普通2D和3D视频是在线免费上传分享功能，支持免费在线直播。
 
