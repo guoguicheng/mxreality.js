@@ -38,16 +38,16 @@
         "gulp-sequence": "^0.4.5",
         "gulp-uglify": "^1.5.2",
         "hoek": ">=4.2.1",
-        "jshint": "^2.11.0",
-        "lodash": "^4.17.15",
+        "jshint": "^2.11.1",
+        "lodash": ">=4.17.19",
         "lodash.template": "^4.5.0",
         "minimatch": ">=3.0.2",
         "rev-del": "^2.0.0"
     },
     "dependencies": {
-        "antd": "^4.1.5",
-        "gulp-uglify": "^1.5.2",
+        "antd": "^4.4.3",
         "flv.js": "^1.5.0",
+        "gulp-uglify": "^1.5.2",
         "hls.js": "^0.13.2"
     }
 }
