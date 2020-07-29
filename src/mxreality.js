@@ -7,7 +7,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
         typeof define === 'function' && define.amd ? define(['exports'], factory) :
-        (factory(global));
+            (factory(global));
 }(this, (function (exports) {
     var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
         this.scene = scene;
@@ -79,10 +79,10 @@
         this.camera = new THREE.PerspectiveCamera(this.cameraPara.fov, this.cameraPara.aspect, this.cameraPara.near, this.cameraPara.far);
         this.camera.lookAt(this._controlTarget);
         this.cameraEvt = {
-            'controlGroup': function () {},
-            'updatePosition': function () {},
-            'hover': function () {},
-            'leave': function () {}
+            'controlGroup': function () { },
+            'updatePosition': function () { },
+            'hover': function () { },
+            'leave': function () { }
         };
         this._takeScreenShot = false;
         this.timerList = {};
@@ -104,6 +104,7 @@
 
     };
     VR.prototype.destory = function () {
+        var that = this;
         if (that.video) {
             that.video.pause();
             that.video = null;
@@ -1642,9 +1643,9 @@
 
                     this.resetVar();
                     scope.dispatchEvent(changeEvent);
-                    (config && config.target0) ? scope.target.copy(config.target0): scope.target.copy(scope.target0);
-                    (config && config.position0) ? scope.object.position.copy(config.position0): scope.object.position.copy(scope.position0);
-                    (config && config.rotation0) ? scope.object.rotation.copy(config.rotation0): scope.object.rotation.copy(scope.rotation0);
+                    (config && config.target0) ? scope.target.copy(config.target0) : scope.target.copy(scope.target0);
+                    (config && config.position0) ? scope.object.position.copy(config.position0) : scope.object.position.copy(scope.position0);
+                    (config && config.rotation0) ? scope.object.rotation.copy(config.rotation0) : scope.object.rotation.copy(scope.rotation0);
                     (config && config.zoom0) ? (scope.zoom = zoom0) : scope.zoom0;
 
                 };
@@ -2118,9 +2119,9 @@
         },
         bindCameraEvent: function (vr, options) {
             options = options || {
-                trigger: function (e) {},
-                empty: function (e) {},
-                move: function (e) {}
+                trigger: function (e) { },
+                empty: function (e) { },
+                move: function (e) { }
             };
             var that = this;
             var scale = options.scale || 0.022;
@@ -2268,13 +2269,13 @@
 
             if (!isFullscreen) { //进入全屏,多重短路表达式
                 (el.requestFullscreen && el.requestFullscreen()) ||
-                (el.mozRequestFullScreen && el.mozRequestFullScreen()) ||
-                (el.webkitRequestFullscreen && el.webkitRequestFullscreen()) || (el.msRequestFullscreen && el.msRequestFullscreen());
+                    (el.mozRequestFullScreen && el.mozRequestFullScreen()) ||
+                    (el.webkitRequestFullscreen && el.webkitRequestFullscreen()) || (el.msRequestFullscreen && el.msRequestFullscreen());
 
             } else { //退出全屏,三目运算符
                 document.exitFullscreen ? document.exitFullscreen() :
                     document.mozCancelFullScreen ? document.mozCancelFullScreen() :
-                    document.webkitExitFullscreen ? document.webkitExitFullscreen() : '';
+                        document.webkitExitFullscreen ? document.webkitExitFullscreen() : '';
             }
         },
         isFullscreen: function () {
