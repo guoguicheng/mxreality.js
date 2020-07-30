@@ -103,7 +103,7 @@
 
 
     };
-    VR.prototype.destory = function () {
+    VR.prototype.destroy = function () {
         var that = this;
         if (that.video) {
             that.video.pause();
