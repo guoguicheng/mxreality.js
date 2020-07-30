@@ -113,6 +113,12 @@
             that.audio.pause();
             that.audio = null;
         }
+        if (that.hlsPlayer) {
+            that.hlsPlayer.destroy();
+        }
+        if (that.flvPlayer) {
+            that.flvPlayer.destroy();
+        }
         for (var timer in that.timerList) {
             clearInterval(that.timerList[timer]);
         }
@@ -788,10 +794,10 @@
                         return;
                     }
                     that.flvConfig.url = recUrl;
-                    var flvPlayer = flvjs.createPlayer(that.flvConfig);
-                    flvPlayer.attachMediaElement(video);
-                    flvPlayer.load();
-                    flvPlayer.play();
+                    that.flvPlayer = flvjs.createPlayer(that.flvConfig);
+                    that.flvPlayer.attachMediaElement(video);
+                    that.flvPlayer.load();
+                    that.flvPlayer.play();
                 } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
                     video.src = recUrl;
                 } else {
