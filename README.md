@@ -8,7 +8,7 @@
 
 * 有问题可[进入社区](http://discuss.mxreality.cn)提问
 
-* 查看官方例子[在线地址](https://www.mxreality.cn/test/vrlive.html)
+* 查看官方例子[在线地址](https://www.mxreality.cn)
 
 ## ♨️商务合作请咨询
 <img src="https://www.mxreality.cn/wechat.jpeg" width="200" height="300"/>
