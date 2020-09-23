@@ -2011,6 +2011,7 @@
                     }
                 }, false);
                 this.domElement.addEventListener("mouseup", mouseup, false);
+		this.domElement.addEventListener("mouseleave", mouseup, false);
                 this.domElement.addEventListener('touchstart', touchstart, false);
                 this.domElement.addEventListener('touchend', touchend, false);
                 this.domElement.addEventListener('touchmove', touchmove, false);
