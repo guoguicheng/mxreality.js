@@ -585,7 +585,14 @@
         this._takeScreenShot = true;
         this._takeScreenShotCallback = callback;
     };
-    VR.prototype.playPanorama = function (recUrl, resType, options) {
+    Object.defineProperty(VR.prototype, 'playPanorama', {
+        get: function () {
+            console.warn('playPanorama() no longer supports. Use play() instead.');
+            return VR.prototype.play;
+
+        }
+    });
+    VR.prototype.play = function (recUrl, resType, options) {
         var playCfg = Object.assign(this.playCfg, options);
         var ids = ['__mxrealitySkybox', "__mxrealitySlice", "__mxrealityDefault"];
         for (var i in ids) {
@@ -742,6 +749,7 @@
                 video.muted = playCfg.muted;
                 if (playCfg.autoplay) {
                     video.setAttribute('autoplay', true);
+                    video.play();
                 } else {
                     video.removeAttribute('autoplay');
                 }
