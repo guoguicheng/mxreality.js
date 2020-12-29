@@ -1,6 +1,6 @@
 {
     "name": "mxreality.js",
-    "version": "1.2.19",
+    "version": "1.2.20",
     "description": "VR全景视频、图片、模型播放器，支持hls，flv视频直播流",
     "main": "mxreality.js",
     "scripts": {

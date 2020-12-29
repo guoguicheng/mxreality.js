@@ -19006,8 +19006,20 @@
 					texture.generateMipmaps = false;
 
 				} else {
-
-					state.texImage2D( _gl.TEXTURE_2D, 0, glFormat, glFormat, glType, image );
+					// FIXME: IOS14无法播放问题
+					if(typeof AVR.__fixHlsRender != 'undefined'){
+						if(texture.fixCanvas===undefined){
+							texture.fixCanvas = document.createElement('canvas');
+							texture.fixCanvasCtx=texture.fixCanvas.getContext('2d');
+						}
+						texture.fixCanvas.width = image.videoWidth||image.width;
+						texture.fixCanvas.height = image.videoHeight||image.height;
+						texture.fixCanvasCtx.drawImage(image,0,0,texture.fixCanvas.width,texture.fixCanvas.height);
+						state.texImage2D( _gl.TEXTURE_2D, 0, glFormat, glFormat, glType, texture.fixCanvas );
+					}else{
+						state.texImage2D( _gl.TEXTURE_2D, 0, glFormat, glFormat, glType, image );
+					}
+					// state.texImage2D( _gl.TEXTURE_2D, 0, glFormat, glFormat, glType, image );
 
 				}
 
@@ -30916,7 +30928,7 @@
 
 		setCrossOrigin: function ( value ) {
 
-			this.crossOrigin = value;
+			this.crossOrigin = 'Anonymous';
 			return this;
 
 		},
@@ -30986,7 +30998,7 @@
 
 		setCrossOrigin: function ( value ) {
 
-			this.crossOrigin = value;
+			this.crossOrigin = 'Anonymous';
 			return this;
 
 		},
@@ -31043,7 +31055,7 @@
 
 		setCrossOrigin: function ( value ) {
 
-			this.crossOrigin = value;
+			this.crossOrigin = 'Anonymous';
 			return this;
 
 		},
@@ -34446,7 +34458,7 @@
 
 		setCrossOrigin: function ( value ) {
 
-			this.crossOrigin = value;
+			this.crossOrigin = 'Anonymous';
 
 		},
 
