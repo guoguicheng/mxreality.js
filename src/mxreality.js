@@ -884,7 +884,7 @@
 
             function buildTexture(texture, isImg) {
                 isImg = isImg || false;
-                material = new THREE.MeshBasicMaterial({
+                var material = new THREE.MeshBasicMaterial({
                     overdraw: true,
                     map: texture
                 });
