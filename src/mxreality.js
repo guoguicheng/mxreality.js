@@ -802,6 +802,9 @@
                         console.error('Your browser does not support flvjs')
                         return;
                     }
+                    if (that.flvPlayer) {
+                        that.flvPlayer.destroy();
+                    }
                     that.flvConfig.url = recUrl;
                     that.flvPlayer = flvjs.createPlayer(that.flvConfig);
                     that.flvPlayer.attachMediaElement(video);
