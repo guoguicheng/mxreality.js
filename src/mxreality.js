@@ -802,6 +802,9 @@
                         console.error('Your browser does not support flvjs')
                         return;
                     }
+                    if (that.flvPlayer) {
+                        that.flvPlayer.destroy();
+                    }
                     that.flvConfig.url = recUrl;
                     that.flvPlayer = flvjs.createPlayer(that.flvConfig);
                     that.flvPlayer.attachMediaElement(video);
@@ -884,7 +887,7 @@
 
             function buildTexture(texture, isImg) {
                 isImg = isImg || false;
-                material = new THREE.MeshBasicMaterial({
+                var material = new THREE.MeshBasicMaterial({
                     overdraw: true,
                     map: texture
                 });
@@ -2030,7 +2033,7 @@
                     }
                 }, false);
                 this.domElement.addEventListener("mouseup", mouseup, false);
-		this.domElement.addEventListener("mouseleave", mouseup, false);
+                this.domElement.addEventListener("mouseleave", mouseup, false);
                 this.domElement.addEventListener('touchstart', touchstart, false);
                 this.domElement.addEventListener('touchend', touchend, false);
                 this.domElement.addEventListener('touchmove', touchmove, false);
@@ -2602,8 +2605,11 @@
             ie: navigator.userAgent.match(/MSIE\s([\d.]+)/) || navigator.userAgent.match(/Trident\/[\d](?=[^\?]+).*rv:([0-9.].)/),
             edge: navigator.userAgent.match(/Edge\/([\d.]+)/),
             chrome: navigator.userAgent.match(/Chrome\/([\d.]+)/) || navigator.userAgent.match(/CriOS\/([\d.]+)/),
-            webview: !this.chrome && navigator.userAgent.match(/(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/),
-            safari: this.webview || navigator.userAgent.match(/Version\/([\d.]+)([^S](Safari)|[^M]*(Mobile)[^S]*(Safari))/),
+            webview: !(navigator.userAgent.match(/Chrome\/([\d.]+)/) || navigator.userAgent.match(/CriOS\/([\d.]+)/))
+                && navigator.userAgent.match(/(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/),
+            safari: !(navigator.userAgent.match(/Chrome\/([\d.]+)/) || navigator.userAgent.match(/CriOS\/([\d.]+)/))
+                && navigator.userAgent.match(/(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/)
+                || navigator.userAgent.match(/Version\/([\d.]+)([^S](Safari)|[^M]*(Mobile)[^S]*(Safari))/),
             chromiumType: null,
 
             _getChromiumType: function () {
