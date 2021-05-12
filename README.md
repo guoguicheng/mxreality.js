@@ -13,6 +13,8 @@
 <tr>
 <td style="background:#FFFFE0;">flv直播</td><td>部分支持</td><td>部分支持</td><td>部分支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td>
 </tr>
+<td style="background:#FFFFE0;">webrtc直播</td><td>否</td><td>否</td><td>否</td><td>否</td><td>否</td><td>否</td><td>否</td><td>支持</td>
+</tr>
 <tr>
 <td style="background:#FFFFE0;">延迟</td><td>高</td><td>中</td><td>中</td><td>低</td><td>低</td><td>低</td><td>低</td><td>低</td>
 </tr>
@@ -20,7 +22,7 @@
 <td style="background:#FFFFE0;">全景图</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td>
 </tr>
 <tr>
-<td style="background:#FFFFE0;">全景视频</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td>
+<td style="background:#FFFFE0;">VR视频</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td>
 </tr>
 <tr>
 <td style="background:#FFFFE0;">普通视频</td><td>不支持</td><td>不支持</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td><td>支持</td><td>支持</td>
@@ -32,7 +34,7 @@
 <td style="background:#FFFFE0;">影院模式</td><td>不支持</td><td>不支持</td><td>支持</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
 </tr>
 <tr>
-<td style="background:#FFFFE0;">技术支持</td><td>无</td><td>1年</td><td>1年</td><td>3年</td><td>3年</td><td>3年</td><td>3年</td><td>3年</td>
+<td style="background:#FFFFE0;">技术支持</td><td>无</td><td>1年</td><td>1年</td><td>1年</td><td>1年</td><td>1年</td><td>1年</td><td>1年</td>
 </tr>
 <tr>
 <td style="background:#FFFFE0;">视频编码</td><td>h264</td><td>h264</td><td>h264</td><td>h264</td><td>h264,h265</td><td>h264,h265</td><td>h264,h265</td><td>h264,h265</td>
