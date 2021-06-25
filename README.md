@@ -6,7 +6,7 @@
 用mxplayer.js进取版（JQ-version）。
 如果对直播要求低延迟，支持flv直播，支持h254、h265解码、支持webrtc，支持ts，立体电影等功能，有更好的清晰度，更好的兼容性，
 则推荐购买mxplayer.js授权版本（QJ-version）；
-授权版本对这些功能都支持的很友好，直接购买授权版本可免除大
+授权版本对这些功能都支持的很友好，直接购买授权版本可免除大量开发时间和开发成本
 
 The player SDK is divided into free version and paid version. The paid version has MxRealite.js Enterprise (jq-version) and MxPlayer.js Ultimate (qj-version).
 If the live broadcast and VR interaction requirements are not high, only used for general HLS live broadcast, MP4 video playback, panorama, the current free version can fully meet your needs;
@@ -14,7 +14,7 @@ If you think that the MxReality. Js library can basically meet, but the player f
 Use mxplayer.js for jq-version.
 If low delay is required for live broadcasting, support FLV live broadcasting, support H254, H265 decoding, support WEBRTC, support TS, stereo film and other functions, with better clarity, better compatibility,
 It is recommended to purchase the authorized version of mxplayer.js (qj-version);
-The licensed versions support these functions very friendly, direct purchase of the licensed versions can be exempt from large
+The licensed versions support these functions very friendly, Buying the licensed version directly eliminates a lot of development time and development costs
 
 <hr/>
 
