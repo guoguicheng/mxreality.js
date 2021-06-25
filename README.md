@@ -1,10 +1,29 @@
-## covideo.cn(酷视频)专注研究web VR视频和普通视频低延迟解决方案  
+## covideo.cn(酷视频) 专注研究web VR视频和普通视频低延迟解决方案｜focus on web VR video and general video low latency solutions
 
+播放器sdk分为免费版和收费版，收费版有mxreality.js进取版(JQ-version)和mxplayer.js旗舰版（QJ-version），
+如果对直播和VR交互要求不高，只用于普通hls直播，mp4视频播放，全景图，当前免费版完全可以满足您的需要；
+如果觉得mxreality.js库基本可以满足，但是需要对播放器功能需要扩充，如支持普通平面视频播放器功能，VR功能增强等需求或需要技术支援服务则可以选
+用mxplayer.js进取版（JQ-version）。
+如果对直播要求低延迟，支持flv直播，支持h254、h265解码、支持webrtc，支持ts，立体电影等功能，有更好的清晰度，更好的兼容性，
+则推荐购买mxplayer.js授权版本（QJ-version）；
+授权版本对这些功能都支持的很友好，直接购买授权版本可免除大
+
+The player SDK is divided into free version and paid version. The paid version has MxRealite.js Enterprise (jq-version) and MxPlayer.js Ultimate (qj-version).
+If the live broadcast and VR interaction requirements are not high, only used for general HLS live broadcast, MP4 video playback, panorama, the current free version can fully meet your needs;
+If you think that the MxReality. Js library can basically meet, but the player functions need to be expanded, such as support for ordinary flat video player functions, VR function enhancement and other requirements or need technical support services, you can choose
+Use mxplayer.js for jq-version.
+If low delay is required for live broadcasting, support FLV live broadcasting, support H254, H265 decoding, support WEBRTC, support TS, stereo film and other functions, with better clarity, better compatibility,
+It is recommended to purchase the authorized version of mxplayer.js (qj-version);
+The licensed versions support these functions very friendly, direct purchase of the licensed versions can be exempt from large
+
+<hr/>
+
+## check support (Chinese)
 <table>
 <thead>
 <tr style="background:#FFFFE0;">
 <th></th>
-<th>探索版</th><th>进取版A</th><th>进取版B</th><th>旗舰版A</th><th>旗舰版B</th><th>旗舰版C</th><th>旗舰版D</th><th>旗舰版E</th>
+<th>探索版（当前版本）</th><th>进取版A</th><th>进取版B</th><th>旗舰版A</th><th>旗舰版B</th><th>旗舰版C</th><th>旗舰版D</th><th>旗舰版E</th>
 </tr>
 </thead>
 <tr>
@@ -49,30 +68,87 @@
 <tbody>
 </tbody>
 </table>
+<hr/>
 
-## ♨️商务合作请咨询
-<img src="docs/wechat.jpeg" width="200" height="300"/>
+## check support (English)
+<table>
+<thead>
+<tr style="background:#FFFFE0;">
+<th></th>
+<th>TS(current version)</th><th>JC-A</th><th>JC-B</th><th>QJ-A</th><th>QJ-B</th><th>QJ-C</th><th>QJ-D</th><th>QJ-E</th>
+</tr>
+</thead>
+<tr>
+<td style="background:#FFFFE0;">Enable hls</td><td>supported</td><td>supported</td><td>supported</td><td>not supported</td><td>not supported</td><td>supported</td><td>supported</td><td>supported</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Enable flv</td><td>Part</td><td>Part</td><td>Part</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td>
+</tr>
+<td style="background:#FFFFE0;">Enable webrtc</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>supported</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Delay</td><td>slow</td><td>slowish</td><td>slowish</td><td>fast</td><td>fast</td><td>fast</td><td>fast</td><td>fast</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Panorama image</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Panorama video</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Normal video</td><td>not supported</td><td>not supported</td><td>supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>supported</td><td>supported</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Stereo video</td><td>not supported</td><td>not supported</td><td>supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>supported</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Cinema mode</td><td>not supported</td><td>not supported</td><td>supported</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Free support</td><td>none</td><td>one year</td><td>one year</td><td>one year</td><td>one year</td><td>one year</td><td>one year</td><td>one year</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Enable decoder</td><td>h264</td><td>h264</td><td>h264</td><td>h264</td><td>h264,h265</td><td>h264,h265</td><td>h264,h265</td><td>h264,h265</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Enable resolution</td><td>2k</td><td>4k</td><td>4k</td><td>4k</td><td>4k</td><td>4k</td><td>4k</td><td>4k</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Buy license</td><td>free</td><td>?</td><td>?</td><td>?</td><td>?</td><td>?</td><td>?</td><td>?</td>
+</tr>
 
-# mxreality 读音 mix reality
+<tbody>
+</tbody>
+</table>
+<hr/>
 
-### <font color="#dd0000">免费软件，但受软件版权保护，尊重作者的成果，严格遵守协议内容并且保留播放器版权信息</font>
-
-* MXREALITY 混合现实网页版【QQ群：863363544】
-
-* [在线文档](docs/index.md) 
+* [中文在线文档](docs/index.md) 
+* [English Document](docs/index_en.md) 
 
 * 有问题可[进入社区](http://discuss.mxreality.cn)提问
+* Any questions?please check [discuss](http://discuss.mxreality.cn)
+<hr/>
 
-* 查看官方例子[在线地址](https://www.mxreality.cn)
+* 查看官方例子 [在线地址](https://www.mxreality.cn)
+* Check examples [examples](https://www.mxreality.cn)
+
+
+<hr/>
 
 * 🐡本站提供全面的VR全景视频、普通2D和3D视频是在线免费上传分享功能，支持免费在线直播。
+* 🐡Support VR video,VR video live,panorama images
+<hr/>
 
 * 🎈提供VR视频和普通视频直播技术支持
+* 🎈Provide business support
+<hr/>
 
-* 💓关注官方微信公众号“迷视VR资讯”，获取最新的VR咨询内容
+* 🌼加入QQ群863363544交流行业技术心得
+* 🌼Follow [Twitter]("https://twitter.com/cheng67274319")
+<hr/>
 
-* 🌼加入QQ群863363544与各路同行大佬交流行业技术心得
-
-* [https://www.mxreality.cn](https://www.mxreality.cn)
-
-* ![扫码或搜索微信号mxreality关注迷视资讯微信公众号](https://github.com/guoguicheng/mxreality.js/raw/master/qrcode.jpg)
+## Business support
+[Connect on Twitter]("https://twitter.com/cheng67274319")
+## (商务合作请咨询）
+<img src="docs/wechat.jpeg" width="200" height="300" title=“wechat”/>
+<hr/>
