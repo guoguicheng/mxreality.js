@@ -144,11 +144,11 @@ The licensed versions support these functions very friendly, Buying the licensed
 <hr/>
 
 * 🌼加入QQ群863363544交流行业技术心得
-* 🌼Follow [Twitter]("https://twitter.com/cheng67274319")
+* 🌼Follow [Twitter](https://twitter.com/cheng67274319)
 <hr/>
 
 ## Business support
-[Connect on Twitter]("https://twitter.com/cheng67274319")
+[Connect on Twitter](https://twitter.com/cheng67274319)
 ## (商务合作请咨询）
 <img src="docs/wechat.jpeg" width="200" height="300" title=“wechat”/>
 <hr/>
