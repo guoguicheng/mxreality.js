@@ -19,22 +19,85 @@
 
 4、将场景、容器和渲染器绑定到VR播放器，以及播放器设置视角FOV设置
 
+    /**
+    * 播放器初始化
+    * @param scene threejs场景对象
+    * @param renderer 渲染器对象
+    * @param container 播放器容器dom对象
+    * @param cameraPara {
+                "fov": 90,
+                "aspect": that.container.innerWidth / that.container.innerHeight,
+                "near": 0.001,
+                "far": 1000
+            }
+    * @param cameraPosition {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            }
+    */
     var vr=new VR(scene,renderer,container,{"fov":50});
+
+    // 直播设置
+    vr.liveSettings = {
+        "forceUseHls": false,
+        "forceUseVndAppleMpegUrl": false,
+        "forceUseXmpegUrl": false,
+        "usePlugin": false,
+        "loadPlugin": function (video) {
+            console.log('load video', video);
+        }
+    }
+    // 设置hls.js 初始化参数
+    vr.hlsConfig = {
+        autoStartLoad: true,
+    };
+    // 设置flv.js 初始化参数
+    vr.flvConfig = {
+        type: 'flv',
+        isLive: true,
+    };
+
+    // 设置工具栏自动隐藏时间
+    this.defaultAutoHideLeftTime = 3;
+    // 设置声音控制自动隐藏时间
+    this.defaultVoiceHideLeftTime = 2;
+    // 设置默认音量大小，pc和部分android有效
+    this.defaultVolume = 0.3;
+
+    // 播放初始配置
+    vr.playCfg = {
+        muted: false,
+        autoplay: false,
+    };
+
+    // 播放事件触发回调
+    vr.videoPlayHook = function () {
+        console.log('video play')
+    }
+    // 暂停事件触发回调
+    vr.videoPauseHook = function () {
+        console.log('video pause')
+    }
+
     vr.init()
 
 5、播放VR
 
-    vr.playPanorama('360.mp4',vr.resType.video);
+    /**
+    * 播放视频
+    * @param url 播放地址
+    * @param resType VR播放类别：
+        vr.resType.video 播放VR视频
+        vr.resType.box 天空盒子模式
+        vr.resType.slice 全景图片切片模式
+        vr.resType.sliceVideo 全景视频分片模式或者是HLS直播模式
+        vr.resType.flvVideo FLV直播模式
+    * @praram options 该参数会覆盖vr.playCfg参数配置
+    */
+    vr.playPanorama(url,resType,options);
+    vr.play(url,resType,options)
 
-
-#### 可播放的资源类型
-
-    VR播放类别：
-    vr.resType.video 播放VR视频
-    vr.resType.box 天空盒子模式
-    vr.resType.slice 全景图片切片模式
-    vr.resType.sliceVideo 全景视频分片模式或者是HLS直播模式
-    vr.resType.flvVideo FLV直播模式
 
 #### 资源加载精度回调
 
@@ -54,24 +117,32 @@
 
 #### 场景对象
 
-    获取当前场景
+    获取当前场景，兼容threejs操作
     vr.scene;
     
-    获取当前渲染器
+    获取当前渲染器对象，兼容threejs操作
     vr.renderer;
     
-    获取当前容器对象
+    获取播当前播放器容器dom对象
     vr.container;
     
-    获取摄像头视频对象
+    获取视频对象，该对象支持video标签的所有事件和方法
     vr.video;
+    // 例如
     vr.video.pause()/暂停视频
     vr.video.play()/播放视频
+    vr.video.addEventListener('loadedmetadata', function () {
+        // code ...
+    });
     
-    获取音频对象
+    获取音频对象,该对象支持audio标签所有事件和方法，主要用于独立控制和播放音频
     vr.audio;
-    vr.audio.paush()/暂停音频
-    vr.audio.play()/播放音频
+    // 例如
+    vr.audio.paush();//暂停音频
+    vr.audio.play();//播放音频
+
+    // 获取播放器状态栏所有可操作的元素的dom对象，如获取时间显示区域对象可用vr.toolBar.timeInfo即可获取
+    vr.toolBar
     
 #### 自动旋转
 
@@ -126,3 +197,93 @@
     
     立体相机宽度
     vr.asteroidConfig.cubeResolution=2048
+
+### 通用组件对象使用说明
+
+    //获取播放器使用的svg图标集合
+    AVR.playerIcon
+    // 例如可以获取播放按钮的svg图像AVR.playerIcon.playSvg,该图片可以使用AVR.playerIcon.playSvg="..."替换成自己需要的图标，前提是需要放在播放器初始化之前设置好
+    // 播放图标：AVR.playerIcon.playSvg
+    // 暂停图标：AVR.playerIcon.pauseSvg
+    // 回正视角图标：AVR.playerIcon.resetLookAtSvg
+    // 陀螺仪图标：AVR.playerIcon.gyroSvg
+    // VR图标：AVR.playerIcon.vrSvg
+    // 播放音频图标：AVR.playerIcon.audioPlaySvg
+    // 暂停音频图标：AVR.playerIcon.audioPauseSvg
+
+    /**
+    * 获取摄像头对象空间方向矢量
+    * @param camera 当前vr摄像头对象
+    * @param times 单位方向矢量缩放倍数
+    */
+    AVR.cameraVector: function (camera, times)
+
+    /**
+    * 捕获涉嫌穿过的模型集合
+    * @param event 鼠标事件对象e
+    * @param vr 当前vr对象
+    * @param callback 回调方法对象{success:funciton(){},empty:funciton(){}}
+    */
+    AVR.bindRaycaster: function (event, vr, callback)
+
+    /**
+    * 绑定camera触发事件，用于VR模式通过场景内的摄像头焦点触发用户操作
+    * @param vr 当前vr对象
+    * @param options {
+                vectorRadius: vr.vrbox.width / 2.2,
+                trigger: function (e) {
+                    console.log("on", e.jsonInfo)
+                },
+                move: function (e) {
+                    intersectObj = e[0].object;
+                    console.log('intersectObj', intersectObj)
+                },
+                empty: function () {
+                    vr.cameraEvt.leave();
+                }
+            }
+    */
+    AVR.bindCameraEvent:function (vr, options)
+
+    /**
+    * 屏幕坐标转3D场景坐标
+    * @param e 鼠标事件e
+    * @param container 播放器对象
+    * @param camera vr摄像头对象
+    */
+    AVR.screenPosTo3DCoordinate: function (e, container, camera)
+
+    /**
+    * 3D场景坐标转屏幕坐标
+    * @param object 3D场景内的模型对象
+    * @param container 播放器container对象
+    * @param camera 当前vr摄像头对象
+    */
+    AVR.objectPosToScreenPos: function (object, container, camera)
+
+    /**
+    * 判断是否为移动设备
+    */
+    AVR.isMobileDevice()
+
+    /**
+    * 判断是否为横屏模式
+    */
+    AVR.isCrossScreen()
+
+    AVR.OS.isGooglePixel();
+    AVR.OS.isMiOS();
+    AVR.OS.isSamsung();
+    AVR.OS.isMobile();
+    AVR.OS.isAndroid();
+    AVR.OS.isiOS();
+    AVR.OS.isWeixin()
+    
+    AVR.Broswer.isIE();
+    AVR.Broswer.ieVersion();
+    AVR.Broswer.isEdge();
+    AVR.Broswer.isSafari();
+    AVR.Broswer.is360();
+    AVR.Broswer.isSogou();
+    AVR.Broswer.isChromium();
+    AVR.Broswer.webglAvailable();
