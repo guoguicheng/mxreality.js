@@ -1,6 +1,6 @@
 {
     "name": "mxreality.js",
-    "version": "1.2.20",
+    "version": "1.2.21",
     "description": "VR全景视频、图片、模型播放器，支持hls，flv视频直播流",
     "main": "mxreality.js",
     "scripts": {
@@ -48,6 +48,7 @@
         "antd": "^4.4.3",
         "flv.js": "^1.5.0",
         "gulp-uglify": "^1.5.2",
-        "hls.js": "^0.13.2"
+        "hls.js": "^0.13.2",
+        "http-server": "^13.0.0"
     }
 }

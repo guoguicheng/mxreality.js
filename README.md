@@ -1,4 +1,15 @@
-## covideo.cn(酷视频) 专注研究web VR视频和普通视频低延迟解决方案｜focus on web VR video and general video low latency solutions
+# covideo.cn(酷视频) 专注研究web VR视频和普通视频低延迟解决方案｜focus on web VR video and general video low latency solutions
+
+## 当前github版本为社区版免费版，开放源码，社区共同维护
+
+    // 安装依赖
+    npm install
+##
+    // 编译源码
+    gulp build
+##
+    // 启动服务查看测试例子
+    http-server -p 8080
 
 播放器sdk分为免费版和收费版，收费版有mxreality.js进取版(JQ-version)和mxplayer.js旗舰版（QJ-version），
 如果对直播和VR交互要求不高，只用于普通hls直播，mp4视频播放，全景图，当前免费版完全可以满足您的需要；

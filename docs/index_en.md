@@ -1,6 +1,3 @@
-
-## If you do not know much about the web server or a beginner, see the example before build nginx server (https://www.nginx.cn/doc/), find the install Windows users - > nginx in Windows installation, Follow the tutorial and modify the nginx.conf configuration file, specify the current project directory as the root directory, and then type localhost[open](http://localhost) in the browser address bar to see the example
-
 ### Clone && build
 
         $ git clone https://github.com/guoguicheng/mxreality.js.git
