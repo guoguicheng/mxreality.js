@@ -10,7 +10,7 @@
             (factory(global));
 }(this, (function (exports) {
     var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
-        console.log('version 1.2.22');
+        console.log('version 1.2.23');
         this.scene = scene;
         this.renderer = renderer;
         this.container = container;
@@ -2345,11 +2345,11 @@
             });
             timeInfo.appendChild(totalTime);
             toolbar.appendChild(timeInfo);
-            this.addCSS("@keyframes moreTip{from {top:0.75rem;} to{top:1rem}}", 0); //写入样式
+            var css = "@keyframes moreTip{from {top:0.75rem;} to{top:1rem}}"; //写入样式
             if (!AVR.Broswer.isIE()) {
-                this.addCSS("@-webkit-keyframes moreTip{from {top:0.75rem;} to{top:1rem}}", 0); //写入样式
+                css += "@-webkit-keyframes moreTip{from {top:0.75rem;} to{top:1rem}}"; //写入样式
             }
-
+            this.addCSS(css);
 
             var moreBtn = this.createTag('span', {
                 'style': 'width:2.2rem;height:2.2rem;position:inherit;left:50%;margin-left:-1.1rem;margin-top:-0.75rem;color:#fff;font-size:1.5rem;' +
@@ -2557,8 +2557,6 @@
             container.style.left = "0px";
             container.style.top = "0px";
             container.style.overflow = "hidden";
-            var style = document.createElement('style');
-            document.getElementsByTagName('head')[0].appendChild(style);
 
             document.body.addEventListener("touchmove", bodyPreventDefault);
             document.oncontextmenu = function () {
