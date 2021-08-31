@@ -31,12 +31,7 @@
         var  scene, renderer;
         var container;
         //renderer = new THREE.WebGLRenderer();
-        AVR.debug=true;
-        if( !AVR.Broswer.isIE() && AVR.Broswer.webglAvailable() ) {
-            renderer = new THREE.WebGLRenderer();
-        }else {
-            renderer = new THREE.CanvasRenderer();
-        }
+        renderer = new THREE.WebGLRenderer();
         renderer.setPixelRatio( window.devicePixelRatio );
         container = document.getElementById('example');
         container.appendChild(renderer.domElement);
@@ -66,7 +61,6 @@
         vr.play('/examples/frag_bunny.mp4',vr.resType.video);
         vr.video.setAttribute("loop","loop");
         vr.video.crossOrigin="Anonymous";
-
 
 
         vr.video.onended=function () {

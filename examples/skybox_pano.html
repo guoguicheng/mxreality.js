@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>vr box example</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,6 +10,7 @@
             margin: 0px;
             overflow: hidden;
         }
+
         #example {
             position: absolute;
             top: 0;
@@ -18,40 +20,52 @@
         }
     </style>
 </head>
+
 <body>
-<div id="example"></div>
+    <div>
+        <label>纹理布局</label>
+        -----------------------------
+        | 左 | 右 | 上 | 下 | 后 | 前 |
+        -----------------------------
+    </div>
+    <div id="example"></div>
 
-<script src="../build/three.js"></script>
-<script src="./js/controls/OrbitControls.js"></script>
-<script src="../build/mxreality.js"></script>
+    <script src="../build/three.js"></script>
+    <script src="../build/mxreality.js"></script>
 
-<script>
-    var  scene, renderer;
-    var container;
-    var vr=null;
-    function init() {
-        renderer = new THREE.WebGLRenderer();
-        container = document.getElementById('example');
-        container.appendChild(renderer.domElement);
+    <script>
+        var scene, renderer;
+        var container;
+        var vr = null;
+        function init() {
+            renderer = new THREE.WebGLRenderer();
+            container = document.getElementById('example');
+            container.appendChild(renderer.domElement);
 
 
-        scene = new THREE.Scene();
-        //AVR.develop=true;
-        vr=new VR(scene,renderer,container,{'fov':80});
-        vr.vrbox.width=50;
-        vr.vrbox.height=50;
-        vr.vrbox.depth=50;
-        vr.loadProgressManager.onLoad=function () {
+            scene = new THREE.Scene();
+            //AVR.develop=true;
+            vr = new VR(scene, renderer, container, { 'fov': 80 });
+            vr.vrbox.width = 50;
+            vr.vrbox.height = 50;
+            vr.vrbox.depth = 50;
+            vr.loadProgressManager.onLoad = function () {
+            }
+            vr.init(function () {
+
+            });
+            vr.playPanorama("textures/sun_temple_stripe1.jpg", vr.resType.box);
+            //vr.playPanorama("textures/aaa.png",vr.resType.box);
+
+            console.log('纹理布局')
+            console.log('-----------------------------');
+            console.log('| 左 | 右 | 上 | 下 | 后 | 前 |');
+            console.log('-----------------------------');
+
         }
-        vr.init(function () {
+        init();
 
-        });
-        vr.playPanorama("textures/sun_temple_stripe.jpg",vr.resType.box);
-        //vr.playPanorama("textures/aaa.png",vr.resType.box);
-
-    }
-    init();
-
-</script>
+    </script>
 </body>
+
 </html>

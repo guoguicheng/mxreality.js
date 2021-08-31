@@ -55,14 +55,15 @@
         this.playCfg = {
             muted: false,
             autoplay: false,
+            shape: 'sphere'
         };
+        this.shapeList = { 'sphere': 'sphere', 'box': 'box' };
         this.resType = {
             "video": "video",
             "box": "box",
             "slice": "slice",
             "sliceVideo": "sliceVideo",
-            'flvVideo': 'flvVideo',
-            'boxVideo': 'boxVideo',
+            'flvVideo': 'flvVideo'
         };
         this.videoPlayHook = function () {
             console.log('video play');
@@ -128,8 +129,11 @@
         for (var timer in that.timerList) {
             clearInterval(that.timerList[timer]);
         }
+        if (that.boxRenderFrame) {
+            cancelAnimationFrame(that.boxRenderFrame);
+        }
         that.destoryed = true;
-    }
+    };
     VR.prototype.init = function (extendsAnimationFrame) {
         var that = this;
         var startPos = new THREE.Vector2();
@@ -273,7 +277,7 @@
                     if (spot) {
                         delete spots[touch.identifier];
                     }
-                })
+                });
                 if (e.targetTouches.length === 0) {
                     _s = 0;
                     that.controls.enable = true;
@@ -608,6 +612,10 @@
         that.autoHideLeftTime = that.defaultAutoHideLeftTime;
         that.voiceHideLeftTime = that.defaultVoiceHideLeftTime;
 
+        if (that.boxRenderFrame) {
+            cancelAnimationFrame(that.boxRenderFrame);
+        }
+
         if (that.resType.box == resType) {
             that.toolBar.timeInfo.style.display = "none";
             var textures = [];
@@ -650,7 +658,7 @@
                     Box.material = materials;
                 }
                 that.loadProgressManager.onLoad();
-            }
+            };
 
         } else if (that.resType.slice == resType) {
             //cubeGeometry.scale(-1, 1, 1)
@@ -717,7 +725,7 @@
                 that.asteroidForward = function (callback) {
                     that.cubeCamera.update(that.renderer, that.scene);
                     asteroidForward(callback);
-                }
+                };
             } else {
                 that.cubeCameraSphere.visible = false;
             }
@@ -859,13 +867,17 @@
 
                     }
                 }
-                var texture = new THREE.VideoTexture(video);
-                texture.generateMipmaps = false;
-                texture.minFilter = THREE.LinearFilter;
-                texture.magFilter = THREE.LinearFilter;
-                //texture.format = THREE.RGBFormat;
-                texture.format = THREE.RGBAFormat;
-                buildTexture(texture);
+                if (playCfg.shape == that.shapeList.box) {
+                    that.boxTexture(video);
+                } else {
+                    var texture = new THREE.VideoTexture(video);
+                    texture.generateMipmaps = false;
+                    texture.minFilter = THREE.NearestFilter;
+                    texture.magFilter = THREE.NearestFilter;
+                    //texture.format = THREE.RGBFormat;
+                    texture.format = THREE.RGBAFormat;
+                    buildTexture(texture);
+                }
 
                 clearInterval(that.timerList.videoProgressTimer);
                 that.timerList.videoProgressTimer = that.video.progressTimer = setInterval(function (e) {
@@ -914,7 +926,7 @@
                 if (that.asteroidConfig.enable) {
                     that.asteroidForward = function (callback) {
                         asteroidForward(callback);
-                    }
+                    };
                 }
 
             }
@@ -968,7 +980,110 @@
         }
 
     };
+    VR.prototype.boxTexture = function (video) {
+        var that = this;
+        that.toolBar.timeInfo.style.display = "block";
+        var textures = [];
+        var materials = [];
 
+        var canvasArr = [], contextArr = [];
+        for (var i = 0; i < 6; i++) {
+            textures[i] = new THREE.Texture();
+            canvasArr[i] = document.createElement('canvas');
+            contextArr[i] = canvasArr[i].getContext('2d');
+        }
+        function render() {
+            that.boxRenderFrame = requestAnimationFrame(render);
+            if (!video.videoWidth) {
+                return;
+            }
+            var vH = video.videoHeight;
+            var vW = video.videoWidth;
+            var faceW = vW / 3;
+            var faceH = vH / 2;
+            for (var i = 0; i < 6; i++) {
+                canvasArr[i].height = faceH;
+                canvasArr[i].width = faceW;
+            }
+
+            /** 渲染顺序
+            -----------------------------
+            | 左 | 右 | 上 | 下 | 后 | 前 |
+            -----------------------------
+            */
+            /** 视频纹理布局
+             -————-————-————--
+             ｜ 右 ｜ 左 ｜ 上 ｜    
+             —————-————-————--         
+             ｜ 下 ｜ 前 ｜ 后 ｜
+             —————-————-————--
+             */
+
+            // 左
+            contextArr[0].drawImage(video, faceW * 1, 0 * faceH, faceW, faceH, 0, 0, faceW, faceH);
+            textures[0].image = canvasArr[0];
+            textures[0].needsUpdate = true;
+            materials.push(new THREE.MeshBasicMaterial({
+                map: textures[0]
+            }));
+            // 右
+            contextArr[1].drawImage(video, faceW * 0, 0 * faceH, faceW, faceH, 0, 0, faceW, faceH);
+            textures[1].image = canvasArr[1];
+            textures[1].needsUpdate = true;
+            materials.push(new THREE.MeshBasicMaterial({
+                map: textures[1]
+            }));
+            // 上
+            contextArr[2].drawImage(video, faceW * 2, 0 * faceH, faceW, faceH, 0, 0, faceW, faceH);
+            textures[2].image = canvasArr[2];
+            textures[2].needsUpdate = true;
+            textures[2].rotation = -Math.PI;
+            textures[2].center = new THREE.Vector2(0.5, 0.5);
+            materials.push(new THREE.MeshBasicMaterial({
+                map: textures[2]
+            }));
+            // 下
+            contextArr[3].drawImage(video, faceW * 0, 1 * faceH, faceW, faceH, 0, 0, faceW, faceH);
+            textures[3].image = canvasArr[3];
+            textures[3].needsUpdate = true;
+            textures[3].rotation = -Math.PI;
+            textures[3].center = new THREE.Vector2(0.5, 0.5);
+
+            materials.push(new THREE.MeshBasicMaterial({
+                map: textures[3]
+            }));
+            // 后
+            contextArr[4].drawImage(video, faceW * 2, 1 * faceH, faceW, faceH, 0, 0, faceW, faceH);
+            textures[4].image = canvasArr[4];
+            textures[4].needsUpdate = true;
+            materials.push(new THREE.MeshBasicMaterial({
+                map: textures[4]
+            }));
+            // 前
+            contextArr[5].drawImage(video, faceW * 1, 1 * faceH, faceW, faceH, 0, 0, faceW, faceH);
+            textures[5].image = canvasArr[5];
+            textures[5].needsUpdate = true;
+            materials.push(new THREE.MeshBasicMaterial({
+                map: textures[5]
+            }));
+
+
+            var Box = that.VRObject.getObjectByName("__mxrealitySkybox");
+            if (!Box) {
+                var Box = new THREE.Mesh(new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth), new THREE.MultiMaterial(materials));
+                Box.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
+                Box.visible = true;
+                Box.name = "__mxrealitySkybox";
+                Box.matrixAutoUpdate = false;
+                Box.updateMatrix();
+                that.VRObject.add(Box);
+            } else {
+                Box.material = materials;
+            }
+            materials = [];
+        }
+        render();
+    }
     VR.prototype.sphere2BoxPano = function (img, w, h, callback) {
         var that = this;
         var fases = {
