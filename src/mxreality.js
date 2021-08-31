@@ -10,7 +10,7 @@
             (factory(global));
 }(this, (function (exports) {
     var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
-        console.log('version 1.2.23');
+        console.log('version 1.2.24');
         this.scene = scene;
         this.renderer = renderer;
         this.container = container;
