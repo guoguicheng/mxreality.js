@@ -61,14 +61,15 @@
             "box": "box",
             "slice": "slice",
             "sliceVideo": "sliceVideo",
-            'flvVideo': 'flvVideo'
+            'flvVideo': 'flvVideo',
+            'boxVideo': 'boxVideo',
         };
         this.videoPlayHook = function () {
-            console.log('video play')
-        }
+            console.log('video play');
+        };
         this.videoPauseHook = function () {
-            console.log('video pause')
-        }
+            console.log('video pause');
+        };
         this.asteroidConfig = {
             enable: false,
             asteroidFPS: 10,
@@ -190,7 +191,7 @@
             } else {
                 slideBar(6);
             }
-        }
+        };
         that.vrBtnClick = function (e) {
             var vrBtn = that.toolBar.vrBtn;
             if (AVR.isMobileDevice()) {
@@ -233,7 +234,7 @@
                 gyroBtn.setAttribute("active", "active");
                 btnActive(gyroBtn);
             }
-        }
+        };
 
         function ongyroreset() {
             that.controls && (that.controls.reset());
@@ -247,13 +248,13 @@
 
                     spots[touch.identifier] = new THREE.Vector2(0, 0);
 
-                })
+                });
                 clearInterval(that.timerList.renderTouchersRimer);
                 that.timerList.renderTouchersRimer = setInterval(function () {
                     renderTouches(touches);
                 }, 1);
             }
-        }
+        };
 
         function onmousedown(e) {
             toolBar.isMouseDown = true;
@@ -280,14 +281,14 @@
                 }
 
             }
-        }
+        };
 
         function onmouseup(e) {
             toolBar.isMouseDown = false;
         }
         that.touchMove = function (e) {
             touches = e.touches;
-        }
+        };
 
         function onmousemove(e) {
             e.preventDefault();
@@ -337,7 +338,7 @@
                     num = 0;
                     return;
                 }
-            })
+            });
         }
 
         function slideBar(h) {
@@ -442,11 +443,11 @@
 
         that._play = function () {
             toolBar.btn.innerHTML = AVR.playerIcon.pauseSvg;
-        }
+        };
 
         that._pause = function () {
             toolBar.btn.innerHTML = AVR.playerIcon.playSvg;
-        }
+        };
 
         function bindVolumeEvent() {
             var Audio = that.video || that.audio;
