@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "mxreality.js": "^1.2.21",
+    "mxreality.js": "^1.2.22",
     "vue": "^2.6.11"
   },
   "devDependencies": {

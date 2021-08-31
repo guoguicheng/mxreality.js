@@ -25,5 +25,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 更新mxreality npm包
 
-    npm i mxreality.js
+    npm i mxreality.js@latest
     

@@ -70,5 +70,5 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 
 ### 更新mxreality npm包
 
-    npm i mxreality.js
+    npm i mxreality.js@latest
     
