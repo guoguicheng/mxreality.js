@@ -10,7 +10,7 @@
             (factory(global));
 }(this, (function (exports) {
     var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
-        console.log('version 1.2.24');
+        console.log('version 1.2.25');
         this.scene = scene;
         this.renderer = renderer;
         this.container = container;
@@ -544,7 +544,7 @@
             var width = that.container.offsetWidth;
             var height = that.container.offsetHeight;
             that.camera.aspect = width / height;
-            if ((AVR.isMobileDevice() && AVR.isCrossScreen())) {
+            if ((AVR.isMobileDevice() && AVR.isCrossScreen() && AVR.enableVrMode)) {
                 that.cameraEvt.updatePosition();
                 that.effect.setSize(width, height);
                 that.effect.render(that.scene, that.camera);
@@ -732,8 +732,9 @@
         } else {
             var videoType = [that.resType.video, that.resType.sliceVideo, that.resType.flvVideo];
             if (videoType.indexOf(resType) >= 0) {
+                var video = null;
                 if (!that.video) {
-                    var video = that.video = AVR.createTag('video', {
+                    video = that.video = AVR.createTag('video', {
                         'webkit-playsinline': true,
                         'playsinline': true,
                         'preload': 'auto',
@@ -750,7 +751,7 @@
                     });
 
                 } else {
-                    var video = that.video;
+                    video = that.video;
                     for (var node = 0; node < video.childNodes.length; node++) {
                         video.removeChild(video.childNodes[node]);
                     }
@@ -1548,6 +1549,7 @@
 
     var AVR = {
         debug: false,
+        enableVrMode: true,
         playerIcon: {
             playSvg: '<svg t="1596623860726" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32635" width="32" height="32"><path fill="#ffffff" d="M744.727273 551.563636L325.818182 795.927273c-30.254545 18.618182-69.818182-4.654545-69.818182-39.563637v-488.727272c0-34.909091 39.563636-58.181818 69.818182-39.563637l418.909091 244.363637c30.254545 16.290909 30.254545 62.836364 0 79.127272z" p-id="32636"></path></svg>',
             pauseSvg: '<svg t="1596624663266" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32779" width="32" height="32"><path fill="#ffffff" d="M442.181818 709.818182c0 37.236364-30.254545 69.818182-69.818182 69.818182s-69.818182-30.254545-69.818181-69.818182v-395.636364c0-37.236364 30.254545-69.818182 69.818181-69.818182s69.818182 30.254545 69.818182 69.818182v395.636364z m279.272727 0c0 37.236364-30.254545 69.818182-69.818181 69.818182s-69.818182-30.254545-69.818182-69.818182v-395.636364c0-37.236364 30.254545-69.818182 69.818182-69.818182s69.818182 30.254545 69.818181 69.818182v395.636364z" p-id="32780"></path></svg>',
