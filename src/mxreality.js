@@ -1070,7 +1070,7 @@
 
             var Box = that.VRObject.getObjectByName("__mxrealitySkybox");
             if (!Box) {
-                var Box = new THREE.Mesh(new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth), new THREE.MultiMaterial(materials));
+                Box = new THREE.Mesh(new THREE.CubeGeometry(that.vrbox.width, that.vrbox.height, that.vrbox.depth), new THREE.MultiMaterial(materials));
                 Box.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
                 Box.visible = true;
                 Box.name = "__mxrealitySkybox";
