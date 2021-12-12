@@ -58,6 +58,15 @@ The licensed versions support these functions very friendly, Buying the licensed
 <td style="background:#FFFFE0;">普通视频</td><td>不支持</td><td>不支持</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td><td>支持</td><td>支持</td>
 </tr>
 <tr>
+<td style="background:#FFFFE0;">CubeMap</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">CubeMap自定义面的位置</td><td>不支持</td><td>不支持</td><td>不支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">渲染加速</td><td>CPU</td><td>CPU</td><td>CPU</td><td>GPU</td><td>GPU</td><td>GPU</td><td>GPU</td><td>GPU</td>
+</tr>
+<tr>
 <td style="background:#FFFFE0;">立体视频</td><td>不支持</td><td>不支持</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td><td>不支持</td><td>支持</td>
 </tr>
 <tr>
@@ -108,6 +117,15 @@ The licensed versions support these functions very friendly, Buying the licensed
 </tr>
 <tr>
 <td style="background:#FFFFE0;">Normal video</td><td>not supported</td><td>not supported</td><td>supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>supported</td><td>supported</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">CubeMap</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Change CubeMap face</td><td>not supported</td><td>not supported</td><td>not supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td>
+</tr>
+<tr>
+<td style="background:#FFFFE0;">Booster</td><td>CPU</td><td>CPU</td><td>CPU</td><td>GPU</td><td>GPU</td><td>GPU</td><td>GPU</td><td>GPU</td>
 </tr>
 <tr>
 <td style="background:#FFFFE0;">Stereo video</td><td>not supported</td><td>not supported</td><td>supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>supported</td>
