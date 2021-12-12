@@ -80,7 +80,12 @@
         console.log('video pause')
     }
 
-    vr.init()
+    /**
+    * 初始化VR
+    * extendsAnimationFrameCallback - 方法与three的render渲染器同步回调，一些需要重复渲染的自定义场景代码可以放在该回调方法中，
+    * 可以不指定
+    * /
+    vr.init(extendsAnimationFrameCallback)
 
 5、播放VR
 
@@ -200,6 +205,9 @@
 
 ### 通用组件对象使用说明
 
+    //禁用VR模式,需要在初始化之前设置
+    AVR.enableVrMode=false;
+
     //获取播放器使用的svg图标集合
     AVR.playerIcon
     // 例如可以获取播放按钮的svg图像AVR.playerIcon.playSvg,该图片可以使用AVR.playerIcon.playSvg="..."替换成自己需要的图标，前提是需要放在播放器初始化之前设置好
@@ -287,3 +295,90 @@
     AVR.Broswer.isSogou();
     AVR.Broswer.isChromium();
     AVR.Broswer.webglAvailable();
+
+### 播放器事件回调：
+
+    vr.video对象为播放器视频对象，支持原始所有video方法和事件
+    下面是几个常用video事件回调使用例子
+    // 视频已开始加载
+    vr.video.onloadstart = function () {
+
+    };
+    // 当音频/视频的加载已放弃时触发。
+    vr.video.onabort = function () {
+    };
+    // 当浏览器可以开始播放音频/视频时触发。
+    vr.video.oncanplay = function () {
+
+    };
+    // 当浏览器可在不因缓冲而停顿的情况下进行播放时触发
+    vr.video.oncanplaythrough = function () {
+
+    };
+    // 当音频/视频的时长已更改时触发。
+    vr.video.ondurationchange = function () {
+
+    };
+    // 当目前的播放列表已结束时触发。
+    vr.video.onended = function () {
+
+    };
+    // 当在音频/视频加载期间发生错误时触发。
+    vr.video.onerror = function () {
+    };
+    // 当浏览器已加载音频/视频的当前帧时触发。
+    vr.video.onloadeddata = function () {
+
+    };
+    // 当浏览器已加载音频/视频的元数据时触发。
+    vr.video.onloadedmetadata = function () {
+
+    };
+    // 当音频/视频已暂停时触发。
+    vr.video.onpause = function () {
+
+    };
+    // 当音频/视频已开始或不再暂停时触发。
+    vr.video.onplay = function () {
+
+    };
+    // 当音频/视频在因缓冲而暂停或停止后已就绪时触发。
+    vr.video.onplaying = function () {
+
+    };
+    // 当浏览器正在下载音频/视频时触发。
+    vr.video.onprogress = function () {
+
+    };
+    // 当音频/视频的播放速度已更改时触发。
+    vr.video.onratechange = function () {
+
+    };
+    // 当用户已移动/跳跃到音频/视频中的新位置时触发。
+    vr.video.onseeked = function () {
+
+    };
+    // 当用户开始移动/跳跃到音频/视频中的新位置时触发。
+    vr.video.onseeking = function () {
+
+    };
+    // 当浏览器尝试获取媒体数据，但数据不可用时触发。
+    vr.video.onstalled = function () {
+
+    };
+    // 当浏览器刻意不获取媒体数据时触发。
+    vr.video.onsuspend = function () {
+
+    };
+    // 当目前的播放位置已更改时触发。
+    vr.video.ontimeupdate = function () {
+
+    };
+    // 当音量已更改时触发。
+    vr.video.onvolumechange = function () {
+
+    };
+    // 当视频由于需要缓冲下一帧而停止时触发。
+    vr.video.onwaiting = function () {
+
+    };
