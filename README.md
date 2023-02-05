@@ -184,5 +184,5 @@ The licensed versions support these functions very friendly, Buying the licensed
 ## Business support
 [Connect on Twitter](https://twitter.com/cheng67274319)
 ## (商务合作请咨询）
-<img src="docs/wechat.jpeg" width="200" height="300" title=“wechat”/>
+<img src="docs/wechat.png" width="200" height="200" title=“wechat”/>
 <hr/>
