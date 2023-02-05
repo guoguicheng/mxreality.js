@@ -9,8 +9,38 @@
         typeof define === 'function' && define.amd ? define(['exports'], factory) :
             (factory(global));
 }(this, (function (exports) {
-    var VR = function (scene, renderer, container, cameraPara, cameraPosition) {
-        console.log('version 1.2.25');
+    var VR = function (scene, renderer, container, cameraPara, cameraPosition, onload) {
+        console.log('version 1.2.26');
+        var options = null;
+        if (!AVR.Broswer.webglAvailable()) {
+            console.log('Your browser does not support webgl');
+            return;
+        }
+        if (1 === arguments.length && !(scene instanceof THREE.Scene)) {
+            options = scene;
+            if (!options.id) {
+                console.error('player container id required!');
+                return;
+            }
+            container = null;
+            renderer = null;
+            if (!AVR.Broswer.isIE()) {
+                renderer = new THREE.WebGLRenderer();
+            } else {
+                renderer = new THREE.CanvasRenderer();
+            }
+            renderer.setPixelRatio(window.devicePixelRatio);
+            if ('string' === typeof options.id) {
+                container = document.getElementById(options.id);
+            } else if (options.id instanceof HTMLElement) {
+                container = options.id;
+            }
+            container.appendChild(renderer.domElement);
+            scene = new THREE.Scene();
+            cameraPara = options.camera_para ? options.camera_para : null;
+            cameraPosition = options.camera_position ? options.camera_position : null;
+        }
+
         this.scene = scene;
         this.renderer = renderer;
         this.container = container;
@@ -32,7 +62,7 @@
             "loadPlugin": function (video) {
                 console.log('load video', video);
             }
-        }
+        };
         this.hlsConfig = {
             autoStartLoad: true,
         };
@@ -106,9 +136,12 @@
         //this.renderer.setPixelRatio( window.devicePixelRatio );
         this.effect = AVR.stereoEffect(this.renderer);
         AVR.bindOrientationEvent(this, this._controlTarget);
-
-
-
+        if (onload && 'function' === typeof onload) {
+            onload();
+        }
+        if (options && options.onload && 'function' === typeof options.onload) {
+            options.onload();
+        }
     };
     VR.prototype.destroy = function () {
         var that = this;
