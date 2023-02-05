@@ -7,17 +7,7 @@
 
     <div id='example'></div>
 
-2、获取渲染容器，初始化渲染器，绑定到该容器
-
-    container=document.getElementById('example')
-    renderer = new THREE.WebGLRenderer();
-    container.appendChild(renderer.domElement);
-
-3、初始化3D场景
-
-    scene = new THREE.Scene();
-
-4、将场景、容器和渲染器绑定到VR播放器，以及播放器设置视角FOV设置
+2、初始化播放器
 
     var vr=new VR({
         'id':<container id or HTMLElement of container >,
@@ -81,7 +71,7 @@
     * /
     vr.init(extendsAnimationFrameCallback)
 
-5、播放VR
+3、播放VR
 
     /**
     * 播放视频
@@ -94,7 +84,6 @@
         vr.resType.flvVideo FLV直播模式
     * @praram options 该参数会覆盖vr.playCfg参数配置
     */
-    vr.playPanorama(url,resType,options);
     vr.play(url,resType,options)
 
 

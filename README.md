@@ -11,20 +11,20 @@
     // 启动服务查看测试例子
     http-server -p 8080
 
-播放器sdk分为免费版和收费版，收费版有mxreality.js进取版(JQ-version)和mxplayer.js旗舰版（QJ-version），
+播放器sdk分为免费版和收费版，收费版有mxreality.js进取版(Plus)和mxplayer.js旗舰版（Pro），
 如果对直播和VR交互要求不高，只用于普通hls直播，mp4视频播放，全景图，当前免费版完全可以满足您的需要；
 如果觉得mxreality.js库基本可以满足，但是需要对播放器功能需要扩充，如支持普通平面视频播放器功能，VR功能增强等需求或需要技术支援服务则可以选
-用mxplayer.js进取版（JQ-version）。
+用mxplayer.js进取版（Plus）。
 如果对直播要求低延迟，支持flv直播，支持h264、h265解码、支持webrtc，支持ts，立体电影等功能，有更好的清晰度，更好的兼容性，
-则推荐购买mxplayer.js授权版本（QJ-version）；
+则推荐购买mxplayer.js授权版本（Pro）；
 授权版本对这些功能都支持的很友好，直接购买授权版本可免除大量开发时间和开发成本
 
-The player SDK is divided into free version and paid version. The paid version has MxRealite.js Enterprise (jq-version) and MxPlayer.js Ultimate (qj-version).
+The player SDK is divided into free version (Basic) and paid version. The paid version has MxRealite.js Enterprise (Plus) and MxPlayer.js Ultimate (Pro).
 If the live broadcast and VR interaction requirements are not high, only used for general HLS live broadcast, MP4 video playback, panorama, the current free version can fully meet your needs;
 If you think that the MxReality. Js library can basically meet, but the player functions need to be expanded, such as support for ordinary flat video player functions, VR function enhancement and other requirements or need technical support services, you can choose
 Use mxplayer.js for jq-version.
-If low delay is required for live broadcasting, support FLV live broadcasting, support H264, H265 decoding, support WEBRTC, support TS, stereo film and other functions, with better clarity, better compatibility,
-It is recommended to purchase the authorized version of mxplayer.js (qj-version);
+If low delay is required for live broadcasting, support FLV live broadcasting, support H264, H265 decoding, support WEBRTC, support websocket, stereo film and other functions, with better clarity, better compatibility,
+It is recommended to purchase the authorized version of mxplayer.js (Pro);
 The licensed versions support these functions very friendly, Buying the licensed version directly eliminates a lot of development time and development costs
 
 <hr/>
@@ -44,6 +44,8 @@ The licensed versions support these functions very friendly, Buying the licensed
 <td style="background:#FFFFE0;">flv直播</td><td>部分支持</td><td>部分支持</td><td>部分支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td>
 </tr>
 <td style="background:#FFFFE0;">webrtc直播</td><td>否</td><td>否</td><td>否</td><td>否</td><td>否</td><td>否</td><td>否</td><td>支持</td>
+</tr>
+<td style="background:#FFFFE0;">websocket直播</td><td>否</td><td>否</td><td>否</td><td>否</td><td>否</td><td>否</td><td>否</td><td>支持</td>
 </tr>
 <tr>
 <td style="background:#FFFFE0;">延迟</td><td>高</td><td>中</td><td>中</td><td>低</td><td>低</td><td>低</td><td>低</td><td>低</td>
@@ -95,7 +97,7 @@ The licensed versions support these functions very friendly, Buying the licensed
 <thead>
 <tr style="background:#FFFFE0;">
 <th></th>
-<th>TS(current version)</th><th>JC-A</th><th>JC-B</th><th>QJ-A</th><th>QJ-B</th><th>QJ-C</th><th>QJ-D</th><th>QJ-E</th>
+<th>Basic(current version)</th><th>Plaus-A</th><th>Plus-B</th><th>Pro-A</th><th>Pro-B</th><th>Pro-C</th><th>Pro-D</th><th>Pro-E</th>
 </tr>
 </thead>
 <tr>
@@ -105,6 +107,9 @@ The licensed versions support these functions very friendly, Buying the licensed
 <td style="background:#FFFFE0;">Enable flv</td><td>Part</td><td>Part</td><td>Part</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td><td>supported</td>
 </tr>
 <td style="background:#FFFFE0;">Enable webrtc</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>supported</td>
+</tr>
+</tr>
+<td style="background:#FFFFE0;">websocket</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>not supported</td><td>supported</td>
 </tr>
 <tr>
 <td style="background:#FFFFE0;">Delay</td><td>slow</td><td>slowish</td><td>slowish</td><td>fast</td><td>fast</td><td>fast</td><td>fast</td><td>fast</td>
@@ -152,14 +157,14 @@ The licensed versions support these functions very friendly, Buying the licensed
 <hr/>
 
 * [中文在线文档](docs/index.md) 
-* [English Document](docs/index_en.md) 
+* [English Documents](docs/index_en.md) 
 
 * 有问题可[进入社区](http://discuss.mxreality.cn)提问
 * Any questions?please check [discuss](http://discuss.mxreality.cn)
 <hr/>
 
-* 查看官方例子 [在线地址](https://www.mxreality.cn)
-* Check examples [examples](https://www.mxreality.cn)
+* 查看官方例子 [在线地址](https://www.covideo.cn)
+* Check examples [examples](https://www.covideo.cn)
 
 
 <hr/>

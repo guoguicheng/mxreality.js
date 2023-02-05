@@ -6,7 +6,7 @@
 
     <div id='example'></div>
 
-2、Initialize threejs render
+2、Initialize player
 
     var vr=new VR({
         'id':<container id or HTMLElement of container >,
@@ -26,7 +26,7 @@
     * /
     vr.init(extendsAnimationFrameCallback)
 
-5、Play panorama video or panorama image
+3、Play panorama video or panorama image
 
     vr.play('360.mp4',vr.resType.video);
 
