@@ -19,24 +19,18 @@
 
 4、将场景、容器和渲染器绑定到VR播放器，以及播放器设置视角FOV设置
 
-    /**
-    * 播放器初始化
-    * @param scene threejs场景对象
-    * @param renderer 渲染器对象
-    * @param container 播放器容器dom对象
-    * @param cameraPara {
-                "fov": 90,
-                "aspect": that.container.innerWidth / that.container.innerHeight,
-                "near": 0.001,
-                "far": 1000
-            }
-    * @param cameraPosition {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            }
-    */
-    var vr=new VR(scene,renderer,container,{"fov":50});
+    var vr=new VR({
+        'id':<container id or HTMLElement of container >,
+        'camera_para':{
+            "fov": 90,
+            "aspect": container.innerWidth / container.innerHeight,
+            "near": 0.001,
+            "far": 1000
+        },
+        'camera_position':{
+            'x':0,'y':'','z':''
+        }
+    });
 
     // 直播设置
     vr.liveSettings = {

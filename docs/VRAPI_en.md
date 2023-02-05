@@ -8,17 +8,18 @@
 
 2、Initialize threejs render
 
-    container=document.getElementById('example')
-    renderer = new THREE.WebGLRenderer();
-    container.appendChild(renderer.domElement);
-
-3、Initialize threejs scene
-
-    scene = new THREE.Scene();
-
-4、Initialize vr object
-
-    var vr=new VR(scene,renderer,container,{"fov":50});
+    var vr=new VR({
+        'id':<container id or HTMLElement of container >,
+        'camera_para':{
+            "fov": 90,
+            "aspect": container.innerWidth / container.innerHeight,
+            "near": 0.001,
+            "far": 1000
+        },
+        'camera_position':{
+            'x':0,'y':'','z':''
+        }
+    });
 
     /**
     * extendsAnimationFrameCallback - Method synchronizes the callback with Three's Render renderer, and some custom scene code that needs to be rendered repeatedly can be placed in this callback method.（nullable）
@@ -27,7 +28,7 @@
 
 5、Play panorama video or panorama image
 
-    vr.playPanorama('360.mp4',vr.resType.video);
+    vr.play('360.mp4',vr.resType.video);
 
 
 #### Check enable resType items
