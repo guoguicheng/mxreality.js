@@ -32,25 +32,9 @@
         }
         //var vr=new VR(scene,renderer,container);
         function init() {
-            var scene, renderer;
-            var container;
-            //renderer = new THREE.WebGLRenderer();
+            
             AVR.debug = true;
-            if (!AVR.Broswer.isIE() && AVR.Broswer.webglAvailable()) {
-                renderer = new THREE.WebGLRenderer();
-            } else {
-                renderer = new THREE.CanvasRenderer();
-            }
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container = document.getElementById('example');
-            container.appendChild(renderer.domElement);
-
-            scene = new THREE.Scene();
-
-            // fov 选项可调整初始视频远近
-            var vr = new VR(scene, renderer, container, {
-                "fov": 50
-            });
+            var vr = new VR({ 'id': 'example' });
 
             document.getElementById('switch').addEventListener('change', function (e) {
                 var type = this.value;
@@ -69,7 +53,7 @@
                     vr.liveSettings.forceUseXmpegUrl = true;
                 }
 
-                vr.playPanorama('http://localhost:8000/live/test.flv', vr.resType.flvVideo);
+                vr.play('http://localhost:8000/live/test.flv', vr.resType.flvVideo);
             })
 
             //vr.playText="<img src='img/play90.png' width='40' height='40'/>";
@@ -87,7 +71,7 @@
 
             });
 
-            vr.playPanorama('http://localhost:8000/live/test.flv', vr.resType.flvVideo);
+            vr.play('http://localhost:8000/live/test.flv', vr.resType.flvVideo);
 
 
 

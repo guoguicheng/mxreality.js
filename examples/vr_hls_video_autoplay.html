@@ -29,20 +29,7 @@
         }
         //var vr=new VR(scene,renderer,container);
         function init() {
-            var scene, renderer;
-            var container;
-            //renderer = new THREE.WebGLRenderer();
-            AVR.debug = true;
-            renderer = new THREE.WebGLRenderer();
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container = document.getElementById('example');
-            container.appendChild(renderer.domElement);
-
-
-            scene = new THREE.Scene();
-
-            // fov 选项可调整初始视频远近
-            var vr = new VR(scene, renderer, container, { "fov": 50 });
+            var vr = new VR({ 'id': 'example' });
 
             //vr.playText="<img src='img/play90.png' width='40' height='40'/>";
             vr.vrbox.radius = 600;
@@ -66,7 +53,7 @@
 
             // 运行时自动播放参数(初始化播放参数设置后这里可不选，选择后覆盖初始化参数)
             var options = { 'muted': true, 'autoplay': true };
-            vr.playPanorama('http://ivi.bupt.edu.cn/hls/cctv5phd.m3u8', vr.resType.sliceVideo, options);
+            vr.play('http://ivi.bupt.edu.cn/hls/cctv5phd.m3u8', vr.resType.sliceVideo, options);
             vr.video.setAttribute("loop", "loop");
             vr.video.crossOrigin = "Anonymous";
 

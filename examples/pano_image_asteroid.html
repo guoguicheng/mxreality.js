@@ -29,15 +29,7 @@
         init();
     }
     function init() {
-        var  scene, renderer;
-        var container;
-        renderer = new THREE.WebGLRenderer();
-        container = document.getElementById('example');
-        container.appendChild(renderer.domElement);
-
-        scene = new THREE.Scene();
-
-        var vr=new VR(scene,renderer,container,{'fov':60});
+        var vr = new VR({ 'id': 'example', onload: function () { } });
         vr.vrbox.radius=10;
         vr.asteroidConfig.enable=true;
         //vr.asteroidConfig.asteroidTop=-1;
@@ -65,7 +57,7 @@
             vr.controls.object.position.z=0.0001;
         },36)*/
 
-        vr.playPanorama('./textures/puydesancy.jpg');
+        vr.play('./textures/puydesancy.jpg');
     }
 
 

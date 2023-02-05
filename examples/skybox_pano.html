@@ -38,14 +38,7 @@
         var container;
         var vr = null;
         function init() {
-            renderer = new THREE.WebGLRenderer();
-            container = document.getElementById('example');
-            container.appendChild(renderer.domElement);
-
-
-            scene = new THREE.Scene();
-            //AVR.develop=true;
-            vr = new VR(scene, renderer, container, { 'fov': 80 });
+            var vr = new VR({ 'id': 'example', 'camera_para': { "fov": 80 } });
             vr.vrbox.width = 50;
             vr.vrbox.height = 50;
             vr.vrbox.depth = 50;
@@ -54,7 +47,7 @@
             vr.init(function () {
 
             });
-            vr.playPanorama("textures/sun_temple_stripe1.jpg", vr.resType.box);
+            vr.play("textures/sun_temple_stripe1.jpg", vr.resType.box);
             //vr.playPanorama("textures/aaa.png",vr.resType.box);
 
             console.log('纹理布局')

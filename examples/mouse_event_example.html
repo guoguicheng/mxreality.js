@@ -21,15 +21,7 @@
         init();
     }
     function init() {
-        var  scene, renderer;
-        var container;
-        renderer = new THREE.WebGLRenderer();
-        container = document.getElementById('example');
-        container.appendChild(renderer.domElement);
-
-        scene = new THREE.Scene();
-
-        var vr=new VR(scene,renderer,container,{'fov':60});
+        var vr = new VR({ 'id': 'example', onload: function () { } });
         vr.vrbox.radius=50;
 
         if(!AVR.isCrossScreen()) {
@@ -47,7 +39,7 @@
         vr.init(function () {
 
         });
-        vr.playPanorama('textures/puydesancy.jpg');
+        vr.play('textures/puydesancy.jpg');
 
 
         var util=new VRUtils(vr);

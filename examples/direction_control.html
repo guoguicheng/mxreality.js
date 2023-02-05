@@ -31,16 +31,7 @@
         }
 
         function init() {
-            var scene, renderer;
-            var container;
-            renderer = new THREE.WebGLRenderer();
-            container = document.getElementById('example');
-            container.appendChild(renderer.domElement);
-
-            scene = new THREE.Scene();
-            var vr = new VR(scene, renderer, container, {
-                'fov': 60
-            });
+            var vr = new VR({ 'id': 'example', onload: function () { } });
 
             document.addEventListener('keydown', function (event) {
                 var e = event || window.event || arguments.callee.caller.arguments[0];
@@ -49,21 +40,18 @@
                 }
                 console.log('keyCode:', e.keyCode);
             })
-            // 自定义方向控制键，默认方向键
-            vr.controls.arrowLeft = 65; //a
-            vr.controls.arrowRight = 68; //d
-            vr.controls.arrowUp = 87; //w
-            vr.controls.arrowDown = 83; //s 
-            vr.consoles.arrowSpeed=0.06;//旋转速度
-
-
-            vr.vrbox.radius = 50;
 
             if (!AVR.isCrossScreen()) {
                 vr.useGyroscope = false;
             }
             vr.loadProgressManager.onLoad = function () {
                 //vr.controls.enable=false;
+                // 自定义方向控制键，默认方向键
+                vr.controls.arrowLeft = 65; //a
+                vr.controls.arrowRight = 68; //d
+                vr.controls.arrowUp = 87; //w
+                vr.controls.arrowDown = 83; //s 
+                vr.consoles.arrowSpeed = 0.06;//旋转速度
             }
             vr.loadProgressManager.onProgress = function () {
                 console.log("onProgress")
@@ -74,8 +62,7 @@
             vr.init(function () {
 
             });
-            vr.playPanorama('textures/puydesancy.jpg');
-
+            vr.play('textures/puydesancy.jpg');
 
 
         }

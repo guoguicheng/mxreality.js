@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>vr sphere example</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -14,100 +15,94 @@
     <style type="text/css">
     </style>
 </head>
+
 <body>
-<div id="example"></div>
-<script>
-    window.onload=function () {
-        init();
-    }
-    function init() {
-        var  scene, renderer;
-        var container;
-        renderer = new THREE.WebGLRenderer();
-        container = document.getElementById('example');
-        container.appendChild(renderer.domElement);
-
-        scene = new THREE.Scene();
-
-        var vr=new VR(scene,renderer,container,{'fov':60});
-        vr.vrbox.radius=50;
-
-        if(!AVR.isCrossScreen()) {
-            vr.useGyroscope = false;
+    <div id="example"></div>
+    <script>
+        window.onload = function () {
+            init();
         }
-        vr.loadProgressManager.onLoad=function () {
-            //vr.controls.enable=false;
-        }
-        vr.loadProgressManager.onProgress=function () {
-            console.log("onProgress")
-        }
-        vr.loadProgressManager.onError=function () {
-            console.log("onError")
-        }
-        vr.init(function () {
+        function init() {
+            var vr = new VR({ 'id': 'example', 'camera_para': { "fov": 60 } });
+            vr.vrbox.radius = 50;
 
-        });
-        vr.playPanorama('textures/puydesancy.jpg');
-
-        //初始化相机中心点事件
-        var cameraEvent=AVR.bindCameraEvent(vr,{
-            vectorRadius:vr._containerRadius,
-            speed:10,
-            tubularSegments:10,
-            trigger:function (e) {
-                if(e){
-                    switch (e.name){
-                        case 'btn1':
-                            //TODO
-                            alert('事件触发')
-                            break;
-                        case 'btn2':
-
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            },
-            move:function (e) {
-                intersectObj=e[0].object;
-                if(intersectObj.meshType=='markIcon'){
-                    switch (intersectObj.name){
-                        case 'btn1':
-                            cameraEvent.hover(intersectObj);
-                            break;
-                        default:
-                            break;
-                    }
-                }else{
-                    cameraEvent.leave(intersectObj);
-                }
-            },
-            empty:function () {
-                cameraEvent.leave();
+            if (!AVR.isCrossScreen()) {
+                vr.useGyroscope = false;
             }
-        })
-        var util=new VRUtils(vr);
+            vr.loadProgressManager.onLoad = function () {
+                //vr.controls.enable=false;
+            }
+            vr.loadProgressManager.onProgress = function () {
+                console.log("onProgress")
+            }
+            vr.loadProgressManager.onError = function () {
+                console.log("onError")
+            }
+            vr.init(function () {
 
-        util.markIcon("textures/forward.png", new THREE.Vector3(0,0,-10), 'btn1','title1', 1,1);
-        util.markIcon("textures/left.png", new THREE.Vector3(10,0,-10), 'btn2','title2',1,1);
-        animate();
-        function animate() {
-            requestAnimationFrame(animate);
-            if(AVR.isCrossScreen()) {
-                cameraEvent.updatePosition();
-            }else{
-                util.markIconInViews();
-                if(vr.markIconGroup) {
-                    for (var i = 0; i < vr.markIconGroup.children.length; i++) {
-                        vr.markIconGroup.children[i].lookAt(vr.vr.camera.position);
+            });
+            vr.playPanorama('textures/puydesancy.jpg');
+
+            //初始化相机中心点事件
+            var cameraEvent = AVR.bindCameraEvent(vr, {
+                vectorRadius: vr._containerRadius,
+                speed: 10,
+                tubularSegments: 10,
+                trigger: function (e) {
+                    if (e) {
+                        switch (e.name) {
+                            case 'btn1':
+                                //TODO
+                                alert('事件触发')
+                                break;
+                            case 'btn2':
+
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                },
+                move: function (e) {
+                    intersectObj = e[0].object;
+                    if (intersectObj.meshType == 'markIcon') {
+                        switch (intersectObj.name) {
+                            case 'btn1':
+                                cameraEvent.hover(intersectObj);
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        cameraEvent.leave(intersectObj);
+                    }
+                },
+                empty: function () {
+                    cameraEvent.leave();
+                }
+            })
+            var util = new VRUtils(vr);
+
+            util.markIcon("textures/forward.png", new THREE.Vector3(0, 0, -10), 'btn1', 'title1', 1, 1);
+            util.markIcon("textures/left.png", new THREE.Vector3(10, 0, -10), 'btn2', 'title2', 1, 1);
+            animate();
+            function animate() {
+                requestAnimationFrame(animate);
+                if (AVR.isCrossScreen()) {
+                    cameraEvent.updatePosition();
+                } else {
+                    util.markIconInViews();
+                    if (vr.markIconGroup) {
+                        for (var i = 0; i < vr.markIconGroup.children.length; i++) {
+                            vr.markIconGroup.children[i].lookAt(vr.vr.camera.position);
+                        }
                     }
                 }
             }
         }
-    }
 
 
-</script>
+    </script>
 </body>
+
 </html>

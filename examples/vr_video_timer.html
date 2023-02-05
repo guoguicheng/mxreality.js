@@ -1,10 +1,10 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>测试视频</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <style>
-
         #example {
             position: absolute;
             top: 0;
@@ -12,57 +12,50 @@
             right: 0;
             bottom: 0;
         }
-
     </style>
 
 </head>
+
 <body>
-<div id="example"></div>
-<script src="../build/three.js"></script>
-<script src="../build/mxreality.js"></script>
-<script>
+    <div id="example"></div>
+    <script src="../build/three.js"></script>
+    <script src="../build/mxreality.js"></script>
+    <script>
 
 
-    window.onload=function () {
-        init();
-    }
-    //var vr=new VR(scene,renderer,container);
-    function init() {
-        var  scene, renderer;
-        var container;
-        renderer = new THREE.WebGLRenderer();
-        renderer.setPixelRatio( window.devicePixelRatio );
-        container = document.getElementById('example');
-        container.appendChild(renderer.domElement);
-        scene = new THREE.Scene();
-
-        var vr=new VR(scene,renderer,container);
-        vr.loadProgressManager.onLoad=function () {
-            vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
-
-            vr.video.addEventListener('timeupdate',function(){
-                console.log('vr.video.currentTime',vr.video.currentTime);
-                if(vr.video.currentTime>=5){
-                    vr.video.pause();
-                    vr.video.src='';
-                    vr.video.load();
-                    alert('你已过5秒试看时间，请下载APP查看完整版');
-                }
-            })
+        window.onload = function () {
+            init();
         }
-        vr.init(function () {
-            
-        });
+        //var vr=new VR(scene,renderer,container);
+        function init() {
+            var vr = new VR({ 'id': 'example' });
+            vr.loadProgressManager.onLoad = function () {
+                vr.VRObject.getObjectByName("__mxrealityDefault").visible = true;
 
-        vr.playPanorama('/examples/textures/vr.mp4',vr.resType.video);
-        vr.video.crossOrigin="Anonymous";
+                vr.video.addEventListener('timeupdate', function () {
+                    console.log('vr.video.currentTime', vr.video.currentTime);
+                    if (vr.video.currentTime >= 5) {
+                        vr.video.pause();
+                        vr.video.src = '';
+                        vr.video.load();
+                        alert('你已过5秒试看时间，请下载APP查看完整版');
+                    }
+                })
+            }
+            vr.init(function () {
 
-        vr.video.onended=function () {
+            });
+
+            vr.play('/examples/textures/vr.mp4', vr.resType.video);
+            vr.video.crossOrigin = "Anonymous";
+
+            vr.video.onended = function () {
+            }
+
         }
 
-    }
 
-
-</script>
+    </script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>VR 地球</title>
     <meta charset="utf-8">
@@ -13,13 +14,14 @@
 
         #info {
             position: absolute;
-            top: 0px; width: 100%;
+            top: 0px;
+            width: 100%;
             color: #ffffff;
             padding: 5px;
-            font-family:Monospace;
-            font-size:13px;
+            font-family: Monospace;
+            font-size: 13px;
             font-weight: bold;
-            text-align:center;
+            text-align: center;
         }
 
         a {
@@ -28,71 +30,74 @@
     </style>
 
 </head>
+
 <body>
 
-<div id="container"></div>
-<div id="info">
-</div>
+    <div id="container"></div>
+    <div id="info">
+    </div>
 
-<script src="../build/three.js"></script>
-<script src="./js/controls/OrbitControls.js"></script>
-<script src="../build/mxreality.js"></script>
-<script>
+    <script src="../build/three.js"></script>
+    <script src="./js/controls/OrbitControls.js"></script>
+    <script src="../build/mxreality.js"></script>
+    <script>
 
-    var scene, renderer;
-    var container, mesh;
-    var VR;
-    init();//初始化
-    animate();//动画
+        var scene, renderer;
+        var container, mesh;
+        var VR;
+        init();//初始化
+        animate();//动画
 
-    function init() {
-        scene = new THREE.Scene();
-        renderer = new THREE.WebGLRenderer();
-        container = document.getElementById( 'container' );
-        VR=new VR(scene,renderer,container);
-        VR.init(function () {
-            
-        });
+        function init() {
+            var container = document.getElementById('container');
+            var vr = new VR({ 'id': container });
+            var scene = vr.scene;
+            var renderer = vr.renderer;
 
-        var envLight=new THREE.AmbientLight(0xffffff,0.5);
-        scene.add(envLight);
+            vr.init(function () {
 
-        light = new THREE.DirectionalLight(0xffffff, 1.0, 0);//设置平行光源
-        light.position.set( 400, 700, -800 );//设置光源向量
-        scene.add( light );
+            });
 
-        var geometry = new THREE.SphereGeometry( 5, 60, 40 );
+            var envLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(envLight);
 
-        var material = new THREE.MeshLambertMaterial( {
-            map: new THREE.TextureLoader().load( 'textures/land_ocean_ice_cloud_2048.jpg' )
-        } );
+            light = new THREE.DirectionalLight(0xffffff, 1.0, 0);//设置平行光源
+            light.position.set(400, 700, -800);//设置光源向量
+            scene.add(light);
 
-        mesh = new THREE.Mesh( geometry, material );
-        mesh.position.set(12,0,12);
-        scene.add( mesh );
+            var geometry = new THREE.SphereGeometry(5, 60, 40);
 
+            var material = new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('textures/land_ocean_ice_cloud_2048.jpg')
+            });
 
-
-        renderer.setPixelRatio( window.devicePixelRatio );
-        renderer.setSize( window.innerWidth, window.innerHeight );
-        container.appendChild( renderer.domElement );
+            mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(12, 0, 12);
+            scene.add(mesh);
 
 
 
-    }
-    function animate() {
-        //document.getElementById("info").innerHTML ="alpha:"+parseInt(V_R._alpha)+",beta:"+parseInt(V_R._beta)+",gama:"+parseInt(V_R._gamma)+",gammaFace:"+V_R._gammaFace;
-        requestAnimationFrame( animate );
-        update();
-
-    }
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
 
 
-    function update() {
-        mesh.rotation.y += 0.01;
-    }
 
-</script>
+        }
+        function animate() {
+            //document.getElementById("info").innerHTML ="alpha:"+parseInt(V_R._alpha)+",beta:"+parseInt(V_R._beta)+",gama:"+parseInt(V_R._gamma)+",gammaFace:"+V_R._gammaFace;
+            requestAnimationFrame(animate);
+            update();
+
+        }
+
+
+        function update() {
+            mesh.rotation.y += 0.01;
+        }
+
+    </script>
 
 </body>
+
 </html>

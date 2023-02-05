@@ -30,14 +30,7 @@
     var container;
     var vr=null;
     function init() {
-        renderer = new THREE.WebGLRenderer();
-        container = document.getElementById('example');
-        container.appendChild(renderer.domElement);
-
-
-        scene = new THREE.Scene();
-        AVR.debug=true;
-        vr=new VR(scene,renderer,container,{'fov':80});
+        var vr = new VR({ 'id': 'example', onload: function () { } });
         vr.vrbox.width=50;
         vr.vrbox.height=50;
         vr.vrbox.depth=50;
@@ -50,7 +43,7 @@
         });
         vr.sphere2BoxPano("textures/puydesancy.jpg",1024,1024,function (img) {
            //document.getElementById("test").src=img;
-            vr.playPanorama(img,vr.resType.box);
+            vr.play(img,vr.resType.box);
         });
 
         //

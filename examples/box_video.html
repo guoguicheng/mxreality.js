@@ -26,21 +26,9 @@
         }
         //var vr=new VR(scene,renderer,container);
         function init() {
-            var scene, renderer;
-            var container;
-            //renderer = new THREE.WebGLRenderer();
-            renderer = new THREE.WebGLRenderer();
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container = document.getElementById('example');
-            container.appendChild(renderer.domElement);
-
-            scene = new THREE.Scene();
-
-            // fov 选项可调整初始视频远近
-            var vr = new VR(scene, renderer, container, { "fov": 50 });
+            var vr = new VR({ 'id': 'example' });
 
             //vr.playText="<img src='img/play90.png' width='40' height='40'/>";
-            vr.vrbox.radius = 600;
             if (AVR.isCrossScreen()) {
                 // 调整vr视窗偏移量
                 vr.effect.separation = 1.2;
@@ -67,7 +55,7 @@
             console.log('—————-————-————--');
             console.log('｜ 下 ｜ 前 ｜ 后 ｜');
             console.log('—————-————-————--');
-            
+
         }
 
 

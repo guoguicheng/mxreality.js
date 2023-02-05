@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>vr sphere example</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -11,7 +12,6 @@
     <script src="../build/three.js"></script>
     <script src="../build/mxreality.js"></script>
     <style type="text/css">
-
         /*#example {
             position: absolute;
             width: 100%;
@@ -22,45 +22,37 @@
         }*/
     </style>
 </head>
+
 <body>
-<div id="example"></div>
-<script>
-    window.onload=function () {
-        init();
-    }
-    function init() {
-        var  scene, renderer;
-        var container;
-        renderer = new THREE.WebGLRenderer();
-        container = document.getElementById('example');
-        container.appendChild(renderer.domElement);
-
-        scene = new THREE.Scene();
-        var vr=new VR(scene,renderer,container,{'fov':60});
-        vr.vrbox.radius=50;
-
-        if(!AVR.isCrossScreen()) {
-            vr.useGyroscope = false;
+    <div id="example"></div>
+    <script>
+        window.onload = function () {
+            init();
         }
-        vr.loadProgressManager.onLoad=function () {
-            //vr.controls.enable=false;
+        function init() {
+
+            var vr = new VR({ 'id': 'example' });
+
+            if (!AVR.isCrossScreen()) {
+                vr.useGyroscope = false;
+            }
+            vr.loadProgressManager.onLoad = function () {
+                //vr.controls.enable=false;
+            }
+            vr.loadProgressManager.onProgress = function () {
+                console.log("onProgress")
+            }
+            vr.loadProgressManager.onError = function () {
+                console.log("onError")
+            }
+            vr.init(function () {
+
+            });
+            vr.play('textures/puydesancy.jpg');
         }
-        vr.loadProgressManager.onProgress=function () {
-            console.log("onProgress")
-        }
-        vr.loadProgressManager.onError=function () {
-            console.log("onError")
-        }
-        vr.init(function () {
-
-        });
-        vr.playPanorama('textures/puydesancy.jpg');
 
 
-
-    }
-
-
-</script>
+    </script>
 </body>
+
 </html>
