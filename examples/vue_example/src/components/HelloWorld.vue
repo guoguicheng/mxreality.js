@@ -20,11 +20,8 @@ export default {
     msg: String,
   },
   mounted() {
-    var scene = new THREE.Scene();
-    var renderer = new THREE.WebGLRenderer();
-    this.$refs.player.appendChild(renderer.domElement);
-    var vr = new VR(scene, renderer, this.$refs.player);
-    vr.init(function () {});
+    var vr = new VR({ 'id': this.$refs.player })
+    vr.init(function () { });
     vr.loadProgressManager.onLoad = function () {
       console.log("loaded.........");
     };
@@ -44,14 +41,17 @@ export default {
 h3 {
   margin: 40px 0 0;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
 }
+
 li {
   display: inline-block;
   margin: 0 10px;
 }
+
 a {
   color: #42b983;
 }
