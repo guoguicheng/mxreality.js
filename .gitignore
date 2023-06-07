@@ -8,3 +8,5 @@
 test.html
 package-lock.json
 localChangeRecords.md
+cert.pem
+key.pem
