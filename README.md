@@ -60,7 +60,7 @@ The SDK is available in three editions:
 <thead>
 <tr>
 <th></th>
-<th>探索版（当前版本）</th><th>Plus版</th><th>Pro</th>
+<th>mxreality.js（当前版本）(免费）</th><th>mxreality.js.Plus版（免费）</th><th>mxplayer.js旗舰版（收费）</th>
 </tr>
 </thead>
 <tr>
@@ -124,7 +124,7 @@ The SDK is available in three editions:
 <thead>
 <tr>
 <th></th>
-<th>Basic(current version)</th><th>Plus</th><th>Pro</th>
+<th>mxplayer.js(current version)（Free）</th><th>mxreality.js.plus（Free）</th><th>mxplayer.js（Paid）</th>
 </tr>
 </thead>
 <tr>
