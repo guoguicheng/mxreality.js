@@ -215,7 +215,7 @@ The SDK is available in three editions:
 
 [Connect on Twitter](https://twitter.com/cheng67274319)
 
-## (商务合作请咨询）
+## （商务合作请咨询）
 
 <img src="docs/wechat.png" width="200" height="200" title=“wechat”/>
 <hr/>
