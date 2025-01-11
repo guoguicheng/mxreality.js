@@ -34,8 +34,8 @@ The player SDK is divided into free version (Basic) and paid versions:
 
 ## 示例 | Examples
 
-- 查看官方例子 [在线地址](https://www.covideo.cn)
-- Check examples [online](https://www.covideo.cn)
+- 查看官方例子 [在线地址](//www.covideo.cn)
+- Check examples [online](//www.covideo.cn)
 
 ## check support (Chinese)
 <table>
@@ -171,8 +171,8 @@ The player SDK is divided into free version (Basic) and paid versions:
 * Any questions?please check [discuss](http://discuss.mxreality.cn)
 <hr/>
 
-* 查看官方例子 [在线地址](https://www.covideo.cn)
-* Check examples [examples](https://www.covideo.cn)
+* 查看官方例子 [在线地址](//www.covideo.cn)
+* Check examples [examples](//www.covideo.cn)
 
 
 <hr/>
